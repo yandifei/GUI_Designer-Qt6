@@ -19,6 +19,17 @@ sys.exit(Free_my_WW_app.exec())  # 安全退出界面任务
 Qtdesigner如果设置了最右上角有UI按钮（其他控件没测）的话，即使边缘缩放打开了也无效
 最右上角如果有控件请填写大小，不然光标会是拉伸的光标（难看）
 
+***
+# 界面展示
+![初始界面](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%87.png?raw=true)
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%871.png?raw=true)
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%872.png?raw=true)
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%873.png?raw=true)
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%874.png?raw=true)
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%875.png?raw=true)
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%876.png?raw=true)
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6-/blob/main/UI%E5%9B%BE%E7%89%87/%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%877.png?raw=true)
+***
 ***自定约定：如果你想快速使用，也就是不想遵守我的协议（当然包括不需要标注作者），那请不用商用（有任何形式的牟利行为）***
 # 协议
  Apache License 2.0
