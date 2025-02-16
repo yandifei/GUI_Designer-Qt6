@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="MustLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="GlobalWidget" native="true">
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,17">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QGridLayout" name="TitleBar">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0" rowspan="2">
+         <layout class="QHBoxLayout" name="TitleLayout" stretch="0,0,13">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>5</number>
+          </property>
+          <property name="topMargin">
+           <number>5</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="LabelPic">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap>32X32.ico</pixmap>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="SoftwareName">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>14</pointsize>
+              <italic>false</italic>
+              <bold>true</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="text">
+             <string>Free my WW 1.0.0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="TitleSpace">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1">
+         <layout class="QHBoxLayout" name="WindowControlButtons">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="HideToWindow">
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>完全隐藏（去任务管理器找）</string>
+            </property>
+            <property name="whatsThis">
+             <string/>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border: none;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(196, 43, 28); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(199, 64, 49);
+}</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>chevron-down.png</normaloff>chevron-down.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MinToSys">
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>系统托盘</string>
+            </property>
+            <property name="statusTip">
+             <string/>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border: none;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>chevrons-down.png</normaloff>chevrons-down.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="Min">
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>最小化</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border: none;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>remove.png</normaloff>remove.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MaxOrRestore">
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>最大化/恢复</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border: none;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>maximise.png</normaloff>maximise.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="autoRepeat">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="Close">
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>关闭</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border:  transparent;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(196, 43, 28); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(199, 64, 49);
+}
+</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>cancel.png</normaloff>cancel.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QWidget" name="MainWidget" native="true">
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
