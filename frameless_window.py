@@ -23,9 +23,9 @@ from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtCore import Qt, QPoint, QPointF, QRect  # Qt用来干掉边框
 from PyQt6 import uic
 # 自己的包
-from SysInformation import *
-from UserFeedback import *
-from SysControl import limit_cursor, release_cursor
+from Free_my_WW_package.SysInformation import *
+from Free_my_WW_package.UserFeedback import *
+from Free_my_WW_package.SysControl import limit_cursor, release_cursor
 
 try:
     from 边框重写 import *

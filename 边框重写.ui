@@ -84,7 +84,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap>32X32.ico</pixmap>
+             <pixmap>UI图片/32X32.ico</pixmap>
             </property>
             <property name="alignment">
              <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -159,7 +159,7 @@ QPushButton:pressed {
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>chevron-down.png</normaloff>chevron-down.png</iconset>
+              <normaloff>UI图片/chevron-down.png</normaloff>UI图片/chevron-down.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -199,7 +199,7 @@ QPushButton:pressed {
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>chevrons-down.png</normaloff>chevrons-down.png</iconset>
+              <normaloff>UI图片/chevrons-down.png</normaloff>UI图片/chevrons-down.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -236,7 +236,7 @@ QPushButton:pressed {
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>remove.png</normaloff>remove.png</iconset>
+              <normaloff>UI图片/remove.png</normaloff>UI图片/remove.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -270,7 +270,7 @@ QPushButton:pressed {
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>maximise.png</normaloff>maximise.png</iconset>
+              <normaloff>UI图片/maximise.png</normaloff>UI图片/maximise.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -311,7 +311,7 @@ QPushButton:pressed {
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>cancel.png</normaloff>cancel.png</iconset>
+              <normaloff>UI图片/cancel.png</normaloff>UI图片/cancel.png</iconset>
             </property>
             <property name="iconSize">
              <size>
