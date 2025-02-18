@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RCC>
+  <qresource prefix="标题栏">
+    <file>窗口恢复.png</file>
+    <file>关闭.png</file>
+    <file>深度隐藏.png</file>
+    <file>托盘隐藏.png</file>
+    <file>最大化.png</file>
+    <file>最小化.png</file>
+  </qresource>
+  <qresource prefix="Logo">
+    <file>16X16.ico</file>
+    <file>32X32.ico</file>
+    <file>48X48.ico</file>
+    <file>64X64.ico</file>
+    <file>128X128.ico</file>
+    <file>256X256.ico</file>
+    <file>logo.png</file>
+  </qresource>
+</RCC>
