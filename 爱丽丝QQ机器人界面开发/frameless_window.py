@@ -1,31 +1,11 @@
-"""不要把QApplication和show写进去自定义的类里面去，
-QApplication是只能有一个的，创建2个对象就完了
-show如果是在自定义类之后则有可能出现未知bug
-在未初始化 GUI 前调用 show()	窗口可能无法正确渲染
-将Form对象的窗口布局器（1个）的类名设置为GlobalLayout，意为全局布局器
-"""
-# 去掉原来的边框，直接重写
-# 导包
-""" 添加路径导入自定义包
-import os # 用来导入自定义包的
-sys.path.append(os.getcwd())   # 添加路径到系统路径里面
-package_path = f"{os.getcwd()}\\Free_my_WW_package"   # 当前目录下找包
-sys.path.append(package_path)   # 添加路径到系统路径里面
-package_path = os.path.dirname(package_path)   # 获取上级目录
-sys.path.append(package_path)   # 添加路径到系统路径里面
-print(f"{os.getcwd()}\\Free_my_WW_package")
-"""
-import sys
-import os
-sys.path.append(f"{os.getcwd()}\Free_my_WW_package")  # 添加路径到系统路径里面
+"""Qt无标题栏界面解决方案（仅限于Windows）
+self.setWindowFlag(Qt.WindowType.FramelessWindowHint) 不仅会把标题栏去掉还会把原来的拖拽等功能去掉
 
+"""
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtCore import Qt, QPoint, QPointF, QRect  # Qt用来干掉边框
 from PyQt6 import uic
-# 自己的包
-from Free_my_WW_package.SysInformation import *
-from Free_my_WW_package.UserFeedback import *
-from Free_my_WW_package.SysControl import limit_cursor, release_cursor
+
 
 try:
     from 边框重写 import *
