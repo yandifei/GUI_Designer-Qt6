@@ -9,11 +9,11 @@ from time import sleep  # 睡眠
 import win32api, win32con, win32gui, win32print
 # 第三方包
 from PyQt6.uic import loadUi  # 加载ui文件或ui装py的文件
-from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow
 from PyQt6.QtCore import Qt  # 用来使用Qt.WindowType.FramelessWindowHint
 # 自己的包
-# from resources.frameless_window import Ui_FramelessWindow   # uic转后py文件
-import resources.resources
+from resources.frameless_window import Ui_FramelessWindow   # uic转后py文件
+import resources.resources  # 这个必须存在（即使编译器报灰色）
 
 # 可以通过多继承去调用uic转后py文件, Ui_FramelessWindow
 class FramelessWindow(QWidget):
@@ -21,13 +21,12 @@ class FramelessWindow(QWidget):
         """构建一个无标题栏（自定义）的窗口"""
         super().__init__()
         """加载ui文件（Qt designer的文件）"""
-        loadUi("./resources/frameless_window.ui", self)  # 运行时动态加载ui文件
+        loadUi("./resources/Arisu.ui", self)  # 运行时动态加载ui文件
         # self.setupUi(self)    # 创建UI实例，为了后续控件的调用
         """窗口初始化"""
-        # self.setWindowFlag(Qt.WindowType.FramelessWindowHint) # 无标题栏
         self.move_center_window()   # 移动窗口的屏幕中间
-        self.remove_title_bar()     # 去掉窗口的标题栏(必须展示窗口后才有句柄)
-        self.show() # 展示窗口
+        # self.remove_title_bar()     # 去掉窗口的标题栏(必须展示窗口后才有句柄)
+        self.a()
 
 
     """窗口初始化"""
@@ -42,29 +41,100 @@ class FramelessWindow(QWidget):
         # 设置窗口位置
         self.move(x, y)
 
+
+    def a(self):
+        """去掉标题栏并保留系统贴边功能"""
+        hwnd = int(self.winId())
+
+        # 获取当前样式
+        current_style = win32gui.GetWindowLong(hwnd, win32con.GWL_STYLE)
+
+        # 计算新样式
+        # 移除标题栏但保留调整边框、最大化/最小化按钮
+        new_style = current_style & ~win32con.WS_CAPTION
+        new_style |= win32con.WS_THICKFRAME | win32con.WS_MAXIMIZEBOX | win32con.WS_MINIMIZEBOX
+
+        # 应用新样式
+        win32gui.SetWindowLong(hwnd, win32con.GWL_STYLE, new_style)
+
+        # 强制窗口重绘
+        win32gui.SetWindowPos(hwnd,
+                              win32con.HWND_TOP,
+                              0, 0, 0, 0,
+                              win32con.SWP_NOMOVE |
+                              win32con.SWP_NOSIZE |
+                              win32con.SWP_FRAMECHANGED)
+
+        # 计算并设置负边距以消除顶部空白
+        border_rect = win32gui.GetWindowRect(hwnd)
+        client_rect = win32gui.GetClientRect(hwnd)
+        title_bar_height = (border_rect[3] - border_rect[1]) - (client_rect[3] - client_rect[1])
+        self.setContentsMargins(0, -title_bar_height, 0, 0)
+
+        # 再次强制重绘确保布局更新
+        win32gui.SetWindowPos(hwnd,
+                              win32con.HWND_TOP,
+                              0, 0, 0, 0,
+                              win32con.SWP_NOMOVE |
+                              win32con.SWP_NOSIZE |
+                              win32con.SWP_FRAMECHANGED)
+
     def remove_title_bar(self):
         """去掉标题栏
         WS_MAXIMIZEBOX  最大化
         WS_MINIMIZEBOX  最小化
         WS_THICKFRAME   边缘缩放
+        WS_SYSMENU      系统菜单和关闭按钮
+        WS_CAPTION      窗口的标题栏区域（效果是包括以上等控件都没了）
+        WS_POPUP        无边框
+         & ~ 是去除， | 是使用
         """
-        # current_style = win32gui.GetWindowLong(int(self.winId()), win32con.GWL_STYLE) # 拿到当前的窗口样式
-        # # 组合拿到新的窗口样式
-        # new_style = current_style & ~win32con.WS_THICKFRAME & ~win32con.WS_MAXIMIZEBOX | win32con.WS_THICKFRAME
-        # win32gui.SetWindowLong(int(self.winId()), win32con.GWL_STYLE, new_style)  # 应用新样式
-
+        # 完全自定义边框方案
+        # self.setContentsMargins(0, -100, 0, 0)   # 左、上、右、下
+        # 使用win32api直接去标题栏和保留边缘拉伸
         current_style = win32gui.GetWindowLong(int(self.winId()), win32con.GWL_STYLE)
-        new_style = current_style & ~win32con.WS_CAPTION
+        new_style = current_style & ~win32con.WS_CAPTION | win32con.WS_THICKFRAME    # 去掉标题栏（直接去掉）和保留窗口边缘拉伸
         win32gui.SetWindowLong(int(self.winId()), win32con.GWL_STYLE, new_style)  # 应用新样式
-
-        #强制窗口重新绘制
+        # 强制窗口重新绘制
         # SWP_NOMOVE保持窗口当前位置不变，忽略 SetWindowPos 函数中传入的 x 和 y 坐标参数。
         # SWP_NOSIZE保持窗口当前尺寸不变，忽略 SetWindowPos 函数中传入的 cx 和 cy（宽度和高度）参数。
         # SWP_FRAMECHANGED强制窗口重新计算非客户区（Non-Client Area，如标题栏、边框等）
-        win32gui.SetWindowPos(int(self.winId()),win32con.HWND_TOP,0, 0, 0, 0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_FRAMECHANGED)
+        # WVR_REDRAW    标志确保窗口正确重绘
+        win32gui.SetWindowPos(int(self.winId()),
+                              win32con.HWND_TOP,
+                              0, 0, 0, 0,
+                              win32con.SWP_NOMOVE |
+                              win32con.SWP_NOSIZE |
+                              win32con.SWP_FRAMECHANGED |
+                              win32con.WVR_REDRAW)
+
+        # # ===== 新增部分：消除顶部空白 =====
+        # # 获取窗口实际尺寸（含非客户区）
+        # border_rect = win32gui.GetWindowRect(int(self.winId()))
+        # # 获取客户区尺寸
+        # client_rect = win32gui.GetClientRect(int(self.winId()))
+        #
+        # print(border_rect, )
+        #
+        # # 计算标题栏高度 = (窗口高度 - 客户区高度)
+        # window_height = border_rect[3] - border_rect[1]
+        # client_height = client_rect[3] - client_rect[1]  # 注意：client_rect高度是纯客户区
+        # title_bar_height = window_height - client_height
+
+        # 设置负上边距抵消标题栏空间
+        self.setContentsMargins(0, -5, 0, 0)
+
+        # 再次强制重绘确保布局更新
+        win32gui.SetWindowPos(int(self.winId()),
+                              win32con.HWND_TOP,
+                              0, 0, 0, 0,
+                              win32con.SWP_NOMOVE |
+                              win32con.SWP_NOSIZE |
+                              win32con.SWP_FRAMECHANGED)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)  # 管理控制事件流和设置(sys.argv控制台接收参数)
     window = FramelessWindow()
-    # window.show()
+    window.show()
     sys.exit(app.exec())  # 安全退出界面任务
