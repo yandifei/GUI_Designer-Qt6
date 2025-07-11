@@ -7,42 +7,51 @@ self.setWindowFlag(Qt.WindowType.FramelessWindowHint) 不仅会把标题栏去�
 # 官方库
 import sys  # 导入系统库
 # 第三方包
-import win32con, win32gui   # 使用win32api
-from PyQt6.QtCore import Qt, QEvent, QPoint # Qt的核心类
-from PyQt6.uic import loadUi  # 加载ui文件或ui装py的文件
-from PyQt6.QtGui import QIcon   # 图标处理
-from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget, QMainWindow
-from qframelesswindow import FramelessWindow as FramelessWindowWidget      # 导入FramelessWindow(无窗口类)
+import win32con, win32gui                                                           # 使用win32api
+from PyQt6.QtCore import Qt, QEvent                                                 # Qt的核心类
+from PyQt6.uic import loadUi                                                        # 加载ui文件或ui装py的文件
+from PyQt6.QtGui import QIcon, QAction                                              # 图标处理
+from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget           # 界面处理类
+from qframelesswindow import FramelessWindow as FramelessWindowWidget               # 导入FramelessWindow(无窗口类)
 # 自己的包
-from resources.Arisu import Ui_Arisu   # uic转后py文件
-import resources.resources  # 这个必须存在（即使编译器报灰色）
+from resources.Arisu import Ui_Arisu                                                # uic转后py文件
+import resources.resources                                                          # 这个必须存在（即使编译器报灰色）
 
 # 可以通过多继承去调用uic转后py文件, Ui_FramelessWindow
 class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
-    def __init__(self, class_name = "", title = "", show_system_tray = False):
+    def __init__(self, class_name = "", title = "", show_system_tray = True):
         """构建一个无标题栏（自定义）的窗口
         class_name : 窗口类名（默认为""）
         title : 窗口标题（默认为""）
-        show_system_tray : 是否展示系统托盘（False/True）
+        show_system_tray : 是否展示系统托盘（False/True）,默认为True
         """
         super().__init__()
         """参数初始化"""
         self.show_system_tray = show_system_tray  # 接受初始化参数（是否显示系统托盘）
         """加载ui文件（Qt designer的文件）"""
-        loadUi("./resources/Arisu.ui", self)  # 运行时动态加载ui文件
-        # self.setupUi(self)    # 创建UI实例，为了后续控件的调用
+        # loadUi("./resources/Arisu.ui", self)  # 运行时动态加载ui文件
+        self.setupUi(self)    # 创建UI实例，为了后续控件的调用
         self.hwnd = int(self.winId())   # 拿到窗口句柄
         """预加载图标资源"""
         # 预加载图标资源
-        self.QLogo = QIcon(":/Logo/Logo/32.ico")  # QLogo图标
+        self.QLogo = QIcon(":/Logo/Logo/256.ico")  # QLogo图标
         self.max_icon = QIcon(":/标题栏/标题栏/最大化.png")  # 需要切换的图标
         self.restore_icon = QIcon(":/标题栏/标题栏/窗口恢复.png")  # 需要切换的图标
         """系统托盘(有个系统托盘按钮需要链接)"""
-        self.system_tray = QSystemTrayIcon(self.QLogo,self)  # 创建系统托盘(self建立父子关系避免资源泄露) 和 设置系统托盘的图标
+        self.system_tray = QSystemTrayIcon(self)  # 创建系统托盘(self建立父子关系避免资源泄露)
+        self.system_tray.setIcon(self.QLogo)# 设置系统托盘的图标
+        self.system_tray.setToolTip(self.SoftwareName.text())     # 设置悬浮提示为软件名
+        # 系统托盘菜单
+        self.system_tray_menu = QMenu(self)                                 # 创建系统托盘菜单
+        self.quit_action = QAction("退出", self)           # 添加一级菜单动作选项（退出）
+        self.quit_action.triggered.connect(self.system_tray_menu_exit)      # 链接动作行为
+        self.system_tray_menu.addAction(self.quit_action)                   # 菜单把动作添加进去
+        self.system_tray_menu.addSeparator()
+        self.system_tray.setContextMenu(self.system_tray_menu)              # 设置系统托盘上下文菜单
+        # 点击托盘触发的操作
+        self.system_tray.activated.connect(self.system_tray_click)
         # 根据初始化参数来决定 隐藏系统托盘 还是 显示系统托盘
         self.system_tray.show() if self.show_system_tray else self.system_tray.hide()
-        self.system_tray.setToolTip(self.SoftwareName.text())     # 设置悬浮提示为软件名
-        # self.system_tray.setContextMenu(QMenu)
         """窗口初始化(无边框和自定义按钮)"""
         self.setObjectName(class_name)  # 设置窗口类名(无效)
         # pass
@@ -78,14 +87,13 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
     def link_buttons(self):
         """链接自己写好的按钮"""
         # 最基础的三个控件(关闭、最大化、最小化) + 额外按钮（置顶、系统托盘、隐藏）
-        self.close_btn.clicked.connect(self.close)                      # 关闭按钮(这里没有必要链接隐藏的按钮)
+        self.close_btn.clicked.connect(QApplication.quit)             # 关闭按钮(这里没有必要链接隐藏的按钮)
         self.max_btn.clicked.connect(self.titleBar.maxBtn.click)        # 最大化按钮(其实叫toggleMaximizeButton合适，有最大化和恢复功能)
         self.min_btn.clicked.connect(self.showMinimized)                # 最小化按钮
         self.top_btn.clicked.connect(self.switch_top)                   # 窗口置顶按钮
         # self.min_system_tray_btn.clicked.connect(self.min_system_tray)  # 最小化到系统托盘按钮（因为Qt系统托盘bug的问题直接去掉该按钮）
         self.hide_btn.clicked.connect(self.hide_button_function)        # 隐藏窗口按钮(隐藏窗口和系统托盘)
-        # 系统托盘
-        self.system_tray.activated.connect(self.system_tray_click)      # 点击托盘触发的操作
+
 
 
     """其他按钮的功能方法"""
@@ -105,7 +113,8 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
     def hide_button_function(self):
         """实现隐藏按钮的功能"""
         self.hide() # 隐藏窗口
-        self.system_tray.hide() # 隐藏系统托盘
+        if not self.show_system_tray:       # 如果创建界面后不想要系统托盘，那么设置属性后隐藏窗口后就也把系统托盘隐藏
+            self.system_tray.hide() # 隐藏系统托盘
 
 
     """系统托盘信号处理"""
@@ -114,13 +123,23 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
         if signal == QSystemTrayIcon.ActivationReason.Trigger:# 点击系统托盘(取名Trigger是因为在不同系统有不同的操作)
             # if not self.show_system_tray:   # 初始化时是不展示系统托盘（展示界面，隐藏系统托盘）
             #     self.system_tray.show()       # 因为bug所以不搞了
-            self.showNormal()  # 恢复窗口（show在窗口最小化是没用）
-        elif signal == QSystemTrayIcon.ActivationReason.Context:
-            print("右键单击")
-        elif signal == QSystemTrayIcon.ActivationReason.DoubleClick:
-            print("双击")
-        elif signal == QSystemTrayIcon.ActivationReason.MiddleClick:
-            print("中键单击")
+            # 如果窗口最小化或隐藏，则显示
+            if self.isMinimized() or not self.isVisible():
+                self.showNormal()   # 如果窗口最小化或隐藏了则恢复窗口（show在窗口最小化没用）
+            else:
+                self.hide()  # 如果窗口已显示，则隐藏
+        # elif signal == QSystemTrayIcon.ActivationReason.Context:
+        #     print("右键单击")
+        # elif signal == QSystemTrayIcon.ActivationReason.DoubleClick:
+        #     print("双击")
+        # elif signal == QSystemTrayIcon.ActivationReason.MiddleClick:
+        #     print("中键单击")
+
+    def system_tray_menu_exit(self):
+        """系统托盘退出行为槽函数"""
+        # self.hide() # 隐藏托盘窗口
+        self.close()    # 关闭窗口释放当前的
+        QApplication.exit() # 退出所有程序（释放所有Qt资源）
 
 
 
@@ -144,7 +163,7 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)  # 管理控制事件流和设置(sys.argv控制台接收参数)
     # QApplication.processEvents()  # 强制Qt处理事件队列
-    window = FramelessWindow("1", "2", False)
+    window = FramelessWindow("1", "2", True)
     window.show()
 
     sys.exit(app.exec())  # 安全退出界面任务

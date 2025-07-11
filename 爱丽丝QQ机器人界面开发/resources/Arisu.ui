@@ -52,7 +52,7 @@
      <item row="0" column="0" rowspan="2">
       <layout class="QHBoxLayout" name="TitleLayout" stretch="0,0,0">
        <property name="spacing">
-        <number>0</number>
+        <number>5</number>
        </property>
        <property name="leftMargin">
         <number>5</number>
@@ -62,6 +62,9 @@
        </property>
        <property name="rightMargin">
         <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
        </property>
        <item>
         <widget class="QLabel" name="Logo">
