@@ -4,31 +4,53 @@ self.setWindowFlag(Qt.WindowType.FramelessWindowHint) 不仅会把标题栏去�
 """
 
 # 导包
+# 官方库
 import sys  # 导入系统库
-from time import sleep  # 睡眠
-import win32api, win32con, win32gui, win32print
 # 第三方包
+import win32con, win32gui   # 使用win32api
+from PyQt6.QtCore import Qt, QEvent, QPoint # Qt的核心类
 from PyQt6.uic import loadUi  # 加载ui文件或ui装py的文件
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow
-# from PyQt6.QtCore import Qt  # 用来使用Qt.WindowType.FramelessWindowHint
+from PyQt6.QtGui import QIcon   # 图标处理
+from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QWidget, QMainWindow
 from qframelesswindow import FramelessWindow as FramelessWindowWidget      # 导入FramelessWindow(无窗口类)
 # 自己的包
-from resources.frameless_window import Ui_FramelessWindow   # uic转后py文件
+from resources.Arisu import Ui_Arisu   # uic转后py文件
 import resources.resources  # 这个必须存在（即使编译器报灰色）
 
 # 可以通过多继承去调用uic转后py文件, Ui_FramelessWindow
-class FramelessWindow(QWidget, Ui_FramelessWindow):
-    def __init__(self):
-        """构建一个无标题栏（自定义）的窗口"""
+class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
+    def __init__(self, class_name = "", title = "", show_system_tray = False):
+        """构建一个无标题栏（自定义）的窗口
+        class_name : 窗口类名（默认为""）
+        title : 窗口标题（默认为""）
+        show_system_tray : 是否展示系统托盘（False/True）
+        """
         super().__init__()
+        """参数初始化"""
+        self.show_system_tray = show_system_tray  # 接受初始化参数（是否显示系统托盘）
         """加载ui文件（Qt designer的文件）"""
         loadUi("./resources/Arisu.ui", self)  # 运行时动态加载ui文件
         # self.setupUi(self)    # 创建UI实例，为了后续控件的调用
         self.hwnd = int(self.winId())   # 拿到窗口句柄
-        """窗口初始化"""
+        """预加载图标资源"""
+        # 预加载图标资源
+        self.Logo = QIcon(":/Logo/Logo/256.ico")  # Logo图标
+        self.max_icon = QIcon(":/标题栏/标题栏/最大化.png")  # 需要切换的图标
+        self.restore_icon = QIcon(":/标题栏/标题栏/窗口恢复.png")  # 需要切换的图标
+        """系统托盘(有个系统托盘按钮需要链接)"""
+        self.system_tray = QSystemTrayIcon(self.Logo,self)  # 创建系统托盘(self建立父子关系避免资源泄露) 和 设置系统托盘的图标
+        # 根据初始化参数来决定 隐藏系统托盘 还是 显示系统托盘
+        self.system_tray.show() if self.show_system_tray else self.system_tray.hide()
+        # self.system_tray.setToolTip(self.SoftwareName.text())     # 设置悬浮提示为软件名
+        """窗口初始化(无边框和自定义按钮)"""
+        self.setObjectName(class_name)  # 设置窗口类名(无效)
+        # pass
+        self.setWindowTitle(title)  # 设置窗口标题
+        self.setWindowIcon(self.Logo)   # 设置窗口图标
         self.move_center_window()   # 移动窗口的屏幕中间
-        self.remove_title_bar()     # 去掉窗口的标题栏(必须展示窗口后才有句柄)
-
+        self.hide_frameless_window_buttons()   # 隐藏FramelessWindow自带的3个按钮控件
+        self.link_buttons()  # 链接自己的按钮
+        self.offset = QPoint()      # 记录拖拽位置
 
     """窗口初始化"""
     def move_center_window(self):
@@ -42,50 +64,74 @@ class FramelessWindow(QWidget, Ui_FramelessWindow):
         # 设置窗口位置
         self.move(x, y)
 
+    def hide_frameless_window_buttons(self):
+        """隐藏继承FramelessWindowWidget后的按钮"""
+        self.titleBar.closeBtn.deleteLater()    # 移除关闭按钮
+        # self.titleBar.maxBtn.deleteLater()  # 移除最大化按钮
+        self.titleBar.minBtn.deleteLater()  # 移除最小化按钮
+        # self.titleBar.closeBtn.hide()   # 隐藏关闭按钮
+        self.titleBar.maxBtn.hide()     # 隐藏最大化按钮
+        # self.titleBar.minBtn.hide()     # 隐藏最小化按钮
 
-    def remove_title_bar(self):
-        """去掉标题栏
-        WS_MAXIMIZEBOX  最大化
-        WS_MINIMIZEBOX  最小化
-        WS_THICKFRAME   边缘缩放
-        WS_SYSMENU      系统菜单和关闭按钮
-        WS_CAPTION      窗口的标题栏区域（效果是包括以上等控件都没了）
-        WS_POPUP        无边框
-         & ~ 是去除， | 是使用
+    def link_buttons(self):
+        """链接自己写好的按钮"""
+        # 最基础的三个控件(关闭、最大化、最小化) + 额外按钮（置顶、系统托盘、隐藏）
+        self.close_btn.clicked.connect(self.close)                      # 关闭按钮(这里没有必要链接隐藏的按钮)
+        self.max_btn.clicked.connect(self.titleBar.maxBtn.click)        # 最大化按钮(其实叫toggleMaximizeButton合适，有最大化和恢复功能)
+        self.min_btn.clicked.connect(self.showMinimized)                # 最小化按钮
+        self.top_btn.clicked.connect(self.switch_top)                   # 窗口置顶按钮
+        self.min_system_tray_btn.clicked.connect(self.min_system_tray)  # 最小化到系统托盘按钮
+        self.hide_btn.clicked.connect(self.hide)                        # 隐藏窗口按钮
+        # 系统托盘
+        self.system_tray.activated.connect(self.hide)
+
+    """其他按钮的功能方法"""
+    def switch_top(self):
+        """窗口置顶切换"""
+        # 如果窗口置顶了就给他取消置顶
+        if win32gui.GetWindowLong(self.hwnd, win32con.GWL_EXSTYLE) & win32con.WS_EX_TOPMOST:
+            win32gui.SetWindowPos(self.hwnd,win32con.HWND_NOTOPMOST,0, 0, 0, 0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+        else:   # 如果窗口没有置顶则置顶窗口
+            win32gui.SetWindowPos(self.hwnd,win32con.HWND_TOPMOST,0, 0, 0, 0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+
+    def min_system_tray(self):
+        """窗口最小化到系统托盘"""
+        self.system_tray.show()     # 显示系统托盘
+        self.hide()                 # 隐藏窗口
+
+    def system_tray_function(self, signal):
+        print(1)
+
+
+    """无边框窗口事件重写"""
+    def changeEvent(self, event):
+        """处理窗口状态改变事件
+        处理最大化图标切换
         """
-        # 完全自定义边框方案
-        # self.setContentsMargins(0, -100, 0, 0)   # 左、上、右、下
-        # 使用win32api直接去标题栏和保留边缘拉伸
-        current_style = win32gui.GetWindowLong(self.hwnd, win32con.GWL_STYLE)
-        new_style = current_style & ~win32con.WS_CAPTION | win32con.WS_THICKFRAME    # 去掉标题栏（直接去掉）和保留窗口边缘拉伸
-        win32gui.SetWindowLong(self.hwnd, win32con.GWL_STYLE, new_style)  # 应用新样式
+        super().changeEvent(event)  # 继承父类的操作
+        # 处理最大化图标切换的问题
+        if event.type() == QEvent.Type.WindowStateChange:   # 判断是否为窗口事件（图标改变也算）
+            if self.isMaximized():  # 判断是否最大化
+                self.max_btn.setIcon(self.restore_icon) # 最大化则修改图标为回复
+            else:
+                self.max_btn.setIcon(self.max_icon) # 非最大化则修改图标为最大化
 
 
 
-        # 强制窗口重新绘制
-        # SWP_NOMOVE保持窗口当前位置不变，忽略 SetWindowPos 函数中传入的 x 和 y 坐标参数。
-        # SWP_NOSIZE保持窗口当前尺寸不变，忽略 SetWindowPos 函数中传入的 cx 和 cy（宽度和高度）参数。
-        # SWP_FRAMECHANGED强制窗口重新计算非客户区（Non-Client Area，如标题栏、边框等）
-        # WVR_REDRAW    标志确保窗口正确重绘
-        win32gui.SetWindowPos(self.hwnd,
-                              win32con.HWND_TOP,
-                              0, 0, 0, 0,
-                              win32con.SWP_NOMOVE |
-                              win32con.SWP_NOSIZE |
-                              win32con.SWP_FRAMECHANGED |
-                              win32con.WVR_REDRAW)
+    def mousePressEvent(self, event):
+        # 记录鼠标按下的初始位置
+        self.offset = event.pos()   # 记录偏移位置
 
-    """重写拖拽功能"""
-    def moveWindow(self):
-        win32gui.ReleaseCapture()
-        win32api.SendMessage(
-            self.hwnd, win32con.WM_SYSCOMMAND, win32con.SC_MOVE + win32con.HTCAPTION, 0
-        )
+    def mouseMoveEvent(self, event):
+        # 移动窗口位置
+        if event.buttons() == Qt.MouseButton.LeftButton:    # 左击
+            self.move(self.pos() + event.pos() - self.offset)
 
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)  # 管理控制事件流和设置(sys.argv控制台接收参数)
-    window = FramelessWindow()
+    window = FramelessWindow("1", "2")
     window.show()
     sys.exit(app.exec())  # 安全退出界面任务
+

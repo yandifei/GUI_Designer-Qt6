@@ -9,32 +9,35 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 
-class Ui_FramelessWindow(object):
-    def setupUi(self, FramelessWindow):
-        FramelessWindow.setObjectName("FramelessWindow")
-        FramelessWindow.resize(1280, 720)
-        FramelessWindow.setMouseTracking(True)
-        self.verticalLayout = QtWidgets.QVBoxLayout(FramelessWindow)
+class Ui_Arisu(object):
+    def setupUi(self, Arisu):
+        Arisu.setObjectName("Arisu")
+        Arisu.resize(1280, 720)
+        Arisu.setMouseTracking(True)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Arisu)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.TitleBar = QtWidgets.QGridLayout()
         self.TitleBar.setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetNoConstraint)
-        self.TitleBar.setContentsMargins(10, -1, -1, -1)
+        self.TitleBar.setContentsMargins(0, -1, -1, -1)
         self.TitleBar.setSpacing(0)
         self.TitleBar.setObjectName("TitleBar")
         self.TitleLayout = QtWidgets.QHBoxLayout()
         self.TitleLayout.setContentsMargins(5, 5, 0, -1)
         self.TitleLayout.setSpacing(0)
         self.TitleLayout.setObjectName("TitleLayout")
-        self.LabelPic = QtWidgets.QLabel(parent=FramelessWindow)
-        self.LabelPic.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.LabelPic.setText("")
-        self.LabelPic.setPixmap(QtGui.QPixmap(":/Logo/Logo/32.ico"))
-        self.LabelPic.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify|QtCore.Qt.AlignmentFlag.AlignVCenter)
-        self.LabelPic.setObjectName("LabelPic")
-        self.TitleLayout.addWidget(self.LabelPic)
-        self.SoftwareName = QtWidgets.QLabel(parent=FramelessWindow)
+        self.Logo = QtWidgets.QLabel(parent=Arisu)
+        self.Logo.setMouseTracking(False)
+        self.Logo.setTabletTracking(False)
+        self.Logo.setAcceptDrops(False)
+        self.Logo.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        self.Logo.setText("")
+        self.Logo.setPixmap(QtGui.QPixmap(":/Logo/Logo/32.ico"))
+        self.Logo.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify|QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.Logo.setObjectName("Logo")
+        self.TitleLayout.addWidget(self.Logo)
+        self.SoftwareName = QtWidgets.QLabel(parent=Arisu)
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(14)
@@ -52,10 +55,10 @@ class Ui_FramelessWindow(object):
         self.WindowControlButtons = QtWidgets.QHBoxLayout()
         self.WindowControlButtons.setSpacing(0)
         self.WindowControlButtons.setObjectName("WindowControlButtons")
-        self.HideToWindow = QtWidgets.QPushButton(parent=FramelessWindow)
-        self.HideToWindow.setMouseTracking(True)
-        self.HideToWindow.setWhatsThis("")
-        self.HideToWindow.setStyleSheet("QPushButton {\n"
+        self.hide_btn = QtWidgets.QPushButton(parent=Arisu)
+        self.hide_btn.setMouseTracking(True)
+        self.hide_btn.setWhatsThis("")
+        self.hide_btn.setStyleSheet("QPushButton {\n"
 "    background: transparent;  /* 透明背景 */\n"
 "    border: none;            /* 移除默认边框 */\n"
 "}\n"
@@ -67,17 +70,17 @@ class Ui_FramelessWindow(object):
 "QPushButton:pressed {\n"
 "    background: rgb(199, 64, 49);\n"
 "}")
-        self.HideToWindow.setText("")
+        self.hide_btn.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/深度隐藏.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.HideToWindow.setIcon(icon)
-        self.HideToWindow.setIconSize(QtCore.QSize(40, 30))
-        self.HideToWindow.setObjectName("HideToWindow")
-        self.WindowControlButtons.addWidget(self.HideToWindow)
-        self.SystemTray = QtWidgets.QPushButton(parent=FramelessWindow)
-        self.SystemTray.setMouseTracking(True)
-        self.SystemTray.setStatusTip("")
-        self.SystemTray.setStyleSheet("QPushButton {\n"
+        self.hide_btn.setIcon(icon)
+        self.hide_btn.setIconSize(QtCore.QSize(40, 30))
+        self.hide_btn.setObjectName("hide_btn")
+        self.WindowControlButtons.addWidget(self.hide_btn)
+        self.min_system_tray_btn = QtWidgets.QPushButton(parent=Arisu)
+        self.min_system_tray_btn.setMouseTracking(True)
+        self.min_system_tray_btn.setStatusTip("")
+        self.min_system_tray_btn.setStyleSheet("QPushButton {\n"
 "    background: transparent;  /* 透明背景 */\n"
 "    border: none;            /* 移除默认边框 */\n"
 "}\n"
@@ -89,16 +92,37 @@ class Ui_FramelessWindow(object):
 "QPushButton:pressed {\n"
 "    background: rgb(213, 213, 213);\n"
 "}")
-        self.SystemTray.setText("")
+        self.min_system_tray_btn.setText("")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/托盘隐藏.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.SystemTray.setIcon(icon1)
-        self.SystemTray.setIconSize(QtCore.QSize(40, 30))
-        self.SystemTray.setObjectName("SystemTray")
-        self.WindowControlButtons.addWidget(self.SystemTray)
-        self.Min = QtWidgets.QPushButton(parent=FramelessWindow)
-        self.Min.setMouseTracking(True)
-        self.Min.setStyleSheet("QPushButton {\n"
+        self.min_system_tray_btn.setIcon(icon1)
+        self.min_system_tray_btn.setIconSize(QtCore.QSize(40, 30))
+        self.min_system_tray_btn.setObjectName("min_system_tray_btn")
+        self.WindowControlButtons.addWidget(self.min_system_tray_btn)
+        self.top_btn = QtWidgets.QPushButton(parent=Arisu)
+        self.top_btn.setMouseTracking(True)
+        self.top_btn.setStyleSheet("QPushButton {\n"
+"    background: transparent;  /* 透明背景 */\n"
+"    border:  transparent;            /* 移除默认边框 */\n"
+"}\n"
+"/* 悬停状态 */\n"
+"QPushButton:hover {\n"
+"    background: rgb(233, 233, 233); /* 轻微高亮 */\n"
+"}\n"
+"/* 按下状态 */\n"
+"QPushButton:pressed {\n"
+"    background: rgb(213, 213, 213);\n"
+"}")
+        self.top_btn.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/窗口置顶.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.top_btn.setIcon(icon2)
+        self.top_btn.setIconSize(QtCore.QSize(40, 30))
+        self.top_btn.setObjectName("top_btn")
+        self.WindowControlButtons.addWidget(self.top_btn)
+        self.min_btn = QtWidgets.QPushButton(parent=Arisu)
+        self.min_btn.setMouseTracking(True)
+        self.min_btn.setStyleSheet("QPushButton {\n"
 "    background: transparent;  /* 透明背景 */\n"
 "    border: none;            /* 移除默认边框 */\n"
 "}\n"
@@ -110,19 +134,18 @@ class Ui_FramelessWindow(object):
 "QPushButton:pressed {\n"
 "    background: rgb(213, 213, 213);\n"
 "}")
-        self.Min.setText("")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/最小化.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.Min.setIcon(icon2)
-        self.Min.setIconSize(QtCore.QSize(40, 30))
-        self.Min.setObjectName("Min")
-        self.WindowControlButtons.addWidget(self.Min)
-        self.MaxOrRestore = QtWidgets.QPushButton(parent=FramelessWindow)
-        self.MaxOrRestore.setMouseTracking(True)
-        self.MaxOrRestore.setStyleSheet("QPushButton {\n"
+        self.min_btn.setText("")
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/最小化.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.min_btn.setIcon(icon3)
+        self.min_btn.setIconSize(QtCore.QSize(40, 30))
+        self.min_btn.setObjectName("min_btn")
+        self.WindowControlButtons.addWidget(self.min_btn)
+        self.max_btn = QtWidgets.QPushButton(parent=Arisu)
+        self.max_btn.setMouseTracking(True)
+        self.max_btn.setStyleSheet("QPushButton {\n"
 "    background: transparent;  /* 透明背景 */\n"
 "    border: none;            /* 移除默认边框 */\n"
-"    icon: url(:/标题栏/标题栏/最大化.png); /*最大化图标*/\n"
 "}\n"
 "/* 悬停状态 */\n"
 "QPushButton:hover {\n"
@@ -132,23 +155,19 @@ class Ui_FramelessWindow(object):
 "QPushButton:pressed {\n"
 "    background: rgb(213, 213, 213);\n"
 "}\n"
-"/* 选中状态显示*/\n"
-"QPushButton:checked {\n"
-"    icon: url(:/标题栏/标题栏/窗口恢复.png);    /*恢复图标*/\n"
-"}\n"
 "")
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/最大化.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.MaxOrRestore.setIcon(icon3)
-        self.MaxOrRestore.setIconSize(QtCore.QSize(40, 30))
-        self.MaxOrRestore.setCheckable(True)
-        self.MaxOrRestore.setChecked(False)
-        self.MaxOrRestore.setAutoRepeat(False)
-        self.MaxOrRestore.setObjectName("MaxOrRestore")
-        self.WindowControlButtons.addWidget(self.MaxOrRestore)
-        self.Close = QtWidgets.QPushButton(parent=FramelessWindow)
-        self.Close.setMouseTracking(True)
-        self.Close.setStyleSheet("QPushButton {\n"
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/最大化.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.max_btn.setIcon(icon4)
+        self.max_btn.setIconSize(QtCore.QSize(40, 30))
+        self.max_btn.setCheckable(True)
+        self.max_btn.setChecked(False)
+        self.max_btn.setAutoRepeat(False)
+        self.max_btn.setObjectName("max_btn")
+        self.WindowControlButtons.addWidget(self.max_btn)
+        self.close_btn = QtWidgets.QPushButton(parent=Arisu)
+        self.close_btn.setMouseTracking(True)
+        self.close_btn.setStyleSheet("QPushButton {\n"
 "    background: transparent;  /* 透明背景 */\n"
 "    border:  transparent;            /* 移除默认边框 */\n"
 "}\n"
@@ -161,17 +180,18 @@ class Ui_FramelessWindow(object):
 "    background: rgb(199, 64, 49);\n"
 "}\n"
 "")
-        self.Close.setText("")
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/关闭.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.Close.setIcon(icon4)
-        self.Close.setIconSize(QtCore.QSize(40, 30))
-        self.Close.setObjectName("Close")
-        self.WindowControlButtons.addWidget(self.Close)
+        self.close_btn.setText("")
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/标题栏/标题栏/关闭.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.close_btn.setIcon(icon5)
+        self.close_btn.setIconSize(QtCore.QSize(40, 30))
+        self.close_btn.setObjectName("close_btn")
+        self.WindowControlButtons.addWidget(self.close_btn)
         self.TitleBar.addLayout(self.WindowControlButtons, 0, 1, 1, 1)
         self.verticalLayout.addLayout(self.TitleBar)
-        self.tabWidget = QtWidgets.QTabWidget(parent=FramelessWindow)
+        self.tabWidget = QtWidgets.QTabWidget(parent=Arisu)
         self.tabWidget.setMouseTracking(False)
+        self.tabWidget.setAcceptDrops(False)
         self.tabWidget.setToolTip("")
         self.tabWidget.setWhatsThis("")
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.TabPosition.North)
@@ -183,66 +203,53 @@ class Ui_FramelessWindow(object):
         self.tabWidget.setObjectName("tabWidget")
         self.Home = QtWidgets.QWidget()
         self.Home.setObjectName("Home")
-        self.gridLayout = QtWidgets.QGridLayout(self.Home)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout.setSpacing(0)
-        self.gridLayout.setObjectName("gridLayout")
-        self.widget = QtWidgets.QWidget(parent=self.Home)
-        self.widget.setMaximumSize(QtCore.QSize(1000, 387))
-        self.widget.setStyleSheet("background-image: url(:/主页/守岸人.png);")
-        self.widget.setObjectName("widget")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget)
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_3.setSpacing(0)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
-        self.gridLayout.setRowStretch(0, 10)
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/导航栏/主页.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.tabWidget.addTab(self.Home, icon5, "")
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/导航栏/主页.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.tabWidget.addTab(self.Home, icon6, "")
         self.Cost = QtWidgets.QWidget()
         self.Cost.setObjectName("Cost")
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/导航栏/4C声骇.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.tabWidget.addTab(self.Cost, icon6, "")
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/导航栏/4C声骇.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.tabWidget.addTab(self.Cost, icon7, "")
         self.StatusMonitor = QtWidgets.QWidget()
         self.StatusMonitor.setObjectName("StatusMonitor")
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/导航栏/状态监控.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.tabWidget.addTab(self.StatusMonitor, icon7, "")
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(":/导航栏/状态监控.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.tabWidget.addTab(self.StatusMonitor, icon8, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/导航栏/快捷键.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.tabWidget.addTab(self.tab_2, icon8, "")
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap(":/导航栏/快捷键.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.tabWidget.addTab(self.tab_2, icon9, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/导航栏/问题链接.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.tabWidget.addTab(self.tab_3, icon9, "")
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap(":/导航栏/问题链接.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.tabWidget.addTab(self.tab_3, icon10, "")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(":/导航栏/用户设置.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.tabWidget.addTab(self.tab, icon10, "")
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(":/导航栏/用户设置.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.tabWidget.addTab(self.tab, icon11, "")
         self.verticalLayout.addWidget(self.tabWidget)
 
-        self.retranslateUi(FramelessWindow)
-        self.tabWidget.setCurrentIndex(2)
-        QtCore.QMetaObject.connectSlotsByName(FramelessWindow)
+        self.retranslateUi(Arisu)
+        self.tabWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(Arisu)
 
-    def retranslateUi(self, FramelessWindow):
+    def retranslateUi(self, Arisu):
         _translate = QtCore.QCoreApplication.translate
-        FramelessWindow.setWindowTitle(_translate("FramelessWindow", "Form"))
-        self.SoftwareName.setText(_translate("FramelessWindow", "爱丽丝QQ聊天AI 1.0.0"))
-        self.HideToWindow.setToolTip(_translate("FramelessWindow", "深度隐藏（去任务管理器找）"))
-        self.SystemTray.setToolTip(_translate("FramelessWindow", "托盘隐藏"))
-        self.Min.setToolTip(_translate("FramelessWindow", "最小化"))
-        self.MaxOrRestore.setToolTip(_translate("FramelessWindow", "最大化/恢复"))
-        self.Close.setToolTip(_translate("FramelessWindow", "关闭"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.Home), _translate("FramelessWindow", "主页"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.Cost), _translate("FramelessWindow", "4C声骇"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.StatusMonitor), _translate("FramelessWindow", "状态监测"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_2), _translate("FramelessWindow", "快捷键"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_3), _translate("FramelessWindow", "问题链接"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab), _translate("FramelessWindow", "用户设置"))
+        Arisu.setWindowTitle(_translate("Arisu", "Form"))
+        self.SoftwareName.setText(_translate("Arisu", "爱丽丝QQ聊天AI 1.0.0"))
+        self.hide_btn.setToolTip(_translate("Arisu", "深度隐藏（去任务管理器找）"))
+        self.min_system_tray_btn.setToolTip(_translate("Arisu", "托盘隐藏"))
+        self.top_btn.setToolTip(_translate("Arisu", "窗口置顶"))
+        self.min_btn.setToolTip(_translate("Arisu", "最小化"))
+        self.max_btn.setToolTip(_translate("Arisu", "最大化/恢复"))
+        self.close_btn.setToolTip(_translate("Arisu", "关闭"))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.Home), _translate("Arisu", "主页"))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.Cost), _translate("Arisu", "4C声骇"))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.StatusMonitor), _translate("Arisu", "状态监测"))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_2), _translate("Arisu", "快捷键"))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_3), _translate("Arisu", "问题链接"))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab), _translate("Arisu", "用户设置"))
