@@ -11,7 +11,7 @@ import win32con, win32gui   # 使用win32api
 from PyQt6.QtCore import Qt, QEvent, QPoint # Qt的核心类
 from PyQt6.uic import loadUi  # 加载ui文件或ui装py的文件
 from PyQt6.QtGui import QIcon   # 图标处理
-from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QWidget, QMainWindow
+from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget, QMainWindow
 from qframelesswindow import FramelessWindow as FramelessWindowWidget      # 导入FramelessWindow(无窗口类)
 # 自己的包
 from resources.Arisu import Ui_Arisu   # uic转后py文件
@@ -34,23 +34,25 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
         self.hwnd = int(self.winId())   # 拿到窗口句柄
         """预加载图标资源"""
         # 预加载图标资源
-        self.Logo = QIcon(":/Logo/Logo/256.ico")  # Logo图标
+        self.QLogo = QIcon(":/Logo/Logo/32.ico")  # QLogo图标
         self.max_icon = QIcon(":/标题栏/标题栏/最大化.png")  # 需要切换的图标
         self.restore_icon = QIcon(":/标题栏/标题栏/窗口恢复.png")  # 需要切换的图标
         """系统托盘(有个系统托盘按钮需要链接)"""
-        self.system_tray = QSystemTrayIcon(self.Logo,self)  # 创建系统托盘(self建立父子关系避免资源泄露) 和 设置系统托盘的图标
+        self.system_tray = QSystemTrayIcon(self.QLogo,self)  # 创建系统托盘(self建立父子关系避免资源泄露) 和 设置系统托盘的图标
         # 根据初始化参数来决定 隐藏系统托盘 还是 显示系统托盘
         self.system_tray.show() if self.show_system_tray else self.system_tray.hide()
-        # self.system_tray.setToolTip(self.SoftwareName.text())     # 设置悬浮提示为软件名
+        self.system_tray.setToolTip(self.SoftwareName.text())     # 设置悬浮提示为软件名
+        # self.system_tray.setContextMenu(QMenu)
         """窗口初始化(无边框和自定义按钮)"""
         self.setObjectName(class_name)  # 设置窗口类名(无效)
         # pass
         self.setWindowTitle(title)  # 设置窗口标题
-        self.setWindowIcon(self.Logo)   # 设置窗口图标
+        self.setWindowIcon(self.QLogo)   # 设置窗口图标
         self.move_center_window()   # 移动窗口的屏幕中间
         self.hide_frameless_window_buttons()   # 隐藏FramelessWindow自带的3个按钮控件
         self.link_buttons()  # 链接自己的按钮
-        self.offset = QPoint()      # 记录拖拽位置
+        self.Logo.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents) # 设置Logo为可穿透(为了能够拖拽)
+        self.SoftwareName.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)  # 设置标题栏名称为可穿透(为了能够拖拽)
 
     """窗口初始化"""
     def move_center_window(self):
@@ -80,10 +82,11 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
         self.max_btn.clicked.connect(self.titleBar.maxBtn.click)        # 最大化按钮(其实叫toggleMaximizeButton合适，有最大化和恢复功能)
         self.min_btn.clicked.connect(self.showMinimized)                # 最小化按钮
         self.top_btn.clicked.connect(self.switch_top)                   # 窗口置顶按钮
-        self.min_system_tray_btn.clicked.connect(self.min_system_tray)  # 最小化到系统托盘按钮
-        self.hide_btn.clicked.connect(self.hide)                        # 隐藏窗口按钮
+        # self.min_system_tray_btn.clicked.connect(self.min_system_tray)  # 最小化到系统托盘按钮（因为Qt系统托盘bug的问题直接去掉该按钮）
+        self.hide_btn.clicked.connect(self.hide_button_function)        # 隐藏窗口按钮(隐藏窗口和系统托盘)
         # 系统托盘
-        self.system_tray.activated.connect(self.hide)
+        self.system_tray.activated.connect(self.system_tray_click)      # 点击托盘触发的操作
+
 
     """其他按钮的功能方法"""
     def switch_top(self):
@@ -94,13 +97,33 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
         else:   # 如果窗口没有置顶则置顶窗口
             win32gui.SetWindowPos(self.hwnd,win32con.HWND_TOPMOST,0, 0, 0, 0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
 
-    def min_system_tray(self):
-        """窗口最小化到系统托盘"""
-        self.system_tray.show()     # 显示系统托盘
-        self.hide()                 # 隐藏窗口
+    # def min_system_tray(self):
+    #     """窗口最小化到系统托盘"""
+    #     self.hide()                 # 隐藏窗口
+    #     self.system_tray.show()     # 展示系统托盘
 
-    def system_tray_function(self, signal):
-        print(1)
+    def hide_button_function(self):
+        """实现隐藏按钮的功能"""
+        self.hide() # 隐藏窗口
+        self.system_tray.hide() # 隐藏系统托盘
+
+
+    """系统托盘信号处理"""
+    def system_tray_click(self, signal):
+        """ 处理托盘图标点击事件 """
+        if signal == QSystemTrayIcon.ActivationReason.Trigger:# 点击系统托盘(取名Trigger是因为在不同系统有不同的操作)
+            # if not self.show_system_tray:   # 初始化时是不展示系统托盘（展示界面，隐藏系统托盘）
+            #     self.system_tray.show()       # 因为bug所以不搞了
+            self.showNormal()  # 恢复窗口（show在窗口最小化是没用）
+        elif signal == QSystemTrayIcon.ActivationReason.Context:
+            print("右键单击")
+        elif signal == QSystemTrayIcon.ActivationReason.DoubleClick:
+            print("双击")
+        elif signal == QSystemTrayIcon.ActivationReason.MiddleClick:
+            print("中键单击")
+
+
+
 
 
     """无边框窗口事件重写"""
@@ -118,20 +141,11 @@ class FramelessWindow(Ui_Arisu, FramelessWindowWidget):
 
 
 
-    def mousePressEvent(self, event):
-        # 记录鼠标按下的初始位置
-        self.offset = event.pos()   # 记录偏移位置
-
-    def mouseMoveEvent(self, event):
-        # 移动窗口位置
-        if event.buttons() == Qt.MouseButton.LeftButton:    # 左击
-            self.move(self.pos() + event.pos() - self.offset)
-
-
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)  # 管理控制事件流和设置(sys.argv控制台接收参数)
-    window = FramelessWindow("1", "2")
+    # QApplication.processEvents()  # 强制Qt处理事件队列
+    window = FramelessWindow("1", "2", False)
     window.show()
+
     sys.exit(app.exec())  # 安全退出界面任务
 
