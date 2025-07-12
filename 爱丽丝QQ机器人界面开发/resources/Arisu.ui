@@ -22,7 +22,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(240, 244, 249);</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -383,6 +386,12 @@ QPushButton:pressed {
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="sizeIncrement">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="mouseTracking">
       <bool>false</bool>
      </property>
@@ -398,42 +407,65 @@ QPushButton:pressed {
      <property name="whatsThis">
       <string/>
      </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
      <property name="styleSheet">
-      <string notr="true">QTabWidget::pane {
-    border: transparent; /* 可选：transparent移除边框 */
-    background-image: url(:/背景/背景/爱丽丝2.png); /* 使用资源文件中的图片 */
-    background-repeat: no-repeat;		/*禁止重复*/
-    background-position: center;	/*居中显示*/
-    background-size:100% ; /* cover自适应拉伸填充    100% 100%完全拉伸（可能变形） */
+      <string notr="true">/* 设置选项卡最小/最大尺寸 */
+QTabBar::tab {
+	border-right:  1px solid rgb(226, 230, 234);  /* 右边框显示颜色 */
+	border-top-left-radius: 10px;    /* 左上角圆角半径 */
+	border-bottom-right-radius: 0px; /* 右下角直角 */
+	min-width: 70px;  /* 最小宽度 */
+	min-height: 50px;  /* 最小高度 */
+}
+
+/* 悬停状态 */
+QTabBar::tab:hover {
+    background:rgb(170, 255, 255);
+	border-radius: 10px;		/*圆角*/
+}
+
+/* 选中状态 */
+QTabBar::tab:selected {
+	border-top-right-radius: 10px;   /* 右上角圆角半径 */
+	border-bottom-left-radius: 0px;  /* 左下角直角 */
+	border-bottom-right-radius: 0px; /* 右下角直角 */
+	background-color: rgb(232, 235, 240);
+    color: white;             /* 选中文字色 */
+    border-bottom: 10px solid rgb(85, 255, 255); /* 底部指示条 */
 }</string>
      </property>
      <property name="tabPosition">
-      <enum>QTabWidget::TabPosition::North</enum>
+      <enum>QTabWidget::TabPosition::West</enum>
      </property>
      <property name="tabShape">
       <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="iconSize">
       <size>
-       <width>30</width>
-       <height>30</height>
+       <width>40</width>
+       <height>40</height>
       </size>
+     </property>
+     <property name="usesScrollButtons">
+      <bool>false</bool>
      </property>
      <property name="documentMode">
       <bool>false</bool>
      </property>
      <property name="movable">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="tabBarAutoHide">
       <bool>false</bool>
      </property>
      <widget class="QWidget" name="Home">
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">transform: rotate(0deg);	/* 强制文本水平显示 */</string>
       </property>
       <attribute name="icon">
        <iconset resource="resources.qrc">
@@ -458,10 +490,10 @@ QPushButton:pressed {
        <string>状态监测</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="Hotkey">
+     <widget class="QWidget" name="widget">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/选项卡图标/选项卡图标/快捷键.png</normaloff>:/选项卡图标/选项卡图标/快捷键.png</iconset>
+        <normaloff>:/选项卡图标/选项卡图标/热键.png</normaloff>:/选项卡图标/选项卡图标/热键.png</iconset>
       </attribute>
       <attribute name="title">
        <string/>
@@ -481,6 +513,60 @@ QPushButton:pressed {
       <attribute name="toolTip">
        <string>问题链接</string>
       </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="QuestionLinksBackground">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>黑体</family>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
+         <property name="acceptDrops">
+          <bool>false</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel {
+	border-radius: 10px;		/*圆角*/
+		border: none;			/*无边框*/
+}</string>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="resources.qrc">:/背景/背景/满充能.jpg</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="Settings">
       <attribute name="icon">
@@ -491,7 +577,7 @@ QPushButton:pressed {
        <string/>
       </attribute>
       <attribute name="toolTip">
-       <string>用户设计</string>
+       <string>用户设置</string>
       </attribute>
      </widget>
     </widget>

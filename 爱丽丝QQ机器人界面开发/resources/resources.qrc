@@ -9,7 +9,7 @@
     <file>标题栏/最小化.png</file>
   </qresource>
   <qresource prefix="选项卡图标">
-    <file>选项卡图标/快捷键.png</file>
+    <file>选项卡图标/热键.png</file>
     <file>选项卡图标/问题链接.png</file>
     <file>选项卡图标/用户设置.png</file>
     <file>选项卡图标/主页.png</file>

@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Arisu</class>
+ <widget class="QWidget" name="Arisu">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,15">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="TitleBar">
+     <property name="sizeConstraint">
+      <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0" rowspan="2">
+      <layout class="QHBoxLayout" name="TitleLayout" stretch="0,0,0">
+       <property name="spacing">
+        <number>5</number>
+       </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="Logo">
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="tabletTracking">
+          <bool>false</bool>
+         </property>
+         <property name="acceptDrops">
+          <bool>false</bool>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::NoFrame</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="resources.qrc">:/Logo/Logo/32.ico</pixmap>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="SoftwareName">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>14</pointsize>
+           <italic>false</italic>
+           <bold>true</bold>
+           <underline>false</underline>
+           <strikeout>false</strikeout>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="tabletTracking">
+          <bool>false</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>爱丽丝QQ聊天AI 1.0.0</string>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="TitleSpace">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="WindowControlButtons">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="hide_btn">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>深度隐藏（去任务管理器找）</string>
+         </property>
+         <property name="whatsThis">
+          <string/>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border: none;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/标题栏/标题栏/深度隐藏.png</normaloff>:/标题栏/标题栏/深度隐藏.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="min_system_tray_btn">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>隐藏到托盘</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border:  transparent;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/标题栏/标题栏/托盘隐藏.png</normaloff>:/标题栏/标题栏/托盘隐藏.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="top_btn">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>窗口置顶</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border:  transparent;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/标题栏/标题栏/窗口置顶.png</normaloff>:/标题栏/标题栏/窗口置顶.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="min_btn">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>最小化</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border: none;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/标题栏/标题栏/最小化.png</normaloff>:/标题栏/标题栏/最小化.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="max_btn">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>最大化/恢复</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border: none;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}
+</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/标题栏/标题栏/最大化.png</normaloff>:/标题栏/标题栏/最大化.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <property name="autoRepeat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="close_btn">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>关闭</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border:  transparent;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(196, 43, 28); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(199, 64, 49);
+}
+</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/标题栏/标题栏/关闭.png</normaloff>:/标题栏/标题栏/关闭.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="Main_horizontalLayout" stretch="0,1">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="NavigationBar" stretch="0,0,0,0,0,0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>10</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="Home">
+         <property name="toolTip">
+          <string>主页</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: none;          /* 移除所有默认边框 */
+    border-left: 4px solid #3498db;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/主页.png</normaloff>:/选项卡图标/选项卡图标/主页.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="StateMonitor">
+         <property name="toolTip">
+          <string>状态监测</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/状态监控.png</normaloff>:/选项卡图标/选项卡图标/状态监控.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Hotkey">
+         <property name="toolTip">
+          <string>热键</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/快捷键.png</normaloff>:/选项卡图标/选项卡图标/快捷键.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Sapce">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="toolTip">
+          <string>相关链接</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/问题链接.png</normaloff>:/选项卡图标/选项卡图标/问题链接.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Settings">
+         <property name="toolTip">
+          <string>用户设置</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/用户设置.png</normaloff>:/选项卡图标/选项卡图标/用户设置.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QWidget" name="Selections" native="true">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(170, 255, 255);
+border-radius: 8px;		/*圆角*/</string>
+       </property>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="geometry">
+         <rect>
+          <x>370</x>
+          <y>90</y>
+          <width>431</width>
+          <height>491</height>
+         </rect>
+        </property>
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="tabletTracking">
+         <bool>false</bool>
+        </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string/>
+        </property>
+        <property name="whatsThis">
+         <string/>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QTabWidget::pane {
+    border: transparent; /* 可选：transparent移除边框 */
+    background-image: url(:/背景/背景/爱丽丝2.png); /* 使用资源文件中的图片 */
+    background-repeat: no-repeat;		/*禁止重复*/
+    background-position: center;	/*居中显示*/
+    background-size:100% ; /* cover自适应拉伸填充    100% 100%完全拉伸（可能变形） */
+}</string>
+        </property>
+        <property name="tabPosition">
+         <enum>QTabWidget::TabPosition::West</enum>
+        </property>
+        <property name="tabShape">
+         <enum>QTabWidget::TabShape::Rounded</enum>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="documentMode">
+         <bool>false</bool>
+        </property>
+        <property name="movable">
+         <bool>false</bool>
+        </property>
+        <property name="tabBarAutoHide">
+         <bool>false</bool>
+        </property>
+        <widget class="QWidget" name="Home_2">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/主页.png</normaloff>:/选项卡图标/选项卡图标/主页.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string/>
+         </attribute>
+         <attribute name="toolTip">
+          <string>主页</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="StateMonitor_2">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/状态监控.png</normaloff>:/选项卡图标/选项卡图标/状态监控.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string/>
+         </attribute>
+         <attribute name="toolTip">
+          <string>状态监测</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="Hotkey_2">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/快捷键.png</normaloff>:/选项卡图标/选项卡图标/快捷键.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string/>
+         </attribute>
+         <attribute name="toolTip">
+          <string>快捷键</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="QuestionLinks">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/问题链接.png</normaloff>:/选项卡图标/选项卡图标/问题链接.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string/>
+         </attribute>
+         <attribute name="toolTip">
+          <string>问题链接</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="Settings_2">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/选项卡图标/选项卡图标/用户设置.png</normaloff>:/选项卡图标/选项卡图标/用户设置.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string/>
+         </attribute>
+         <attribute name="toolTip">
+          <string>用户设置</string>
+         </attribute>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>Home</sender>
+   <signal>clicked()</signal>
+   <receiver>Selections</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>24</x>
+     <y>89</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>94</x>
+     <y>86</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
