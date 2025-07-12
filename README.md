@@ -1,4 +1,4 @@
-# GUI_Designer-Qt6-
+# PyQt6无边框
 ***这是是适用所有的系统，但是在左上角和左边上边的拖拽是存在小问题的，2025.2.25我找到了利用winapi解决这个问题，有空再写一篇文章吧（win系统下完美解决去标题栏的问题）***
 PyQt6自定义标题栏，拖拽、双击放大和复原、边缘拉伸、圆角、窗口贴边功能
 使用的是PyQt6最新版，Python是3.9版本（源码能用就行，版本没必要遵守）
@@ -38,3 +38,8 @@ Qtdesigner如果设置了最右上角有UI按钮（其他控件没测）的话�
 from qframelesswindow import FramelessWindow
 ```
 保留了原生窗口拖拽拉伸和窗口贴边布局功能。
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6/blob/7100d92b771949332d06be0d4abc863dcceae9f2/UI%E5%9B%BE%E7%89%87/%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B01.png)
+
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6/blob/7100d92b771949332d06be0d4abc863dcceae9f2/UI%E5%9B%BE%E7%89%87/%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B02.png)
+
+![图片展示](https://github.com/yandifei/GUI_Designer-Qt6/blob/7100d92b771949332d06be0d4abc863dcceae9f2/UI%E5%9B%BE%E7%89%87/%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B03.png)
