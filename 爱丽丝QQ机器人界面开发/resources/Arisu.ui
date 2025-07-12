@@ -41,7 +41,7 @@
    <item>
     <layout class="QGridLayout" name="TitleBar">
      <property name="sizeConstraint">
-      <enum>QLayout::SetNoConstraint</enum>
+      <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
      </property>
      <property name="leftMargin">
       <number>0</number>
@@ -78,7 +78,7 @@
           <bool>false</bool>
          </property>
          <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+          <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="text">
           <string/>
@@ -87,7 +87,7 @@
           <pixmap resource="resources.qrc">:/Logo/Logo/32.ico</pixmap>
          </property>
          <property name="alignment">
-          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+          <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -127,7 +127,7 @@
        <item>
         <spacer name="TitleSpace">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -175,6 +175,43 @@ QPushButton:pressed {
          <property name="icon">
           <iconset resource="resources.qrc">
            <normaloff>:/标题栏/标题栏/深度隐藏.png</normaloff>:/标题栏/标题栏/深度隐藏.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="min_system_tray_btn">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>隐藏到托盘</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background: transparent;  /* 透明背景 */
+    border:  transparent;            /* 移除默认边框 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: rgb(233, 233, 233); /* 轻微高亮 */
+}
+/* 按下状态 */
+QPushButton:pressed {
+    background: rgb(213, 213, 213);
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/标题栏/标题栏/托盘隐藏.png</normaloff>:/标题栏/标题栏/托盘隐藏.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -371,10 +408,10 @@ QPushButton:pressed {
 }</string>
      </property>
      <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
+      <enum>QTabWidget::TabPosition::North</enum>
      </property>
      <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
+      <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
       <number>0</number>
@@ -395,6 +432,9 @@ QPushButton:pressed {
       <bool>false</bool>
      </property>
      <widget class="QWidget" name="Home">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <attribute name="icon">
        <iconset resource="resources.qrc">
         <normaloff>:/选项卡图标/选项卡图标/主页.png</normaloff>:/选项卡图标/选项卡图标/主页.png</iconset>
@@ -406,7 +446,7 @@ QPushButton:pressed {
        <string>主页</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="Cost">
+     <widget class="QWidget" name="StateMonitor">
       <attribute name="icon">
        <iconset resource="resources.qrc">
         <normaloff>:/选项卡图标/选项卡图标/状态监控.png</normaloff>:/选项卡图标/选项卡图标/状态监控.png</iconset>
@@ -418,7 +458,7 @@ QPushButton:pressed {
        <string>状态监测</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="StatusMonitor">
+     <widget class="QWidget" name="Hotkey">
       <attribute name="icon">
        <iconset resource="resources.qrc">
         <normaloff>:/选项卡图标/选项卡图标/快捷键.png</normaloff>:/选项卡图标/选项卡图标/快捷键.png</iconset>
@@ -430,7 +470,7 @@ QPushButton:pressed {
        <string>快捷键</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="QuestionLinks">
       <attribute name="icon">
        <iconset resource="resources.qrc">
         <normaloff>:/选项卡图标/选项卡图标/问题链接.png</normaloff>:/选项卡图标/选项卡图标/问题链接.png</iconset>
@@ -442,7 +482,7 @@ QPushButton:pressed {
        <string>问题链接</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="Settings">
       <attribute name="icon">
        <iconset resource="resources.qrc">
         <normaloff>:/选项卡图标/选项卡图标/用户设置.png</normaloff>:/选项卡图标/选项卡图标/用户设置.png</iconset>
