@@ -467,7 +467,7 @@ QTabBar::tab:selected {
       <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <property name="iconSize">
       <size>
@@ -1816,7 +1816,7 @@ QScrollBar::sub-page:vertical, {
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-144</y>
+            <y>0</y>
             <width>1047</width>
             <height>677</height>
            </rect>

@@ -999,7 +999,7 @@ class Ui_Arisu(object):
         self.HotkeySelections.setWidgetResizable(True)
         self.HotkeySelections.setObjectName("HotkeySelections")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -144, 1047, 677))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1047, 677))
         self.scrollAreaWidgetContents.setMinimumSize(QtCore.QSize(0, 0))
         self.scrollAreaWidgetContents.setStyleSheet("/*可视窗口背景*/\n"
 "QWidget {\n"
@@ -1997,7 +1997,7 @@ class Ui_Arisu(object):
         self.verticalLayout.addWidget(self.ModeWidget)
 
         self.retranslateUi(Arisu)
-        self.ModeWidget.setCurrentIndex(0)
+        self.ModeWidget.setCurrentIndex(4)
         self.StateTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Arisu)
 
