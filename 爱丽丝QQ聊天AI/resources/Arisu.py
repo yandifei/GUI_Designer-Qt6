@@ -1997,7 +1997,7 @@ class Ui_Arisu(object):
         self.verticalLayout.addWidget(self.ModeWidget)
 
         self.retranslateUi(Arisu)
-        self.ModeWidget.setCurrentIndex(4)
+        self.ModeWidget.setCurrentIndex(0)
         self.StateTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Arisu)
 

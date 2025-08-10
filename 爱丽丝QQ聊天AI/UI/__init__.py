@@ -3,6 +3,8 @@
 包含全局配置和包导入优化
 """
 __author__ = "yandifei"
+__name__ = "爱丽丝QQ聊天AI"
+__version__ = "1.0.0"
 # 核心模块的快捷导入路径
 from .ExtendedUI import ArisuUI
 from .arisu_qq_chat_ai_ui import ArisuQQCHatAIUI

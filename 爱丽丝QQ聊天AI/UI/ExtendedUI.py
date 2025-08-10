@@ -15,11 +15,12 @@ from PyQt6.QtGui import QDesktopServices, QShortcut, QKeySequence               
 from PyQt6.QtMultimedia import QMediaPlayer                                                 # 视频播放器
 from PyQt6.QtWidgets import QApplication, QMessageBox, QGroupBox, QVBoxLayout, QTextBrowser # 界面处理类
 # 自己的包
+from UI import __version__                                                                  # 从包里面拿到最新版本
 try:  # 实际环境使用
-    from .functions import OutputRedirection, clear_temp, InputRedirection                  # 导入非UI功能函数
+    from .functions import OutputRedirection, clear_temp, InputRedirection,uninstall_program# 导入非UI功能函数
     from .arisu_qq_chat_ai_ui import ArisuQQCHatAIUI                                        # 基础框架的类
 except (ModuleNotFoundError, ImportError):                                                  # 测试环境使用
-    from functions import OutputRedirection, clear_temp, InputRedirection                   # 导入非UI功能函数
+    from functions import OutputRedirection, clear_temp, InputRedirection,uninstall_program # 导入非UI功能函数
     from arisu_qq_chat_ai_ui import ArisuQQCHatAIUI                                         # 基础框架的类
     from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore                                  # 外部方法的类
     from deepseek_conversation_engine import DeepseekConversationEngine                     # AI对话
@@ -43,6 +44,8 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
         ui_file_path : "../resources/Arisu.ui"开发中ui文件的路径
         """
         super().__init__(title, show_system_tray, ui_file_path)  # 继承父类的属性和方法
+        # 设置软件的版本跟随包的版本
+        self.SoftwareName.setText(f"爱丽丝QQ聊天AI {__version__}")
         """终端输入输出重定向"""
         # 日志输出重定向
         log_output_redirection = OutputRedirection()  # 实例化输出重定向对象
@@ -932,6 +935,7 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
     def uninstall(self):
         """卸载操作（回收资源卸载软件本体和软件产生的文件）"""
         # 回收密钥(需要先判断密钥是否存在)
+        """
         if keyring.get_password("DEEPSEEK_API_KEY", "爱丽丝"):
             keyring.delete_password("DEEPSEEK_API_KEY", "爱丽丝")
             # print("已从系统密钥库删除密钥")
@@ -945,7 +949,12 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
         QTimer.singleShot(1000, clear_temp)  # 延迟1秒
         self.Uninstall.setText("施工中...")
         # 剩下的之后写
-        pass
+        """
+        uninstall_program() # 启动卸载程序
+        # 1秒后调用自我关闭
+        # QTimer.singleShot(1000, QApplication.exit)
+        QApplication.exit()  # 退出所有程序（释放所有Qt资源）
+
 
     """检查用户输入合法性的相关方法"""
 

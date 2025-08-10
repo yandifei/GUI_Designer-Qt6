@@ -126,13 +126,14 @@ class ArisuQQCHatAIUI(FramelessWindowWidget):
         #     print("中键单击")
 
     """无边框窗口按钮事件重写"""
-    def application_exit(self):
+    @staticmethod
+    def application_exit():
         """退出行为槽函数
         将来这里处理资源回收的工作
         """
         # self.hide() # 隐藏托盘窗口
         QApplication.exit() # 退出所有程序（释放所有Qt资源）
-        self.close()    # 关闭窗口释放当前的
+        # self.close()    # 关闭窗口释放当前的
 
     def switch_top(self):
         """窗口置顶切换"""

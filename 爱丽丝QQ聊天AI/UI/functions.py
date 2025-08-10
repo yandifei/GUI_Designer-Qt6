@@ -4,6 +4,8 @@
 # 系统库
 import os   # 系统库
 import re   # 正则库
+import subprocess
+import sys  # 系统库
 
 # 第三方库
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -182,6 +184,63 @@ def clear_temp():
             exception("缓存文件(动态壁纸MP4文件)删除失败，以下是错误信息:")
     return True if flag else False
 
+
+def uninstall_program():
+    """卸载程序"""
+    # 获取当前可执行文件路径（不用担心用户把软件的名改了）
+    exe_path = os.path.abspath(sys.argv[0])
+    # 当前目录路径（当前软件文件夹路径）
+    directory_path = os.getcwd()
+    # 通过环境变量获取Windows临时文件夹路径
+    temp_directory = os.environ.get("TEMP") or os.environ.get("TMP")
+    # 构建卸载文件bat的路径（放到temp目录中）
+    uninstall_bat_path = os.path.join(temp_directory, f"爱丽丝QQ聊天AI{os.getpid()}.bat")
+    # 卸载软件的代码
+    uninstall_code = f"""
+@echo off
+ping -n 2 127.0.0.1
+setlocal enabledelayedexpansion
+set max_wait=30
+set wait_count=0
+:check_process
+set process_name="爱丽丝QQ聊天Al.exe"
+:check_process
+tasklist /fi "imagename eq %process_name%" | findstr /i "%process_name%"
+if %errorlevel% equ 0 (
+    if %wait_count% geq %max_wait% (
+        taskkill /f /im "%process_name%"
+        exit /b 1
+    ) else (
+        ping -n 2 127.0.0.1
+        set /a wait_count+=1
+        goto :check_process
+    )
+)
+rd /s /q {os.path.join(directory_path,"packages")}
+rd /s /q {os.path.join(directory_path,"logs")}
+rd /s /q {os.path.join(directory_path,"resources")}
+rd /s /q {os.path.join(directory_path,"用户设置")}
+rd /s /q {os.path.join(directory_path,"文档")}
+del /f /q {exe_path}
+pause
+del %0
+    """
+    # 把删除代码写入文件里面去
+    with open(uninstall_bat_path, "w", encoding="ANSI") as f:
+        f.write(uninstall_code)
+
+    # 启动批处理文件进行删除
+    subprocess.Popen(
+        [uninstall_bat_path],
+        shell=True,                                 # 将通过系统的 shell 程序执行，而不是直接执行
+        stdin=subprocess.DEVNULL,                   # 输入重定向为空
+        stdout=subprocess.DEVNULL,                  # 标准输出重定向为空
+        stderr=subprocess.DEVNULL,                  # 错误出重定向为空
+        creationflags=subprocess.CREATE_NO_WINDOW   # 不创建可见窗口（后台运行）
+    )
+    info(uninstall_bat_path)
+    # 启动删除文件
+    # os.startfile(uninstall_bat_path)
 
 
 if __name__ == '__main__':

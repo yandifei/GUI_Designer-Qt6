@@ -7,10 +7,10 @@ except ImportError:
 #系统自带的包
 import sys
 # 第三方库
-from PyQt6.QtWidgets import QApplication                                    # 界面处理类
+from PyQt6.QtWidgets import QApplication    # 界面处理类
 # 自己的库
-from UI.ExtendedUI  import ArisuUI                                          # 导入开发好的UI类
-from arisu_logger import debug, info, warning, critical, exception          # 导入日志方法
+from UI.ExtendedUI  import ArisuUI          # 导入开发好的UI类
+from arisu_logger import info               # 导入日志方法
 
 
 """主进程UI设置和槽函数链接"""
