@@ -11,6 +11,7 @@ from PyQt6.QtCore import QRunnable, pyqtSignal, QObject
 from PyQt6.QtWidgets import QTextBrowser
 # 自己的模块
 from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore
+from arisu_logger import critical
 from deepseek_conversation_engine import DeepseekConversationEngine
 from qq_message_monitor import QQMessageMonitor
 
@@ -73,11 +74,14 @@ class ArisuThreading(QRunnable):
             print(f"窗口位置:{ef.qq_group_x, ef.qq_group_y}\t保持原始窗口的刷新时间:{self.keep_win_time}秒/刷")
 
             """“状态输出重定向”"""
-            # 设置最多为20行，多的自动删除，每次增加都是在最新的一行
-            self.print_widget.document().setMaximumBlockCount(50)
-            # 打印绑定窗口的信息
-            text = f"{arisu.output_text}\n" if arisu.output_text else "未成功初始化窗口\n"
-            self.signal.print_signal.emit(self.print_widget, text)  # 使用信号更新打印避免崩溃
+            try:
+                # 设置最多为50行，多的自动删除，每次增加都是在最新的一行
+                self.print_widget.document().setMaximumBlockCount(50)
+                # 打印绑定窗口的信息
+                text = f"{arisu.output_text}\n" if arisu.output_text else "未成功初始化窗口\n"
+                self.signal.print_signal.emit(self.print_widget, text)  # 使用信号更新打印避免崩溃
+            except (RuntimeError,TypeError):
+                critical("启动AI自动回复过程中强行关闭了窗口")
             """核心循环逻辑"""
             while self.is_task_progress:    # 使用变量来确保是否执行和退出
                 """监听窗口控制"""
@@ -127,34 +131,17 @@ class ArisuThreading(QRunnable):
                          f"错误提示：检测到线程池里面的线程崩溃,失去对 {self.qq_group_name} 窗口的控制，将在10秒后重启该线程")
             # error_msg = f"线程崩溃: {str(e)}\n{traceback.format_exc()}"
             # 发射崩溃的信号，传递自生和错误
-            self.signal.error_signal.emit(self.print_widget, self, error_msg)
-            #             # 基础错误信息
-            #             error_type = type(e).__name__
-            #             error_msg = str(e)
-            #
-            #             # 获取堆栈信息
-            #             _, _, exc_traceback = sys.exc_info()                    # 拿到系统错误的信息
-            #             traceback_msg = traceback.extract_tb(exc_traceback)[-1] # 回调的错误信息（栈）
-            #             text = f"""
-            # 文件路径: {traceback_msg.filename}
-            # 错误行号: {traceback_msg.lineno}
-            # 所在函数: {traceback_msg.name}
-            # 所在函数: {traceback_msg.name}
-            # 错误代码: {traceback_msg.line}
-            # 错误类型: {error_type}
-            # 错误信息: {error_msg}
-            # """
+            try:
+                self.signal.error_signal.emit(self.print_widget, self, error_msg)
+            except (RuntimeError, TypeError):
+                critical("启动AI自动回复过程中强行关闭了窗口")
 
     def kill(self):
         """停止线程"""
         self.is_task_progress = False   # 设置标志为假
-
 
     def disconnect_signal(self):
         """断开信号连接
         我直接采用销毁信号对象，会自动将所有连接会自动断开
         """
         self.signal.deleteLater()   # 销毁信号对象
-
-
-

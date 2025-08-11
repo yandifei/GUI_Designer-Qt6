@@ -5,24 +5,22 @@ self.setWindowFlag(Qt.WindowType.FramelessWindowHint) 不仅会把标题栏去�
 
 # 官方库
 import sys  # 导入系统库
-from time import sleep
 
 # 第三方包
 import win32con, win32gui                                                           # 使用win32api
 from PyQt6.QtCore import Qt, QEvent                                                 # Qt的核心类
-from PyQt6.uic import loadUi                                                        # 加载ui文件或ui装py的文件
 from PyQt6.QtGui import QIcon, QAction                                              # 图标处理
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QSplashScreen     # 界面处理类
 from qframelesswindow import FramelessWindow as FramelessWindowWidget               # 导入FramelessWindow(无窗口类)
 # 自己的包
 from resources.Arisu import Ui_Arisu                                                # uic转后py文件
-import resources.resources                                                          # 这个qrc必须存在（即使编译器报灰色）
+# import resources.resources                                                          # 这个qrc必须存在（即使编译器报灰色）
 
 
-
-# 可以通过多继承去调用uic转后py文件, Ui_Arisu
-class ArisuQQCHatAIUI(FramelessWindowWidget):
-# class ArisuQQCHatAIUI(Ui_Arisu, FramelessWindowWidget):
+# 开发时用(没有uic转py的文件)
+# class ArisuQQCHatAIUI(FramelessWindowWidget):
+# 打包时用[开发打包都可以用，只要有uic转的文件](可以通过多继承去调用uic转后py文件, Ui_Arisu)
+class ArisuQQCHatAIUI(Ui_Arisu, FramelessWindowWidget):
     def __init__(self, title = "", show_system_tray = True, ui_file_path = "../resources/Arisu.ui"):
         """构建一个无标题栏（自定义）的窗口
         title : 窗口标题（默认为""）
@@ -30,23 +28,14 @@ class ArisuQQCHatAIUI(FramelessWindowWidget):
         ui_file_path : "../resources/Arisu.ui"开发中ui文件的路径
         """
         super().__init__()
-        # """程序初始化弹窗"""
-        # splash = QSplashScreen(QIcon(":/背景/背景/爱丽丝的笑容.jpg").pixmap(500,500), Qt.WindowType.WindowStaysOnTopHint)  # 创建启动画面
-        # # 定义样式
-        # splash.setStyleSheet("""
-        #         QSplashScreen {
-        #             border: none;			/*无边框*/
-        #         }
-        #     """)
-        # splash.show()
-        # sleep(10)
-
         """参数初始化"""
         self.show_system_tray = show_system_tray  # 接受初始化参数（是否显示系统托盘）
         self.hwnd = int(self.winId())   # 拿到窗口句柄
         """加载ui文件（Qt designer的文件或转换后的文件）"""
-        loadUi(ui_file_path, self)  # 运行时动态加载ui文件
-        # self.setupUi(self)    # 创建UI实例，为了后续控件的调用
+        # from PyQt6.uic import loadUi  # 加载ui文件或ui装py的文件
+        # loadUi(ui_file_path, self)  # 动态调用(开发时用)
+        self.setupUi(self)    # 静态调用(打包时用)
+        # 由继承的类决定是动态加载还是静态加载
         """预加载图标资源"""
         # 预加载图标资源
         self.QLogo = QIcon(":/Logo/Logo/256.ico")  # QLogo图标
@@ -126,14 +115,13 @@ class ArisuQQCHatAIUI(FramelessWindowWidget):
         #     print("中键单击")
 
     """无边框窗口按钮事件重写"""
-    @staticmethod
-    def application_exit():
+    def application_exit(self):
         """退出行为槽函数
         将来这里处理资源回收的工作
         """
         # self.hide() # 隐藏托盘窗口
         QApplication.exit() # 退出所有程序（释放所有Qt资源）
-        # self.close()    # 关闭窗口释放当前的
+        self.close()    # 关闭窗口释放当前的资源（这个超级重要，6小时的bug就在这里）
 
     def switch_top(self):
         """窗口置顶切换"""

@@ -30,6 +30,10 @@ class OutputRedirection(QObject):
     text_print = pyqtSignal(str)   # 打造输出信号(必须放最高层级)
         # console_handler.stream = self   # 输出重定向为自己
 
+    def flush(self):
+        """避免对象删除时出现空引用"""
+        pass
+
     def __init__(self):
         super().__init__()
         # 预编译高效正则表达式（匹配所有 ANSI 转义序列）
@@ -170,7 +174,11 @@ def clear_temp():
     # 遍历temp文件夹的所有符合匹配规则的文件，把符合的文件名构造成列表
     delete_files = [file_name for file_name in os.listdir(path=temp_directory) if re.search(match_rule, file_name)]
 
-    flag = True # 成功卸载所有泄露文件的标志位
+    flag = True # 成功删除所有泄露文件的标志位
+    # 判断是否需要删除
+    if delete_files:
+        info("没有泄露资源文件(MP4文件)，无需进行删除操作")
+        return True
     # 开始删除泄露的文件
     for file_name in delete_files:  # 遍历需要删除的文件名
         try:
@@ -196,6 +204,7 @@ def uninstall_program():
     # 构建卸载文件bat的路径（放到temp目录中）
     uninstall_bat_path = os.path.join(temp_directory, f"爱丽丝QQ聊天AI{os.getpid()}.bat")
     # 卸载软件的代码
+    info("已拿到当前可执行文件路径、当前目录路径、临时文件夹路径，已完成删除的批处理文件路径构造")
     uninstall_code = f"""
 @echo off
 ping -n 2 127.0.0.1
@@ -228,7 +237,8 @@ del %0
     # 把删除代码写入文件里面去
     with open(uninstall_bat_path, "w", encoding="ANSI") as f:
         f.write(uninstall_code)
-
+    info(f"已创建删除的批处理文件(爱丽丝QQ聊天AI{os.getpid()}.bat)和成功写入删除代码")
+    info("开始执行删除的批处理文件")
     # 启动批处理文件进行删除
     subprocess.Popen(
         [uninstall_bat_path],
@@ -238,9 +248,7 @@ del %0
         stderr=subprocess.DEVNULL,                  # 错误出重定向为空
         creationflags=subprocess.CREATE_NO_WINDOW   # 不创建可见窗口（后台运行）
     )
-    info(uninstall_bat_path)
-    # 启动删除文件
-    # os.startfile(uninstall_bat_path)
+    info("成功执行删除指令")
 
 
 if __name__ == '__main__':

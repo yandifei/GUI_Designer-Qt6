@@ -17,10 +17,10 @@ from PyQt6.QtWidgets import QApplication, QMessageBox, QGroupBox, QVBoxLayout, Q
 # 自己的包
 from UI import __version__                                                                  # 从包里面拿到最新版本
 try:  # 实际环境使用
-    from .functions import OutputRedirection, clear_temp, InputRedirection,uninstall_program# 导入非UI功能函数
+    from .functions import OutputRedirection, clear_temp, InputRedirection                  # 导入非UI功能函数
     from .arisu_qq_chat_ai_ui import ArisuQQCHatAIUI                                        # 基础框架的类
 except (ModuleNotFoundError, ImportError):                                                  # 测试环境使用
-    from functions import OutputRedirection, clear_temp, InputRedirection,uninstall_program # 导入非UI功能函数
+    from functions import OutputRedirection, clear_temp, InputRedirection                   # 导入非UI功能函数
     from arisu_qq_chat_ai_ui import ArisuQQCHatAIUI                                         # 基础框架的类
     from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore                                  # 外部方法的类
     from deepseek_conversation_engine import DeepseekConversationEngine                     # AI对话
@@ -29,14 +29,12 @@ from 用户设置.configuration_manager import ConfigurationManager             
 from arisu_logger import debug, info, warning, critical, exception                          # 导入日志方法
 from arisu_logger import console_handler                                                    # 导入日志处理器
 from UI.arisu_threading import ArisuThreading                                               # 线程的类
-from resources.Arisu import Ui_Arisu                                                        # uic转后py文件
 import resources.resources                                                                  # 这个qrc必须存在（即使编译器报灰色）
 debug("ExtendedUI.py(UI界面额外扩展文件已加载完成)")
 
 
 # 可以通过多继承去调用uic转后py文件, Ui_Arisu
-# class ArisuUI(ArisuQQCHatAIUI):
-class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
+class ArisuUI(ArisuQQCHatAIUI):
     def __init__(self, title="", show_system_tray=True, ui_file_path="../resources/Arisu.ui"):
         """构建一个无标题栏（自定义）的窗口
         title : 窗口标题（默认为""）
@@ -47,16 +45,18 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
         # 设置软件的版本跟随包的版本
         self.SoftwareName.setText(f"爱丽丝QQ聊天AI {__version__}")
         """终端输入输出重定向"""
+        # 保留原始的控制台输入输出流
+        self.original_log_stream = console_handler.stream   # 保留原始的日志输出流，确保UI退出(这个类被删除时日志重定向回去)
         # 日志输出重定向
-        log_output_redirection = OutputRedirection()  # 实例化输出重定向对象
-        console_handler.stream = log_output_redirection  # 日志输出重定向
-        log_output_redirection.text_print.connect(self.log_print)  # 信号连接
+        self.log_output_redirection = OutputRedirection()  # 实例化输出重定向对象
+        console_handler.stream = self.log_output_redirection  # 日志输出重定向
+        self.log_output_redirection.text_print.connect(self.log_print)  # 信号连接
         info("日志输出重定向已完成")
         # 准输出重定向
         stdout_redirection = OutputRedirection()  # 实例化输出重定向对象
         sys.stdout = stdout_redirection  # 标准输出重定向
         stdout_redirection.text_print.connect(self.log_print)  # 信号连接
-        info("准输出重定向已完成")
+        info("标准输出重定向已完成")
         # 错误输出重定向
         stderr_redirection = OutputRedirection()  # 实例化输出重定向对象
         sys.stderr = stderr_redirection  # 错误输出重定向
@@ -935,7 +935,6 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
     def uninstall(self):
         """卸载操作（回收资源卸载软件本体和软件产生的文件）"""
         # 回收密钥(需要先判断密钥是否存在)
-        """
         if keyring.get_password("DEEPSEEK_API_KEY", "爱丽丝"):
             keyring.delete_password("DEEPSEEK_API_KEY", "爱丽丝")
             # print("已从系统密钥库删除密钥")
@@ -945,16 +944,16 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
             info("密钥不存在，无需删除")
         # 回收在temp目录下的视频资源
         self.video_player.deleteLater()  # 删除视频播放对象
-        # 延迟删除残留在temp文件的MP4动态壁纸文件（确保资源完全释放才删除）
-        QTimer.singleShot(1000, clear_temp)  # 延迟1秒
-        self.Uninstall.setText("施工中...")
-        # 剩下的之后写
-        """
-        uninstall_program() # 启动卸载程序
-        # 1秒后调用自我关闭
-        # QTimer.singleShot(1000, QApplication.exit)
-        QApplication.exit()  # 退出所有程序（释放所有Qt资源）
-
+        # 构建删除和退出的方法
+        def clear_and_exit():
+            """清理残留资源和退出程序"""
+            # 延迟删除残留在temp文件的MP4动态壁纸文件（确保资源完全释放才删除）
+            clear_temp()
+            # 退出所有程序（释放所有Qt资源）,-20213025是用于卸载的退出代码
+            QTimer.singleShot(100, lambda : QApplication.exit(-20213025) ) # 强制停止所有Qt线程(包括正在运行的)
+        """最终由外部实现卸载0	成功退出 1	通用错误 2	权限不足 3	文件占用 4	资源未释放 其他负数	自定义错误"""
+        # 延迟1秒进行删除资源文件和退出（对象删除需要时间）
+        QTimer.singleShot(100, clear_and_exit)
 
     """检查用户输入合法性的相关方法"""
 
@@ -1008,13 +1007,31 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
         self.QQGroupLocation.setPlaceholderText("Q群窗口的位置(不填默认0,0)")
 
     """重写事件"""
-
     def closeEvent(self, event):
-        sys.stderr = None  # 错误输出重定向为空(之前进行重定向了)
-        sys.stdout = None  # 输出重定向为空(之前进行重定向了)
-        self.terminate_thread()  # 停止所有正在运行的线程
+        self.terminate_thread()  # 停止所有正在运行的线(不会清空对象)
+        # self.switch_reply()
+        # self.log_output_redirection.text_print.disconnect()  # 断开信号连接
+        # sys.stdout.text_print.disconnect()  # 断开信号连接
+        # sys.stderr.text_print.disconnect()  # 断开信号连接
+        console_handler.stream = self.original_log_stream  # 还原日志输出流，确保UI退出后还有被定向前的流输出
+        sys.stdout = sys.__stdout__   # 还原标准输出流
+        sys.stderr = sys.__stderr__   # 还原错误输出流
+        sys.stdin = sys.__stdin__     # 还原输入流
         clear_temp()  # 删奇怪溢出的视频缓存
         super().closeEvent(event)  # 继承之前的关闭功能
+
+    def close_thread(self):
+        """关闭线程和释放资源"""
+        self.arisu_auto_reply_flag = False
+        # 终止所有线程
+        self.terminate_thread()
+        # 释放状态输出的窗口
+        for groupBox in self.output_groupBox_list:  # 遍历容器列表(状态窗口的本质就是在容器里面)
+            groupBox.deleteLater()  # 拿到第一个参数(窗口对象)，对窗口进行销毁，对象树机制会自动销毁里面的所有控件
+        # 清空列表
+        self.thread_args_list.clear()  # 清空线程任务参数列表
+        self.running_threads.clear()  # 清空放置线程对象列表
+        self.output_groupBox_list.clear()  # 清空放置输出窗口容器的对象列表
 
     def keyPressEvent(self, event):
         # 先继承父类的方法
@@ -1025,7 +1042,6 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
         # print(event.text())
 
     """后端核心功能"""
-
     def create_state_monitor(self):
         """创建状态监视器
         根据绑定文件添加，被Home的按钮和自动开启回复所连接信号
@@ -1142,11 +1158,11 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
                     # 跳出遍历
                     break
             else:
-                critical("卧槽，有挂！没有在self.running_threads里找到对应的崩溃线程对象，只能是数据被篡改了吧？")
+                # critical("卧槽，有挂！没有在self.running_threads里找到对应的崩溃线程对象，只能是数据被篡改了吧？")
+                critical("线程池重启异常中断,self.running_threads里没有找到崩溃线程对象(被清空或被修改)")
 
         # 延迟10秒才进程重启
         QTimer.singleShot(10000, restart)
-
 
     def terminate_thread(self):
         """终止线程"""
@@ -1157,6 +1173,7 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
         # 遍历正在运行的线程
         for thread in self.running_threads:
             thread.disconnect_signal()  # 断开信号连接
+            # thread.signal.disconnect()  # 断开信号连接
             thread.is_task_progress = False  # 设置标志位为假
 
     def check_api_key(self):
@@ -1190,7 +1207,6 @@ class ArisuUI(Ui_Arisu, ArisuQQCHatAIUI):
                 exception("检查api是否存在及有效的方法。网络请求失败，错误信息:")  # 打印输出异常并记录异常
                 return False
         return True  # 响应状态码等于200
-
 
 # def arisu_ai_auto_reply_task(print_widget: QTextBrowser, qq_group_name: str, bot_name: str, root: str,
 #                              exit_password: str, init_role: str,
