@@ -130,9 +130,11 @@ class ArisuUI(ArisuQQCHatAIUI):
         self.ConsoleWidget.document().setMaximumBlockCount(100)                 # 设置重定向窗口最多为20行，多的自动删除
         self.tip_api_key_exist()                                                # 告诉用户密钥是否存在
         self.tip_logic_cpu_count()                                              # 提示用户可以使用的逻辑CPU数量，并自动计算最合适的CPU数量
+        self.thread_restart_time()                                              # 提示用户线程重启时间
         self.RestoreNavigationBarSortingButton.clicked.connect(self.restore_navigation_bar_sorting)  # 还原导航栏排序按钮
         self.APIKeyConfirm.clicked.connect(self.__api_key_confirm)              # 检测api有效和把deepseek注入到系统变量
         self.LogicCPUCountConfirm.clicked.connect(self.logic_cup_confirm)       # 确认逻辑CPU数
+        self.ThreadRestartTime.textChanged.connect(self.thread_restart_time)    # 线程重启时间
         self.OpenRoleDir.clicked.connect(self.open_role_repository_directory)   # 打开人设仓库目录
         self.KeywordReplyDir.clicked.connect(self.open_keyword_reply_directory) # 打开关键词回复目录
         self.JMDownloadStrategy.clicked.connect(self.open_jm_strategy_file)     # 打开JM策略的配置文件
@@ -831,6 +833,20 @@ class ArisuUI(ArisuQQCHatAIUI):
                 self.LogicCPUCountState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
                 self.LogicCPUCountState.setTitle(f"修改成功")
         return True
+
+    def thread_restart_time(self):
+        """线程重启时间
+        判断线程重启时间是否有效
+        """
+        try:
+            self.ThreadRestartTimeState.setTitle(f"线程重启时间：{int(self.ThreadRestartTime.text())}秒")
+        except TypeError:
+            # info(f"线程重启时间填写错误: {self.ThreadRestartTime.text()} ，自动转换为10")
+            # self.ThreadRestartTime.setText(10)
+            # return False
+            self.ThreadRestartTimeState.setTitle("线程重启时间输入错误")
+
+
 
     def open_role_repository_directory(self):
         """打开人设库目录"""

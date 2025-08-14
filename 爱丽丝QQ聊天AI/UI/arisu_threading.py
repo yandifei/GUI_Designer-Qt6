@@ -99,8 +99,9 @@ class ArisuThreading(QRunnable):
                     # 非指令
                     if not reply[3]:
                         """聊天回复"""
-                        reply = deepseek.ask(f"{reply[0]}:{reply[1]}，时间:{reply[2]}", False)  # 发出请求并回应(这里不重复打印到屏幕上)
-                        arisu.send_message(reply)
+                        reply_msg = deepseek.ask(f"{reply[0]}:{reply[1]}，时间:{reply[2]}", False)  # 发出请求并回应(这里不重复打印到屏幕上)
+                        # @发送者 回复的消息
+                        arisu.send_message(f"@{reply[0]} {reply_msg}")
                     # 接收到了指令（检测指令是否存在）
                     elif ef.is_order(reply[1]):  # 指令库里面检索指令(顺序不能反，因为指令可能带有参数)
                         """指令操作"""
@@ -108,16 +109,19 @@ class ArisuThreading(QRunnable):
                         order, args = ef.split_order_args(reply[1])
                         # 是否有权限调度指令(包括root和非root的指令)
                         if ef.check_permission(order, reply[0]):  # 传入指令和发送者
-                            arisu.send_message(ef.execute_order(order, args))  # 传入指令执行后拿到返回结果并发送
+                            # 传入指令执行后拿到返回结果并发送(@发送者 执行结果)
+                            arisu.send_message(f"@{reply[0]} {ef.execute_order(order, args)}")
                         else:
                             # 无权操作后的警告
-                            arisu.send_message(self.warning_of_overrepresentation)  # 传入指令执行后拿到返回结果并发送
+                            arisu.send_message(f"@{reply[0]} {self.warning_of_overrepresentation}")  # 传入指令执行后拿到返回结果并发送
                     else:
                         """使用了不存在的指令(不是聊天也无法调用指令库的指令)"""
                         print("接收到了一条不存在的指令(不是聊天也没有在指令库中找到指令)")
-                        arisu.send_message("不存在该指令")
+                        arisu.send_message(f"@{reply[0]} 不存在该指令")
                 else:
                     pass  # print("出现新消息，这里不进行打印，因为监视方法已经打印了")
+
+        # 整体线程异常处理
         except COMError as e:
             # # 设置崩溃后不自动删除对象，继续延用对象并重启线程
             # self.setAutoDelete(False)

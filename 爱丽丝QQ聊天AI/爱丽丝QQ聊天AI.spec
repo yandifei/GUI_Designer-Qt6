@@ -42,7 +42,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     uac_admin=True,
-    icon=['resources\\Logo\\256.ico'],
+    icon=['resources\\ArisuQQChatAI.ico'],
 )
 coll = COLLECT(
     exe,

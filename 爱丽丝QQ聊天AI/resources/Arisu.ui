@@ -467,7 +467,7 @@ QTabBar::tab:selected {
       <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <property name="iconSize">
       <size>
@@ -980,7 +980,7 @@ QScrollBar::add-line:horizontal {		/*滚动条底部的按钮*/
           <attribute name="toolTip">
            <string>QQ群绑定配置录入</string>
           </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,15">
            <property name="spacing">
             <number>10</number>
            </property>
@@ -2425,7 +2425,7 @@ QWidget {
       <attribute name="toolTip">
        <string>用户设置</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_9" stretch="100,1">
+      <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0,0">
        <property name="leftMargin">
         <number>70</number>
        </property>
@@ -2440,6 +2440,12 @@ QWidget {
        </property>
        <item>
         <widget class="QScrollArea" name="SettingsScrollArea">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>500</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">QScrollArea {
 	border: 5px solid rgb(240, 244, 249);  /*边框大小、边框样式、边框颜色*/
@@ -2483,7 +2489,7 @@ QScrollBar::sub-page:vertical, {
 </string>
          </property>
          <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
          </property>
          <property name="widgetResizable">
           <bool>true</bool>
@@ -2494,7 +2500,7 @@ QScrollBar::sub-page:vertical, {
             <x>0</x>
             <y>0</y>
             <width>1054</width>
-            <height>553</height>
+            <height>478</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -2503,235 +2509,582 @@ QWidget {
 	background-color: rgb(240, 244, 249);
 }</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout">
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <property name="spacing">
+            <number>6</number>
+           </property>
            <property name="leftMargin">
-            <number>0</number>
+            <number>50</number>
            </property>
            <property name="topMargin">
-            <number>40</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <property name="horizontalSpacing">
             <number>20</number>
            </property>
-           <property name="verticalSpacing">
-            <number>40</number>
+           <property name="rightMargin">
+            <number>50</number>
            </property>
-           <item row="5" column="0">
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Orientation::Vertical</enum>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="spacing">
+              <number>37</number>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
+             <property name="leftMargin">
+              <number>0</number>
              </property>
-            </spacer>
-           </item>
-           <item row="10" column="8">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+             <property name="topMargin">
+              <number>0</number>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>174</width>
-               <height>20</height>
-              </size>
+             <property name="rightMargin">
+              <number>0</number>
              </property>
-            </spacer>
-           </item>
-           <item row="10" column="1">
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>125</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="10" column="4">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>97</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="10" column="0">
-            <spacer name="horizontalSpacer_7">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>17</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="10" column="5">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>97</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="10" column="2">
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>98</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="10" column="9">
-            <widget class="QPushButton" name="Uninstall">
-             <property name="minimumSize">
-              <size>
-               <width>130</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>黑体</family>
-               <pointsize>17</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+             <item>
+              <widget class="QGroupBox" name="APIKeyState">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>API录入状态显示</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QGroupBox {
+	border: none;			/*无边框*/
+	color: rgb(0, 255, 0);
+}</string>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTop|Qt::AlignmentFlag::AlignTrailing</set>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>24</number>
+                </property>
+                <property name="rightMargin">
+                 <number>15</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="APIKeyInput">
+                  <property name="minimumSize">
+                   <size>
+                    <width>309</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>等线</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;deepseek的api密钥，如果要更换密钥也是这里输入并确认。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QLineEdit {
+	border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/
+	border-radius: 10px; /*边框圆角3px*/
+	background: white; /*背景色为白色*/
+	selection-background-color: green; /* 文本选中时的背景色*/
+}
+/*悬停*/
+QLineEdit:hover {
+	border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/
+}
+
+/*密码模式的颜色*/
+QLineEdit[echoMode=&quot;2&quot;] {
+	color: rgb(0,0, 0);
+}</string>
+                  </property>
+                  <property name="inputMask">
+                   <string/>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="frame">
+                   <bool>false</bool>
+                  </property>
+                  <property name="echoMode">
+                   <enum>QLineEdit::EchoMode::Password</enum>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>false</bool>
+                  </property>
+                  <property name="placeholderText">
+                   <string>请输入DeepSeek的API密钥(Key)</string>
+                  </property>
+                  <property name="clearButtonEnabled">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="APIKeyConfirm">
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>黑体</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;没有挽留，只为尊重你的选择!卸载软件本体、回收资源和清除软件产生的文件，做到绝不留下任何一点垃圾。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">/**正常情况下样式**/
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;1. 什么都不填直接点击确定能测试密钥是否已经存在。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;2. 输入密钥点击确定检测密钥是否有效。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;3. 把密钥存储在存储系统密钥库中。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/**正常情况下样式**/
 QPushButton{
 	border-radius: 10px;		/*圆角*/
 	border-width: 3px;		/*设置边框大小*/
-	border-color: rgb(255, 0, 0);  /*边框颜色*/
+	border-color: rgb(77, 107, 254);  /*边框颜色*/
 	border-style: solid;		/*实线*/
-	color: rgb(255, 0, 0);
-	background-color: rgba(255, 0, 0,0.2);	/*按钮背景颜色纯白*/
+	color: rgb(77, 107, 254);
+	background-color: rgba(77, 107, 254,0.2);	/*按钮背景颜色纯白*/
 }
 
 /**鼠标停留在按钮上的样式**/
 QPushButton::hover{	
-	background-color: rgba(255, 0, 0,0.5);
+	background-color: rgba(77, 107, 254,0.5);
 	color: rgb(255, 255, 255);
 }
 
 /**鼠标按压下去的样式**/
 QPushButton:pressed {
-	background-color: rgb(255, 0, 0);
+	background-color: rgb(77, 107, 254);
 	color: rgb(255, 255, 255);
 }
 </string>
-             </property>
-             <property name="text">
-              <string>一键卸载</string>
-             </property>
-             <property name="autoRepeat">
-              <bool>false</bool>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-             <property name="default">
-              <bool>false</bool>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="6">
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>177</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="3" column="7" colspan="2">
-            <widget class="QPushButton" name="JMDownloadStrategy">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>黑体</family>
-               <pointsize>17</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;不懂不要动！！！&lt;/span&gt;&lt;/p&gt;&lt;p&gt;打开禁漫天堂下载策略的配置文件，修改下载策略，默认下载完整的本子。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">/**正常情况下样式**/
+                  </property>
+                  <property name="text">
+                   <string>确认</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="LogicCPUCountState">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>API录入状态显示</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QGroupBox {
+	border: none;			/*无边框*/
+	color: rgb(0, 255, 0);
+}</string>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>24</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="LogicCPUCount">
+                  <property name="minimumSize">
+                   <size>
+                    <width>309</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>等线</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; color:#414141;&quot;&gt;输入可使用的逻辑核心数，默认通过编程计算。物理核心数乘上1.5后去掉小数点，如过这个值超过最大逻辑核心数就使用最大逻辑核心数。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QLineEdit {
+	border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/
+	border-radius: 10px; /*边框圆角3px*/
+	background: white; /*背景色为白色*/
+	selection-background-color: green; /* 文本选中时的背景色*/
+}
+/*悬停*/
+QLineEdit:hover {
+	border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/
+}
+
+/*正常模式的颜色*/
+QLineEdit[echoMode=&quot;0&quot;] {
+	color: rgb(0,0, 0);
+}</string>
+                  </property>
+                  <property name="inputMask">
+                   <string/>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="frame">
+                   <bool>false</bool>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>false</bool>
+                  </property>
+                  <property name="placeholderText">
+                   <string>请输入运行的最大逻辑核心数</string>
+                  </property>
+                  <property name="clearButtonEnabled">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="LogicCPUCountConfirm">
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>黑体</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;不懂不要填！&lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;不懂不要填！不懂不要填！&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;如果无法获取逻辑核心数，这个值将完全交给用户填写并直接采纳。&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;如果能够获取逻辑核心数则会判断用户输入的核心数是否合理，超出后则使用最大逻辑核心数。&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;输入可使用的逻辑核心数，默认通过编程计算。物理核心数乘上1.5后去掉小数点，如过这个值超过最大逻辑核心数就使用最大逻辑核心数。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/**正常情况下样式**/
 QPushButton{
 	border-radius: 10px;		/*圆角*/
 	border-width: 3px;		/*设置边框大小*/
-	border-color: rgb(85, 85, 255);  /*边框颜色*/
+	border-color: rgb(77, 107, 254);  /*边框颜色*/
 	border-style: solid;		/*实线*/
+	color: rgb(77, 107, 254);
+	background-color: rgba(77, 107, 254,0.2);	/*按钮背景颜色纯白*/
+}
+
+/**鼠标停留在按钮上的样式**/
+QPushButton::hover{	
+	background-color: rgba(77, 107, 254,0.5);
+	color: rgb(255, 255, 255);
+}
+
+/**鼠标按压下去的样式**/
+QPushButton:pressed {
+	background-color: rgb(77, 107, 254);
+	color: rgb(255, 255, 255);
+}
+</string>
+                  </property>
+                  <property name="text">
+                   <string>确认</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>40</number>
+             </property>
+             <property name="horizontalSpacing">
+              <number>51</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QGroupBox" name="ThreadRestartTimeState">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>API录入状态显示</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QGroupBox {
+	border: none;			/*无边框*/
+	color: rgb(0, 255, 0);
+}</string>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>20</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="ThreadRestartTime">
+                  <property name="minimumSize">
+                   <size>
+                    <width>309</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>等线</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;窗口绑定失败后等待重新进行绑定的时间。窗口被关闭、被完全遮挡、崩溃就会导致绑定窗口失效。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QLineEdit {
+	border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/
+	border-radius: 10px; /*边框圆角3px*/
+	background: white; /*背景色为白色*/
+	selection-background-color: green; /* 文本选中时的背景色*/
+}
+/*悬停*/
+QLineEdit:hover {
+	border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/
+}
+
+/*正常模式的颜色*/
+QLineEdit[echoMode=&quot;0&quot;] {
+	color: rgb(0,0, 0);
+}</string>
+                  </property>
+                  <property name="inputMask">
+                   <string/>
+                  </property>
+                  <property name="text">
+                   <string>10</string>
+                  </property>
+                  <property name="frame">
+                   <bool>false</bool>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>false</bool>
+                  </property>
+                  <property name="placeholderText">
+                   <string>请输入线程重启的时间</string>
+                  </property>
+                  <property name="clearButtonEnabled">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1" rowspan="2">
+              <widget class="QGroupBox" name="groupBox">
+               <property name="styleSheet">
+                <string notr="true">QGroupBox {
+	border: none;			/*无边框*/
+	color: rgb(0, 255, 0);
+}</string>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <layout class="QGridLayout" name="gridLayout">
+                <property name="leftMargin">
+                 <number>9</number>
+                </property>
+                <property name="topMargin">
+                 <number>21</number>
+                </property>
+                <property name="horizontalSpacing">
+                 <number>50</number>
+                </property>
+                <property name="verticalSpacing">
+                 <number>53</number>
+                </property>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QPushButton" name="OpenRoleDir">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>黑体</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>打开提示库，在这个目录下用户可以自行添加或修改AI自动回复的人设。</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/**正常情况下样式**/
+QPushButton{
+	border-radius: 10px;		/*圆角*/
+	border: 3px solid rgb(85, 85, 255);  /*边框大小、边框样式、边框颜色*/
 	color: rgb(85, 85, 255);
 	/*background-color: rgba(0, 255, 0,0.1);	*/
-	background-color: rgba(85, 85, 255,0.1)/*按钮背景颜色纯白*/
+	background-color: rgba(85, 85, 255,0.1);/*按钮背景颜色纯白*/
 }
 
 /**鼠标停留在按钮上的样式**/
@@ -2746,50 +3099,50 @@ QPushButton:pressed {
 	color: rgb(255, 255, 255);
 }
 </string>
-             </property>
-             <property name="text">
-              <string>禁漫天堂下载策略</string>
-             </property>
-             <property name="autoRepeat">
-              <bool>false</bool>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-             <property name="default">
-              <bool>false</bool>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="7" colspan="2">
-            <widget class="QPushButton" name="LogQueryDir">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>黑体</family>
-               <pointsize>17</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>存放Q群的聊天记录和软件的日志信息</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">/**正常情况下样式**/
+                  </property>
+                  <property name="text">
+                   <string>人设自定义</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="2">
+                 <widget class="QPushButton" name="LogQueryDir">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>黑体</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>存放Q群的聊天记录和软件的日志信息</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/**正常情况下样式**/
 QPushButton{
 	border-radius: 10px;		/*圆角*/
 	border-width: 3px;		/*设置边框大小*/
@@ -2812,50 +3165,47 @@ QPushButton:pressed {
 	color: rgb(255, 255, 255);
 }
 `</string>
-             </property>
-             <property name="text">
-              <string>日志查询</string>
-             </property>
-             <property name="autoRepeat">
-              <bool>false</bool>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-             <property name="default">
-              <bool>false</bool>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="7" colspan="2">
-            <widget class="QPushButton" name="KeywordReplyDir">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>黑体</family>
-               <pointsize>17</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>打开关键词回复目录，在这个目录下用户可以自行添加或修改AI自动回复的规则。</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">/**正常情况下样式**/
+                  </property>
+                  <property name="text">
+                   <string>日志查询</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QPushButton" name="RestoreNavigationBarSortingButton">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>黑体</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/**正常情况下样式**/
 QPushButton{
 	border-radius: 10px;		/*圆角*/
 	border-width: 3px;		/*设置边框大小*/
@@ -2878,467 +3228,38 @@ QPushButton:pressed {
 	color: rgb(255, 255, 255);
 }
 </string>
-             </property>
-             <property name="text">
-              <string>关键词回复</string>
-             </property>
-             <property name="autoRepeat">
-              <bool>false</bool>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-             <property name="default">
-              <bool>false</bool>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="7" colspan="2">
-            <widget class="QPushButton" name="OpenRoleDir">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>黑体</family>
-               <pointsize>17</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>打开提示库，在这个目录下用户可以自行添加或修改AI自动回复的人设。</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">/**正常情况下样式**/
-QPushButton{
-	border-radius: 10px;		/*圆角*/
-	border: 3px solid rgb(85, 85, 255);  /*边框大小、边框样式、边框颜色*/
-	color: rgb(85, 85, 255);
-	/*background-color: rgba(0, 255, 0,0.1);	*/
-	background-color: rgba(85, 85, 255,0.1);/*按钮背景颜色纯白*/
-}
-
-/**鼠标停留在按钮上的样式**/
-QPushButton::hover{	
-	background-color: rgba(85, 85, 255,0.3);
-	color: rgb(255, 255, 255);
-}
-
-/**鼠标按压下去的样式**/
-QPushButton:pressed {
-	background-color: rgb(85, 85, 255);
-	color: rgb(255, 255, 255);
-}
-</string>
-             </property>
-             <property name="text">
-              <string>人设自定义</string>
-             </property>
-             <property name="autoRepeat">
-              <bool>false</bool>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-             <property name="default">
-              <bool>false</bool>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="6" colspan="3">
-            <widget class="QGroupBox" name="LogicCPUCountState">
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>API录入状态显示</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QGroupBox {
-	border: none;			/*无边框*/
-	color: rgb(0, 255, 0);
-}</string>
-             </property>
-             <property name="title">
-              <string/>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-             <property name="checkable">
-              <bool>false</bool>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>24</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QLineEdit" name="LogicCPUCount">
-                <property name="minimumSize">
-                 <size>
-                  <width>309</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>等线</family>
-                  <pointsize>17</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; color:#414141;&quot;&gt;输入可使用的逻辑核心数，默认通过编程计算。物理核心数乘上1.5后去掉小数点，如过这个值超过最大逻辑核心数就使用最大逻辑核心数。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QLineEdit {
-	border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/
-	border-radius: 10px; /*边框圆角3px*/
-	background: white; /*背景色为白色*/
-	selection-background-color: green; /* 文本选中时的背景色*/
-}
-/*悬停*/
-QLineEdit:hover {
-	border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/
-}
-
-/*正常模式的颜色*/
-QLineEdit[echoMode=&quot;0&quot;] {
-	color: rgb(0,0, 0);
-}</string>
-                </property>
-                <property name="inputMask">
-                 <string/>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="frame">
-                 <bool>false</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-                <property name="readOnly">
-                 <bool>false</bool>
-                </property>
-                <property name="placeholderText">
-                 <string>请输入运行的最大逻辑核心数</string>
-                </property>
-                <property name="clearButtonEnabled">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="LogicCPUCountConfirm">
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="sizeIncrement">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>黑体</family>
-                  <pointsize>17</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;不懂不要填！&lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;不懂不要填！不懂不要填！&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;如果无法获取逻辑核心数，这个值将完全交给用户填写并直接采纳。&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;如果能够获取逻辑核心数则会判断用户输入的核心数是否合理，超出后则使用最大逻辑核心数。&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;输入可使用的逻辑核心数，默认通过编程计算。物理核心数乘上1.5后去掉小数点，如过这个值超过最大逻辑核心数就使用最大逻辑核心数。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">/**正常情况下样式**/
-QPushButton{
-	border-radius: 10px;		/*圆角*/
-	border-width: 3px;		/*设置边框大小*/
-	border-color: rgb(77, 107, 254);  /*边框颜色*/
-	border-style: solid;		/*实线*/
-	color: rgb(77, 107, 254);
-	background-color: rgba(77, 107, 254,0.2);	/*按钮背景颜色纯白*/
-}
-
-/**鼠标停留在按钮上的样式**/
-QPushButton::hover{	
-	background-color: rgba(77, 107, 254,0.5);
-	color: rgb(255, 255, 255);
-}
-
-/**鼠标按压下去的样式**/
-QPushButton:pressed {
-	background-color: rgb(77, 107, 254);
-	color: rgb(255, 255, 255);
-}
-</string>
-                </property>
-                <property name="text">
-                 <string>确认</string>
-                </property>
-                <property name="autoRepeat">
-                 <bool>false</bool>
-                </property>
-                <property name="autoDefault">
-                 <bool>false</bool>
-                </property>
-                <property name="default">
-                 <bool>false</bool>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="1" colspan="5">
-            <widget class="QGroupBox" name="APIKeyState">
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>API录入状态显示</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QGroupBox {
-	border: none;			/*无边框*/
-	color: rgb(0, 255, 0);
-}</string>
-             </property>
-             <property name="title">
-              <string/>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTop|Qt::AlignmentFlag::AlignTrailing</set>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-             <property name="checkable">
-              <bool>false</bool>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>24</number>
-              </property>
-              <property name="rightMargin">
-               <number>15</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QLineEdit" name="APIKeyInput">
-                <property name="minimumSize">
-                 <size>
-                  <width>309</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>等线</family>
-                  <pointsize>17</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;deepseek的api密钥，如果要更换密钥也是这里输入并确认。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QLineEdit {
-	border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/
-	border-radius: 10px; /*边框圆角3px*/
-	background: white; /*背景色为白色*/
-	selection-background-color: green; /* 文本选中时的背景色*/
-}
-/*悬停*/
-QLineEdit:hover {
-	border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/
-}
-
-/*密码模式的颜色*/
-QLineEdit[echoMode=&quot;2&quot;] {
-	color: rgb(0,0, 0);
-}</string>
-                </property>
-                <property name="inputMask">
-                 <string/>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="frame">
-                 <bool>false</bool>
-                </property>
-                <property name="echoMode">
-                 <enum>QLineEdit::EchoMode::Password</enum>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-                <property name="readOnly">
-                 <bool>false</bool>
-                </property>
-                <property name="placeholderText">
-                 <string>请输入DeepSeek的API密钥(Key)</string>
-                </property>
-                <property name="clearButtonEnabled">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="APIKeyConfirm">
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="sizeIncrement">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>黑体</family>
-                  <pointsize>17</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;1. 什么都不填直接点击确定能测试密钥是否已经存在。&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;2. 输入密钥点击确定检测密钥是否有效。&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;3. 把密钥存储在存储系统密钥库中。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">/**正常情况下样式**/
-QPushButton{
-	border-radius: 10px;		/*圆角*/
-	border-width: 3px;		/*设置边框大小*/
-	border-color: rgb(77, 107, 254);  /*边框颜色*/
-	border-style: solid;		/*实线*/
-	color: rgb(77, 107, 254);
-	background-color: rgba(77, 107, 254,0.2);	/*按钮背景颜色纯白*/
-}
-
-/**鼠标停留在按钮上的样式**/
-QPushButton::hover{	
-	background-color: rgba(77, 107, 254,0.5);
-	color: rgb(255, 255, 255);
-}
-
-/**鼠标按压下去的样式**/
-QPushButton:pressed {
-	background-color: rgb(77, 107, 254);
-	color: rgb(255, 255, 255);
-}
-</string>
-                </property>
-                <property name="text">
-                 <string>确认</string>
-                </property>
-                <property name="autoRepeat">
-                 <bool>false</bool>
-                </property>
-                <property name="autoDefault">
-                 <bool>false</bool>
-                </property>
-                <property name="default">
-                 <bool>false</bool>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="2" column="6">
-            <widget class="QPushButton" name="RestoreNavigationBarSortingButton">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>黑体</family>
-               <pointsize>17</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">/**正常情况下样式**/
+                  </property>
+                  <property name="text">
+                   <string>还原导航栏排序</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="JMDownloadStrategy">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>黑体</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;不懂不要动！！！&lt;/span&gt;&lt;/p&gt;&lt;p&gt;打开禁漫天堂下载策略的配置文件，修改下载策略，默认下载完整的本子。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/**正常情况下样式**/
 QPushButton{
 	border-radius: 10px;		/*圆角*/
 	border-width: 3px;		/*设置边框大小*/
@@ -3361,34 +3282,46 @@ QPushButton:pressed {
 	color: rgb(255, 255, 255);
 }
 </string>
-             </property>
-             <property name="text">
-              <string>还原导航栏排序</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="6">
-            <widget class="QComboBox" name="InitialInterfaceLocationComboBox">
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>17</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>初始界面位置</string>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LayoutDirection::LeftToRight</enum>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">/*本体样式(不包括下拉窗口)*/
+                  </property>
+                  <property name="text">
+                   <string>禁漫天堂下载策略</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="2">
+                 <widget class="QComboBox" name="InitialInterfaceLocationComboBox">
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>初始界面位置</string>
+                  </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::LayoutDirection::LeftToRight</enum>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/*本体样式(不包括下拉窗口)*/
 QComboBox{
 	
 	color: rgb(85, 85, 255);	/*字体颜色*/
@@ -3446,62 +3379,235 @@ QComboBox QAbstractItemView::item:selected{
 	background-color: rgba(85, 85, 255,0.3);
 }
 </string>
-             </property>
-             <property name="currentText">
-              <string>主页</string>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>40</width>
-               <height>40</height>
-              </size>
-             </property>
+                  </property>
+                  <property name="currentText">
+                   <string>主页</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>主页</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resources.qrc">
+                     <normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/2.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/2.png</iconset>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>状态监测</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resources.qrc">
+                     <normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/1.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/1.png</iconset>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>键盘热键</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resources.qrc">
+                     <normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/4.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/4.png</iconset>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>问题链接</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resources.qrc">
+                     <normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/6.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/6.png</iconset>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>用户设置</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resources.qrc">
+                     <normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/15.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/15.png</iconset>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPushButton" name="KeywordReplyDir">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>黑体</family>
+                    <pointsize>17</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>打开关键词回复目录，在这个目录下用户可以自行添加或修改AI自动回复的规则。</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/**正常情况下样式**/
+QPushButton{
+	border-radius: 10px;		/*圆角*/
+	border-width: 3px;		/*设置边框大小*/
+	border-color: rgb(85, 85, 255);  /*边框颜色*/
+	border-style: solid;		/*实线*/
+	color: rgb(85, 85, 255);
+	/*background-color: rgba(0, 255, 0,0.1);	*/
+	background-color: rgba(85, 85, 255,0.1)/*按钮背景颜色纯白*/
+}
+
+/**鼠标停留在按钮上的样式**/
+QPushButton::hover{	
+	background-color: rgba(85, 85, 255,0.3);
+	color: rgb(255, 255, 255);
+}
+
+/**鼠标按压下去的样式**/
+QPushButton:pressed {
+	background-color: rgb(85, 85, 255);
+	color: rgb(255, 255, 255);
+}
+</string>
+                  </property>
+                  <property name="text">
+                   <string>关键词回复</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <spacer name="verticalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
              <item>
-              <property name="text">
-               <string>主页</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/2.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/2.png</iconset>
-              </property>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
-              <property name="text">
-               <string>状态监测</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/1.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/1.png</iconset>
-              </property>
+              <widget class="QPushButton" name="Uninstall">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="sizeIncrement">
+                <size>
+                 <width>0</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>黑体</family>
+                 <pointsize>17</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;没有挽留，只为尊重你的选择!卸载软件本体、回收资源和清除软件产生的文件，做到绝不留下任何一点垃圾。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/**正常情况下样式**/
+QPushButton{
+	border-radius: 10px;		/*圆角*/
+	border-width: 3px;		/*设置边框大小*/
+	border-color: rgb(255, 0, 0);  /*边框颜色*/
+	border-style: solid;		/*实线*/
+	color: rgb(255, 0, 0);
+	background-color: rgba(255, 0, 0,0.2);	/*按钮背景颜色纯白*/
+}
+
+/**鼠标停留在按钮上的样式**/
+QPushButton::hover{	
+	background-color: rgba(255, 0, 0,0.5);
+	color: rgb(255, 255, 255);
+}
+
+/**鼠标按压下去的样式**/
+QPushButton:pressed {
+	background-color: rgb(255, 0, 0);
+	color: rgb(255, 255, 255);
+}
+</string>
+               </property>
+               <property name="text">
+                <string>一键卸载</string>
+               </property>
+               <property name="autoRepeat">
+                <bool>false</bool>
+               </property>
+               <property name="autoDefault">
+                <bool>false</bool>
+               </property>
+               <property name="default">
+                <bool>false</bool>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>键盘热键</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/4.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/4.png</iconset>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>问题链接</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/6.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/女仆/6.png</iconset>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>用户设置</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/15.png</normaloff>:/爱丽丝表情包/爱丽丝表情包/非女仆/15.png</iconset>
-              </property>
-             </item>
-            </widget>
+            </layout>
            </item>
           </layout>
          </widget>
