@@ -839,14 +839,16 @@ class ArisuUI(ArisuQQCHatAIUI):
         判断线程重启时间是否有效
         """
         try:
+            self.ThreadRestartTimeState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
             self.ThreadRestartTimeState.setTitle(f"线程重启时间：{int(self.ThreadRestartTime.text())}秒")
+            return True
         except TypeError:
             # info(f"线程重启时间填写错误: {self.ThreadRestartTime.text()} ，自动转换为10")
             # self.ThreadRestartTime.setText(10)
             # return False
+            self.ThreadRestartTimeState.setStyleSheet("color: red;border: none;")  # 提示样式表设置字体为红色并且为无边框
             self.ThreadRestartTimeState.setTitle("线程重启时间输入错误")
-
-
+            return False
 
     def open_role_repository_directory(self):
         """打开人设库目录"""
@@ -1177,8 +1179,14 @@ class ArisuUI(ArisuQQCHatAIUI):
                 # critical("卧槽，有挂！没有在self.running_threads里找到对应的崩溃线程对象，只能是数据被篡改了吧？")
                 critical("线程池重启异常中断,self.running_threads里没有找到崩溃线程对象(被清空或被修改)")
 
-        # 延迟10秒才进程重启
-        QTimer.singleShot(10000, restart)
+        # 拿到重启时间并开启重启线程
+        if self.thread_restart_time():
+            QTimer.singleShot(int(self.ThreadRestartTime), restart)
+            crash_object.thread_restart_time = int(self.ThreadRestartTime)
+        else:   # 重启时间有错
+            # 延迟10秒才进程重启
+            QTimer.singleShot(10000, restart)
+            crash_object.thread_restart_time = 10
 
     def terminate_thread(self):
         """终止线程"""

@@ -1639,7 +1639,7 @@ class Ui_Arisu(object):
         self.ThreadRestartTimeState.setFont(font)
         self.ThreadRestartTimeState.setStyleSheet("QGroupBox {\n"
 "    border: none;            /*无边框*/\n"
-"    color: rgb(0, 255, 0);\n"
+"    color: green;\n"
 "}")
         self.ThreadRestartTimeState.setTitle("")
         self.ThreadRestartTimeState.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter|QtCore.Qt.AlignmentFlag.AlignTop)
@@ -1678,42 +1678,6 @@ class Ui_Arisu(object):
         self.ThreadRestartTime.setClearButtonEnabled(True)
         self.ThreadRestartTime.setObjectName("ThreadRestartTime")
         self.horizontalLayout_6.addWidget(self.ThreadRestartTime)
-        self.ThreadRestartTimeConfirm = QtWidgets.QPushButton(parent=self.ThreadRestartTimeState)
-        self.ThreadRestartTimeConfirm.setMinimumSize(QtCore.QSize(70, 40))
-        self.ThreadRestartTimeConfirm.setSizeIncrement(QtCore.QSize(0, 40))
-        font = QtGui.QFont()
-        font.setFamily("黑体")
-        font.setPointSize(17)
-        font.setBold(True)
-        self.ThreadRestartTimeConfirm.setFont(font)
-        self.ThreadRestartTimeConfirm.setStyleSheet("/**正常情况下样式**/\n"
-"QPushButton{\n"
-"    border-radius: 10px;        /*圆角*/\n"
-"    border-width: 3px;        /*设置边框大小*/\n"
-"    border-color: rgb(77, 107, 254);  /*边框颜色*/\n"
-"    border-style: solid;        /*实线*/\n"
-"    color: rgb(77, 107, 254);\n"
-"    background-color: rgba(77, 107, 254,0.2);    /*按钮背景颜色纯白*/\n"
-"}\n"
-"\n"
-"/**鼠标停留在按钮上的样式**/\n"
-"QPushButton::hover{    \n"
-"    background-color: rgba(77, 107, 254,0.5);\n"
-"    color: rgb(255, 255, 255);\n"
-"}\n"
-"\n"
-"/**鼠标按压下去的样式**/\n"
-"QPushButton:pressed {\n"
-"    background-color: rgb(77, 107, 254);\n"
-"    color: rgb(255, 255, 255);\n"
-"}\n"
-"")
-        self.ThreadRestartTimeConfirm.setAutoRepeat(False)
-        self.ThreadRestartTimeConfirm.setAutoDefault(False)
-        self.ThreadRestartTimeConfirm.setDefault(False)
-        self.ThreadRestartTimeConfirm.setFlat(False)
-        self.ThreadRestartTimeConfirm.setObjectName("ThreadRestartTimeConfirm")
-        self.horizontalLayout_6.addWidget(self.ThreadRestartTimeConfirm)
         self.gridLayout_2.addWidget(self.ThreadRestartTimeState, 0, 0, 1, 1)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.gridLayout_2.addItem(spacerItem2, 1, 0, 1, 1)
@@ -2185,18 +2149,6 @@ class Ui_Arisu(object):
         self.ThreadRestartTime.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">窗口绑定失败后等待重新进行绑定的时间。窗口被关闭、被完全遮挡、崩溃就会导致绑定窗口失效。</span></p></body></html>"))
         self.ThreadRestartTime.setText(_translate("Arisu", "10"))
         self.ThreadRestartTime.setPlaceholderText(_translate("Arisu", "请输入线程重启的时间"))
-        self.ThreadRestartTimeConfirm.setToolTip(_translate("Arisu", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ff0000;\">不懂不要填！</span><span style=\" color:#ff0000;\">不懂不要填！不懂不要填！</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">如果无法获取逻辑核心数，这个值将完全交给用户填写并直接采纳。</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">如果能够获取逻辑核心数则会判断用户输入的核心数是否合理，超出后则使用最大逻辑核心数。</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">输入可使用的逻辑核心数，默认通过编程计算。物理核心数乘上1.5后去掉小数点，如过这个值超过最大逻辑核心数就使用最大逻辑核心数。</p></body></html>"))
-        self.ThreadRestartTimeConfirm.setText(_translate("Arisu", "确认"))
         self.OpenRoleDir.setToolTip(_translate("Arisu", "打开提示库，在这个目录下用户可以自行添加或修改AI自动回复的人设。"))
         self.OpenRoleDir.setText(_translate("Arisu", "人设自定义"))
         self.LogQueryDir.setToolTip(_translate("Arisu", "存放Q群的聊天记录和软件的日志信息"))

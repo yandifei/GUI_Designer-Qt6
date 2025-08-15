@@ -10,7 +10,7 @@
 
 <div align="center">
   <a href=https://www.microsoft.com/zh-cn/software-download/windows11><img alt="使用平台" src="https://img.shields.io/badge/platform-Windows11-blue?style=flat-square&color=00ffff"/></a>
-  <a href=https://github.com/yandifei/ArisuQQChatAI/releases/download/v1.0.0-beta/ArisuQQChatAI.7z><img alt="最新版徽章" src="https://img.shields.io/github/release/yandifei/ArisuQQChatAI?include_prereleases&style=flat-square&color=4141dc"/></a>
+  <a href=https://github.com/yandifei/ArisuQQChatAI/releases><img alt="最新版徽章" src="https://img.shields.io/github/release/yandifei/ArisuQQChatAI?include_prereleases&style=flat-square&color=4141dc"/></a>
   <a href=https://github.com/yandifei/ArisuQQChatAI/releases><img alt="总下载次数" src="https://img.shields.io/github/downloads/yandifei/ArisuQQChatAI/total?style=flat-square&color=00ffff" /></a>
 </div>
 

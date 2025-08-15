@@ -47,7 +47,8 @@ class ArisuThreading(QRunnable):
         self.qq_group_location = qq_group_location          # 0,0（窗口的位置，文本的形式）
         self.remove_dangerous_order= remove_dangerous_order # 移除危险指令
         """额外属性"""
-        self.keep_win_time: int = 10    # 保持窗口的时间
+        self.thread_restart_time = 10   # 线程重启时间
+        self.win_reset_time: int = 10    # 窗口重置的时间
         self.monitoring_time: int = 1   # 消息刷新时间
         self.warning_of_overrepresentation  = "雑魚权限？真の杂鱼~🐟呢"    # 越权警告的发送的文本
         # self.id = None                # 线程id
@@ -70,8 +71,8 @@ class ArisuThreading(QRunnable):
                                    self.remove_dangerous_order)
 
             # 保持窗口(显示、位置、大小)，设置10秒进行一次保持
-            ef.thread_keep_win(self.keep_win_time)
-            print(f"窗口位置:{ef.qq_group_x, ef.qq_group_y}\t保持原始窗口的刷新时间:{self.keep_win_time}秒/刷")
+            ef.thread_keep_win(self.win_reset_time)
+            print(f"窗口位置:{ef.qq_group_x, ef.qq_group_y}\t保持原始窗口的刷新时间:{self.win_reset_time}秒/刷")
 
             """“状态输出重定向”"""
             try:
@@ -127,12 +128,12 @@ class ArisuThreading(QRunnable):
             # self.setAutoDelete(False)
             error_msg = (f"线程崩溃: {str(e)}\n{traceback.format_exc()}\n"
                          f"错误提示：\n未检测到 {self.qq_group_name} 窗口，窗口被关闭了，请重新打开窗口\n"
-                         f"10秒后将自动重启该线程，请确保窗口已经打开并且在桌面上了")
+                         f"{self.thread_restart_time}秒后将自动重启该线程，请确保窗口已经打开并且在桌面上了")
             # 发射崩溃的信号，传递自身和错误
             self.signal.error_signal.emit(self.print_widget, self, error_msg)
         except Exception as e:
             error_msg = (f"线程崩溃: {str(e)}\n{traceback.format_exc()}\n"
-                         f"错误提示：检测到线程池里面的线程崩溃,失去对 {self.qq_group_name} 窗口的控制，将在10秒后重启该线程")
+                         f"错误提示：检测到线程池里面的线程崩溃,失去对 {self.qq_group_name} 窗口的控制，将在{self.thread_restart_time}秒后重启该线程")
             # error_msg = f"线程崩溃: {str(e)}\n{traceback.format_exc()}"
             # 发射崩溃的信号，传递自生和错误
             try:
