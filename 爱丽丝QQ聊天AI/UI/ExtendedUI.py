@@ -842,7 +842,7 @@ class ArisuUI(ArisuQQCHatAIUI):
             self.ThreadRestartTimeState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
             self.ThreadRestartTimeState.setTitle(f"线程重启时间：{int(self.ThreadRestartTime.text())}秒")
             return True
-        except TypeError:
+        except ValueError:
             # info(f"线程重启时间填写错误: {self.ThreadRestartTime.text()} ，自动转换为10")
             # self.ThreadRestartTime.setText(10)
             # return False
