@@ -47,7 +47,6 @@ class ArisuThreading(QRunnable):
         self.qq_group_location = qq_group_location          # 0,0（窗口的位置，文本的形式）
         self.remove_dangerous_order= remove_dangerous_order # 移除危险指令
         """额外属性"""
-        self.thread_restart_time = 10   # 线程重启时间
         self.win_reset_time: int = 10    # 窗口重置的时间
         self.monitoring_time: int = 1   # 消息刷新时间
         self.warning_of_overrepresentation  = "雑魚权限？真の杂鱼~🐟呢"    # 越权警告的发送的文本
@@ -121,25 +120,33 @@ class ArisuThreading(QRunnable):
                         arisu.send_message(f"@{reply[0]} 不存在该指令")
                 else:
                     pass  # print("出现新消息，这里不进行打印，因为监视方法已经打印了")
-
         # 整体线程异常处理
+        except EnvironmentError:
+            # 窗口没有打开的信号，对接的是qq消息监视器的raise EnvironmentError
+            # 发射崩溃的信号，传递自生和错误（先输出栈，再输出错误，不需要as e，堆栈已经有了）
+            try:
+                self.signal.error_signal.emit(self.print_widget, self, f"\n{traceback.format_exc()}")
+            except (RuntimeError):
+                critical("启动AI自动回复过程中强行关闭了窗口")
+
         except COMError as e:
-            # # 设置崩溃后不自动删除对象，继续延用对象并重启线程
-            # self.setAutoDelete(False)
             error_msg = (f"线程崩溃: {str(e)}\n{traceback.format_exc()}\n"
                          f"错误提示：\n未检测到 {self.qq_group_name} 窗口，窗口被关闭了，请重新打开窗口\n"
-                         f"{self.thread_restart_time}秒后将自动重启该线程，请确保窗口已经打开并且在桌面上了")
+                         f"请确保窗口已经打开并且在桌面上了，")
             # 发射崩溃的信号，传递自身和错误
             self.signal.error_signal.emit(self.print_widget, self, error_msg)
+
         except Exception as e:
             error_msg = (f"线程崩溃: {str(e)}\n{traceback.format_exc()}\n"
-                         f"错误提示：检测到线程池里面的线程崩溃,失去对 {self.qq_group_name} 窗口的控制，将在{self.thread_restart_time}秒后重启该线程")
+                         f"错误提示：检测到线程池里面的线程崩溃,失去对 {self.qq_group_name} 窗口的控制，")
             # error_msg = f"线程崩溃: {str(e)}\n{traceback.format_exc()}"
             # 发射崩溃的信号，传递自生和错误
             try:
                 self.signal.error_signal.emit(self.print_widget, self, error_msg)
             except (RuntimeError, TypeError):
                 critical("启动AI自动回复过程中强行关闭了窗口")
+
+
 
     def kill(self):
         """停止线程"""

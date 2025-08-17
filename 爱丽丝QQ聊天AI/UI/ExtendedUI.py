@@ -130,11 +130,13 @@ class ArisuUI(ArisuQQCHatAIUI):
         self.ConsoleWidget.document().setMaximumBlockCount(100)                 # 设置重定向窗口最多为20行，多的自动删除
         self.tip_api_key_exist()                                                # 告诉用户密钥是否存在
         self.tip_logic_cpu_count()                                              # 提示用户可以使用的逻辑CPU数量，并自动计算最合适的CPU数量
-        self.thread_restart_time()                                              # 提示用户线程重启时间
+        self.tip_thread_restart_time()                                          # 提示用户线程重启时间
+        self.tip_win_reset_time()                                               # 提示用户窗口重置时间
         self.RestoreNavigationBarSortingButton.clicked.connect(self.restore_navigation_bar_sorting)  # 还原导航栏排序按钮
         self.APIKeyConfirm.clicked.connect(self.__api_key_confirm)              # 检测api有效和把deepseek注入到系统变量
         self.LogicCPUCountConfirm.clicked.connect(self.logic_cup_confirm)       # 确认逻辑CPU数
-        self.ThreadRestartTime.textChanged.connect(self.thread_restart_time)    # 线程重启时间
+        self.ThreadRestartTime.editingFinished.connect(self.thread_restart_time)# 线程重启时间
+        self.WinResetTime.editingFinished.connect(self.win_reset_time)          # 窗口重置时间
         self.OpenRoleDir.clicked.connect(self.open_role_repository_directory)   # 打开人设仓库目录
         self.KeywordReplyDir.clicked.connect(self.open_keyword_reply_directory) # 打开关键词回复目录
         self.JMDownloadStrategy.clicked.connect(self.open_jm_strategy_file)     # 打开JM策略的配置文件
@@ -839,16 +841,58 @@ class ArisuUI(ArisuQQCHatAIUI):
         判断线程重启时间是否有效
         """
         try:
-            self.ThreadRestartTimeState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
             self.ThreadRestartTimeState.setTitle(f"线程重启时间：{int(self.ThreadRestartTime.text())}秒")
-            return True
+            self.ThreadRestartTimeState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
+            self.config.user_settings["线程重启时间"]["时间"] = self.ThreadRestartTime.text()  # 收录时间
+            warning(f"用户成功修改线程重启时间为{self.ThreadRestartTime.text()}秒")
         except ValueError:
-            # info(f"线程重启时间填写错误: {self.ThreadRestartTime.text()} ，自动转换为10")
-            # self.ThreadRestartTime.setText(10)
-            # return False
             self.ThreadRestartTimeState.setStyleSheet("color: red;border: none;")  # 提示样式表设置字体为红色并且为无边框
-            self.ThreadRestartTimeState.setTitle("线程重启时间输入错误")
-            return False
+            self.ThreadRestartTimeState.setTitle("线程重启时间错误，修正为10秒")
+            self.ThreadRestartTime.setText("10")
+            self.config.user_settings["线程重启时间"]["时间"] = "10"    # 收录时间
+            warning("用户修改线程重启时间错误，自动修正为10秒")
+        finally:
+            # 保存到硬盘
+            self.config.save_user_settings_ini()
+
+    def tip_thread_restart_time(self):
+        """提示用户线程重启时间"""
+        # 配置文件拿到线程重启时间（本质上这里拿到的就是字符串）
+        time = self.config.user_settings["线程重启时间"]["时间"]
+        # 使用用户自定义的时间
+        self.ThreadRestartTime.setText(time)
+        # 状态输出显示时间
+        self.ThreadRestartTimeState.setTitle(f"线程重启时间：{time}秒")
+        info(f"初始线程重启时间：{time}")
+
+    def win_reset_time(self):
+        """窗口重置时间
+        判断线程窗口重置时间是否有效
+        """
+        try:
+            self.WinResetTimeState.setTitle(f"窗口重置时间：{int(self.WinResetTime.text())}秒")
+            self.WinResetTimeState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
+            self.config.user_settings["窗口重置时间"]["时间"] = self.WinResetTime.text()  # 收录时间
+            warning(f"用户成功修改线程重启时间为{self.WinResetTime.text()}秒")
+        except ValueError:
+            self.WinResetTimeState.setStyleSheet("color: red;border: none;")  # 提示样式表设置字体为红色并且为无边框
+            self.WinResetTimeState.setTitle("窗口重置时间错误，修正为10秒")
+            self.WinResetTime.setText("10")
+            self.config.user_settings["窗口重置时间"]["时间"] = "10"    # 收录时间
+            warning("用户修改窗口重置时间错误，自动修正为10秒")
+        finally:
+            # 保存到硬盘
+            self.config.save_user_settings_ini()
+
+    def tip_win_reset_time(self):
+        """提示窗口重置时间"""
+        # 配置文件拿到窗口重置时间（本质上这里拿到的就是字符串）
+        time = self.config.user_settings["窗口重置时间"]["时间"]
+        # 使用用户自定义的时间
+        self.WinResetTime.setText(time)
+        # 状态输出显示时间
+        self.WinResetTimeState.setTitle(f"窗口重置时间：{time}秒")
+        info(f"初始窗口重置时间：{time}")
 
     def open_role_repository_directory(self):
         """打开人设库目录"""
@@ -1147,9 +1191,10 @@ class ArisuUI(ArisuQQCHatAIUI):
         crash_object ： 崩溃对象
         crash_msg ： 崩溃信息
         """
+        time = int(self.config.user_settings["线程重启时间"]["时间"])    # 重启时间
         # 崩溃信息直接发到状态列表里面去
-        text_browser.append(crash_msg)
-        warning(f"检测到线程池里面的线程崩溃,失去对 {crash_object.qq_group_name} 窗口的控制，将在10秒后重启该线程")
+        text_browser.append(f"{crash_msg}线程将在{time}秒后重启")
+        warning(f"检测到线程池里面的线程崩溃,失去对 {crash_object.qq_group_name} 窗口的控制，将在{time}秒后重启该线程")
         # 线程重启
         def restart():
             """线程重启
@@ -1179,14 +1224,8 @@ class ArisuUI(ArisuQQCHatAIUI):
                 # critical("卧槽，有挂！没有在self.running_threads里找到对应的崩溃线程对象，只能是数据被篡改了吧？")
                 critical("线程池重启异常中断,self.running_threads里没有找到崩溃线程对象(被清空或被修改)")
 
-        # 拿到重启时间并开启重启线程
-        if self.thread_restart_time():
-            QTimer.singleShot(int(self.ThreadRestartTime), restart)
-            crash_object.thread_restart_time = int(self.ThreadRestartTime)
-        else:   # 重启时间有错
-            # 延迟10秒才进程重启
-            QTimer.singleShot(10000, restart)
-            crash_object.thread_restart_time = 10
+        # 拿到重启时间并开启重启线程(时间从配置表里面读取，避免控件未校验导致的错误)
+        QTimer.singleShot(time * 1000, restart)     # 它是按照毫秒计算的
 
     def terminate_thread(self):
         """终止线程"""

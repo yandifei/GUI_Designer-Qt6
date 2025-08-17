@@ -89,6 +89,10 @@ class ConfigurationManager:
             "Settings": self.user_settings["用户界面位置"]["用户设置"]
         }
 
+    # def get_restart_thread_time(self):
+    #     """获得线程重启时间"""
+    #     return self.user_settings["线程重启时间"]["时间"]
+
     def get_bind_sections(self):
         """获得绑定ini文件里的所有节"""
         return self.bind.sections()
