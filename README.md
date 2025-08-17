@@ -46,12 +46,12 @@
 ## 界面示意
 
 <div style="display: flex; justify-content: center; gap: 10px; margin: 20px auto;">
-  <img alt="主页" style="width: 400px; height: auto;" src="https://media.githubusercontent.com/media/yandifei/ArisuQQChatAI/bf40dda6d3300abe92f4e03f103e936f9738ee97/%E5%B1%95%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9B%BE%E7%89%87/%E4%B8%BB%E9%A1%B5.png"/>
+  <img alt="主页" style="width: 400px; height: auto;" src="./展示项目的图片/主页.png"/>
   <img alt="状态监测" style="width: 400px; height: auto;" src="https://media.githubusercontent.com/media/yandifei/ArisuQQChatAI/main/%E5%B1%95%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9B%BE%E7%89%87/%E7%8A%B6%E6%80%81%E7%9B%91%E6%B5%8B.png"/>
-  <img alt="Q群绑定" style="width: 400px; height: auto;" src="https://media.githubusercontent.com/media/yandifei/ArisuQQChatAI/main/%E5%B1%95%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9B%BE%E7%89%87/Q%E7%BE%A4%E7%BB%91%E5%AE%9A.png"/>
-  <img alt="用户设置" style="width: 400px; height: auto;" src="https://media.githubusercontent.com/media/yandifei/ArisuQQChatAI/main/%E5%B1%95%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9B%BE%E7%89%87/%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE.png"/>
-  <img alt="状态监测(最大化)" style="width: 400px; height: auto;" src="https://media.githubusercontent.com/media/yandifei/ArisuQQChatAI/main/%E5%B1%95%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9B%BE%E7%89%87/%E7%8A%B6%E6%80%81%E7%9B%91%E6%B5%8B(%E6%9C%80%E5%A4%A7%E5%8C%96).png"/>
-  <img alt="日志监控(最大化)" style="width: 400px; height: auto;" src="https://media.githubusercontent.com/media/yandifei/ArisuQQChatAI/main/%E5%B1%95%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9B%BE%E7%89%87/%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7(%E6%9C%80%E5%A4%A7%E5%8C%96).png"/>
+  <img alt="Q群绑定" style="width: 400px; height: auto;" src="./展示项目的图片/Q群绑定.png"/>
+  <img alt="用户设置" style="width: 400px; height: auto;" src="./展示项目的图片/用户设置.png"/>
+  <img alt="状态监测(最大化)" style="width: 400px; height: auto;" src="./展示项目的图片/状态监测(最大化).png"/>
+  <img alt="日志监控(最大化)" style="width: 400px; height: auto;" src="./展示项目的图片/日志监控(最大化).png"/>
 </div>
 
 
@@ -87,8 +87,10 @@ python 爱丽丝QQ聊天AI/爱丽丝QQ聊天AI.py
 ```
 
 ## 注意事项
-- 更新就直接覆盖安装
+- 禁止倒卖！禁止倒卖！禁止倒卖！！！
+- 更新就直接覆盖安装（或者直接把原来的删除掉）
 - 必须在QQ中在点击“超级调色盘”把主题选择为“极简白”
+- 如果要进行二次分发或转载须附上版权声明和保留开源协议
 
 ## 免责声明
 - ⚠️本软件通过 DeepSeek API 生成的内容不代表开发者观点，其准确性、适当性由使用者自行判断并承担全部责任。🤖AI可能产生错误、偏见或不适宜内容，开发者不对此引发的任何后果负责。
