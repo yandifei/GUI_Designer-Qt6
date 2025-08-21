@@ -100,8 +100,8 @@ class ArisuThreading(QRunnable):
                     if not reply[3]:
                         """聊天回复"""
                         reply_msg = deepseek.ask(f"{reply[0]}:{reply[1]}，时间:{reply[2]}", False)  # 发出请求并回应(这里不重复打印到屏幕上)
-                        # @发送者 回复的消息
-                        arisu.send_message(f"@{reply[0]} {reply_msg}")
+                        # @发送者 回复的消息（系统消息不@）
+                        arisu.send_message(f"@{reply[0]} {reply_msg}" if reply[0] != "系统" else f"{reply_msg}")
                     # 接收到了指令（检测指令是否存在）
                     elif ef.is_order(reply[1]):  # 指令库里面检索指令(顺序不能反，因为指令可能带有参数)
                         """指令操作"""
