@@ -2,9 +2,7 @@
 为了更好实现其他控件逻辑（非基础控件）
 """
 # 系统自带
-import os
 import platform  # CPU逻辑核心计算
-import sys
 # 第三方
 import keyring                                                                              # api密钥加密和解密
 import psutil                                                                               # 电脑硬件信息获取

@@ -14,6 +14,7 @@ import threading        # 线程
 from qq_message_monitor import QQMessageMonitor                         # 导入QQ消息监控者这个类
 from deepseek_conversation_engine import DeepseekConversationEngine     # 导入deepseek对话引擎这个类
 from jmcomic import create_option_by_file, download_album, jm_exception # 导入禁漫模块
+from UI import __version__                                              # 从包里面拿到最新版本
 
 class ArisuQQChatAICore:
     def __init__(self, deepseek: DeepseekConversationEngine, arisu : QQMessageMonitor, root, exit_password, qq_group_location : str,
@@ -111,19 +112,20 @@ class ArisuQQChatAICore:
     @staticmethod
     def get_help():
         """帮助查询"""
-        return """
-1.使用 #指令查询 能查询所有指令，但是指令的执行需要权限
-2.尽管我心里认为这是个垃圾(对它的上限感到了失望)，但是为了学习练习Qt我不得不将此项目重拾起来
-3.禁止将该项目用于引流(带节奏)、纯色情(非学习教育和无任何意义的目的)、当键政等非法目的使用
-4.还是那句话：少🦌点吧，机器人提供的情绪价值是为了让你有更好的明天，禁止把它当成jm的工具
-5.本项目是基于自主研发的DeepseekConversationEngine类库开发的类库去完成AI调用，通过pyautomation库对QQ窗口进行操作
-6.AI类库仓库地址：https://github.com/yandifei/DeepseekConversationEngine
-7.源代码仓库地址：我还在想要不要给Qt仓库改名或者是新建一个仓库来放（后面要release）
-        """
+        return f"""
+爱丽丝QQ聊天AI💬，版本：{__version__}✨
+1️⃣ Github仓库地址🔗：https://github.com/yandifei/ArisuQQChatAI 🚀
+2️⃣ 使用 #指令查询📖 可以查询所有指令，但是部分指令的执行需要权限⚙️
+3️⃣ 如果你喜欢的话，就给爱丽丝个✨Star✨吧！ (ﾉ>ω<)ﾉ❤️🌟
+4️⃣ ❗禁止将该项目用于引流(带节奏)、纯色情(非学习教育和无任何意义的目的)、当键政等非法用途🚫
+5️⃣ 💡还是那句话：少🦌点吧，机器人提供的情绪价值是为了让你有更好的明天🌞，禁止把它当成xn⚠️
+6️⃣ 🔧本项目是基于自主研发的DeepseekConversationEngine类库开发的类库去完成用，通过pyautomation库对QQ窗口进行操作🤖
+7️⃣ 📦AI类库仓库地址：https://github.com/yandifei/DeepseekConversationEngine
+"""
 
     def get_orders(self):
         """查询所有指令"""
-        return " ".join([order for order in self.order_dict])
+        return "\t".join([order for order in self.order_dict])
 
     def jm_down_order(self, jm_album_id):
         """禁漫本子下载指令实现
