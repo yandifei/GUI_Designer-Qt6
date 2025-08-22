@@ -17,10 +17,10 @@ from PyQt6.QtWidgets import QApplication, QMessageBox, QGroupBox, QVBoxLayout, Q
 # 自己的包
 from UI import __version__                                                                  # 从包里面拿到最新版本
 try:  # 实际环境使用
-    from .functions import OutputRedirection, clear_temp, InputRedirection                  # 导入非UI功能函数
+    from .functions import *                                                                # 导入非UI功能函数
     from .arisu_qq_chat_ai_ui import ArisuQQCHatAIUI                                        # 基础框架的类
 except (ModuleNotFoundError, ImportError):                                                  # 测试环境使用
-    from functions import OutputRedirection, clear_temp, InputRedirection                   # 导入非UI功能函数
+    from functions import *                                                                 # 导入非UI功能函数
     from arisu_qq_chat_ai_ui import ArisuQQCHatAIUI                                         # 基础框架的类
     from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore                                  # 外部方法的类
     from deepseek_conversation_engine import DeepseekConversationEngine                     # AI对话
@@ -98,6 +98,7 @@ class ArisuUI(ArisuQQCHatAIUI):
         self.import_bind_data()                                                 # 导入绑定信息(加载Q群列表的配置信息)
         self.AddOrChangeQQGroup.clicked.connect(self.add_or_change_qq_group)    # 添加或修改QQ群按钮
         self.RemoveQQGroup.clicked.connect(self.remove_qq_group)                # 移除QQ群按钮
+        self.QQWinLocationCalculation.clicked.connect(self.qq_win_location_calculation_button)  # Q群窗口位置计算
         self.SwitchReply.clicked.connect(self.switch_reply)                     # AI自动回复开关
         self.QQGroupList.currentItemChanged.connect(self.show_qq_group_info)    # QQ群列表选择项发生改变时显示Q群信息
         self.QQGroupList.clicked.connect(self.show_qq_group_info2)              # QQ群列表选择项被点击时显示Q群信息
@@ -246,14 +247,12 @@ class ArisuUI(ArisuQQCHatAIUI):
                 exception("文档不存在")
                 print("文档不存在")
                 # 错误弹窗提示
-                QMessageBox.critical(self, "错误提示", "文档不存在", QMessageBox.StandardButton.Ok,
-                                     QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self, "错误提示", "文档不存在", QMessageBox.StandardButton.Ok)
                 warning("文档不存在，可能被删除了")
         # 异常处理
         except Exception as e:
             # print(f"打开文档失败: {str(e)}")  # 输出错误信息
-            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok,
-                                 QMessageBox.StandardButton.Ok)
+            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok)
             exception("文档打开失败")
             print("文档打开失败")
 
@@ -469,6 +468,27 @@ class ArisuUI(ArisuQQCHatAIUI):
             self.config.bind.remove_section(self.QQGroupList.currentItem().text())  # 绑定配置删除对应的节
             self.config.save_bind_ini()  # 写入硬盘
             self.QQGroupList.takeItem(self.QQGroupList.currentRow())  # 删除当前选中项
+
+    def qq_win_location_calculation_button(self):
+        """QQ窗口位置计算按钮"""
+        # 错误弹窗提示
+        if self.QQGroupName.text() == "":
+            QMessageBox.critical(self, "错误提示", "请先输入Q群名（优先填备注名），否则将无法计算Q群可用位置",
+                                 QMessageBox.StandardButton.Ok)
+            return False
+        try:
+            calculation_results = qq_win_location_calculation(self.QQGroupName.text())
+            QMessageBox.information(self, "计算结果", f"左上角位置：{calculation_results[0]}\n\n"
+                  f"左边缘可用位置：{"  ".join(str(result) for result in calculation_results[1])}\n\n"
+                  f"上边缘可用位置：{"  ".join(str(result) for result in calculation_results[2])}\n\n"
+                  f"右边缘可用位置：{"  ".join(str(result) for result in calculation_results[3])}\n\n"
+                  f"下边缘可用位置：{"  ".join(str(result) for result in calculation_results[4])}",
+            QMessageBox.StandardButton.Ok)  # 用户提示
+        except EnvironmentError as e:
+            warning(f"用户启动QQ窗口位置计算，但输入了一个不存在或重名的窗口，错误提示：{e}")
+            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok)    # 用户提示
+            self.QQGroupName.setText("")  # 重置给用户重新输入
+
 
     def switch_reply(self):
         """自动回复开关槽函数实现"""
@@ -908,14 +928,12 @@ class ArisuUI(ArisuQQCHatAIUI):
                 exception("提示库文件夹不存在")
                 print("提示库文件夹不存在")
                 # 错误弹窗提示
-                QMessageBox.critical(self, "错误提示", "提示库文件夹不存在", QMessageBox.StandardButton.Ok,
-                                     QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self, "错误提示", "提示库文件夹不存在", QMessageBox.StandardButton.Ok)
                 warning("提示库文件夹不存在，可能被删除了")
         # 异常处理
         except Exception as e:
             # print(f"打开文档失败: {str(e)}")  # 输出错误信息
-            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok,
-                                 QMessageBox.StandardButton.Ok)
+            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok)
             exception("提示库文件夹不存在")
             print("提示库文件夹不存在")
 
@@ -933,14 +951,12 @@ class ArisuUI(ArisuQQCHatAIUI):
                 exception("关键词回复文件夹不存在")
                 print("关键词回复文件夹不存在")
                 # 错误弹窗提示
-                QMessageBox.critical(self, "错误提示", "关键词回复文件夹不存在", QMessageBox.StandardButton.Ok,
-                                     QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self, "错误提示", "关键词回复文件夹不存在", QMessageBox.StandardButton.Ok)
                 warning("关键词回复文件夹不存在，可能被删除了")
         # 异常处理
         except Exception as e:
             # print(f"打开文档失败: {str(e)}")  # 输出错误信息
-            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok,
-                                 QMessageBox.StandardButton.Ok)
+            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok)
             exception("关键词回复文件夹不存在")
             print("关键词回复文件夹不存在")
 
@@ -958,14 +974,12 @@ class ArisuUI(ArisuQQCHatAIUI):
                 exception("禁漫天堂的策略文件不存在")
                 print("禁漫天堂的策略文件不存在")
                 # 错误弹窗提示
-                QMessageBox.critical(self, "错误提示", "禁漫天堂的策略文件不存在", QMessageBox.StandardButton.Ok,
-                                     QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self, "错误提示", "禁漫天堂的策略文件不存在", QMessageBox.StandardButton.Ok)
                 warning("禁漫天堂的策略文件不存在，可能被删除了")
         # 异常处理
         except Exception as e:
             # print(f"打开文档失败: {str(e)}")  # 输出错误信息
-            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok,
-                                 QMessageBox.StandardButton.Ok)
+            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok)
             exception("禁漫天堂的策略文件不存在")
             print("禁漫天堂的策略文件不存在")
 
@@ -983,14 +997,12 @@ class ArisuUI(ArisuQQCHatAIUI):
                 exception("日志目录不存在")
                 print("日志目录")
                 # 错误弹窗提示
-                QMessageBox.critical(self, "错误提示", "日志目录不存在", QMessageBox.StandardButton.Ok,
-                                     QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self, "错误提示", "日志目录不存在", QMessageBox.StandardButton.Ok)
                 warning("日志目录不存在，可能被删除了")
         # 异常处理
         except Exception as e:
             # print(f"打开文档失败: {str(e)}")  # 输出错误信息
-            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok,
-                                 QMessageBox.StandardButton.Ok)
+            QMessageBox.critical(self, "错误提示", str(e), QMessageBox.StandardButton.Ok)
             exception("日志目录不存在")
             print("日志目录不存在")
 
@@ -1118,7 +1130,7 @@ class ArisuUI(ArisuQQCHatAIUI):
             critical("用户没有任何绑定配置，不开启AI自动回复功能，自动跳转到Q群绑定界面")
             QMessageBox.critical(self, "错误提示", "请先进行Q群绑定配置（记得登陆QQ后把需要绑定Q聊窗口单独打开），不会就看文档问人。"
                                                    "就在这个界面填写好信息点击添加就算是绑定成功了。",
-                                 QMessageBox.StandardButton.Ok, QMessageBox.StandardButton.Ok)
+                                 QMessageBox.StandardButton.Ok)
             return False
         else:
             info("1.绑定配置检测通过(已经有绑定的群聊)")
@@ -1247,7 +1259,7 @@ class ArisuUI(ArisuQQCHatAIUI):
         # 密钥不存在
         if not keyring.get_password("DEEPSEEK_API_KEY", "爱丽丝"):
             QMessageBox.critical(self, "错误提示", "请先配置deepseek的api密钥，不会的看文档、看视频、问AI、问别人",
-                                 QMessageBox.StandardButton.Ok, QMessageBox.StandardButton.Ok)
+                                 QMessageBox.StandardButton.Ok)
             return False
         # 密钥存在
         else:
@@ -1261,12 +1273,11 @@ class ArisuUI(ArisuQQCHatAIUI):
                     timeout=5  # 添加超时设置，防止卡死
                 )
                 if response.status_code != 200:  # 检查响应状态码
-                    QMessageBox.critical(self, "错误提示", "之前配置的密钥已无效，请重新配置",
-                                         QMessageBox.StandardButton.Ok, QMessageBox.StandardButton.Ok)
+                    QMessageBox.critical(self, "错误提示", "之前配置的密钥已无效，请重新配置", QMessageBox.StandardButton.Ok)
                     return False
             except requests.exceptions.RequestException as e:  # 捕获所有网络相关异常
                 QMessageBox.critical(self, "错误提示", f"连接超时，请重新试或重接网络。错误代码：{str(e)}",
-                                     QMessageBox.StandardButton.Ok, QMessageBox.StandardButton.Ok)
+                                     QMessageBox.StandardButton.Ok)
                 exception("检查api是否存在及有效的方法。网络请求失败，错误信息:")  # 打印输出异常并记录异常
                 return False
         return True  # 响应状态码等于200

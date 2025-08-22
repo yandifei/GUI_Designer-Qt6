@@ -516,7 +516,7 @@ class Ui_Arisu(object):
         self.StateScrollArea.setWidgetResizable(True)
         self.StateScrollArea.setObjectName("StateScrollArea")
         self.StateWidget = QtWidgets.QWidget()
-        self.StateWidget.setGeometry(QtCore.QRect(0, 0, 1186, 556))
+        self.StateWidget.setGeometry(QtCore.QRect(0, 0, 82, 18))
         self.StateWidget.setObjectName("StateWidget")
         self.StateWidgetLayout = QtWidgets.QHBoxLayout(self.StateWidget)
         self.StateWidgetLayout.setObjectName("StateWidgetLayout")
@@ -806,6 +806,38 @@ class Ui_Arisu(object):
         self.RemoveQQGroup.setObjectName("RemoveQQGroup")
         self.AddOrRemoveLayout.addWidget(self.RemoveQQGroup)
         self.BindInputLayout.addLayout(self.AddOrRemoveLayout)
+        self.QQWinLocationCalculation = QtWidgets.QPushButton(parent=self.Bind)
+        self.QQWinLocationCalculation.setMinimumSize(QtCore.QSize(0, 40))
+        self.QQWinLocationCalculation.setSizeIncrement(QtCore.QSize(0, 40))
+        font = QtGui.QFont()
+        font.setFamily("黑体")
+        font.setPointSize(17)
+        font.setBold(True)
+        self.QQWinLocationCalculation.setFont(font)
+        self.QQWinLocationCalculation.setStyleSheet("/**正常情况下样式**/\n"
+"QPushButton{\n"
+"    border-radius: 10px;        /*圆角*/\n"
+"    border-width: 3px;        /*设置边框大小*/\n"
+"    border-color: rgb(255, 170, 0);  /*边框颜色*/\n"
+"    border-style: solid;        /*实线*/\n"
+"    color: rgb(255, 170, 0);\n"
+"    background-color: rgba(255, 170, 0,0.1);    /*按钮背景颜色纯白*/\n"
+"}\n"
+"\n"
+"/**鼠标停留在按钮上的样式**/\n"
+"QPushButton::hover{    \n"
+"    background-color: rgba(255, 170, 0,0.5);\n"
+"    color: rgb(255, 255, 255);\n"
+"}\n"
+"\n"
+"/**鼠标按压下去的样式**/\n"
+"QPushButton:pressed {\n"
+"    background-color: rgb(255, 170, 0);\n"
+"    color: rgb(255, 255, 255);\n"
+"}\n"
+"")
+        self.QQWinLocationCalculation.setObjectName("QQWinLocationCalculation")
+        self.BindInputLayout.addWidget(self.QQWinLocationCalculation)
         spacerItem1 = QtWidgets.QSpacerItem(13, 13, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.BindInputLayout.addItem(spacerItem1)
         self.SwitchReply = QtWidgets.QPushButton(parent=self.Bind)
@@ -2097,7 +2129,7 @@ class Ui_Arisu(object):
 "}")
         self.ConsoleWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.ConsoleWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.ConsoleWidget.setReadOnly(False)
+        self.ConsoleWidget.setReadOnly(True)
         self.ConsoleWidget.setObjectName("ConsoleWidget")
         self.verticalLayout_9.addWidget(self.ConsoleWidget)
         icon17 = QtGui.QIcon()
@@ -2134,8 +2166,13 @@ class Ui_Arisu(object):
         self.InitRole.setPlaceholderText(_translate("Arisu", "初始人设(不填默认爱丽丝)"))
         self.QQGroupLocation.setPlaceholderText(_translate("Arisu", "Q群窗口的位置(不填默认0,0)"))
         self.RemoveDangerousOrder.setText(_translate("Arisu", "移除危险指令"))
+        self.AddOrChangeQQGroup.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">添加或修改绑定信息，必须要按该按钮才能确定，如果失去焦点就不保存信息。</span></p></body></html>"))
         self.AddOrChangeQQGroup.setText(_translate("Arisu", "添加或修改"))
+        self.RemoveQQGroup.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">移除需要绑定的QQ群，即删除不需要AI恢复的Q群绑定信息。</span></p></body></html>"))
         self.RemoveQQGroup.setText(_translate("Arisu", "移除Q群"))
+        self.QQWinLocationCalculation.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">根据给出的Q群名自动计算，给出所有边缘位置可用的Q群窗口位置（小白专属）。</span></p></body></html>"))
+        self.QQWinLocationCalculation.setText(_translate("Arisu", "Q群位置计算"))
+        self.SwitchReply.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">条件满足就开启Q群的消息监听和AI自动回复。</span></p></body></html>"))
         self.SwitchReply.setText(_translate("Arisu", "开启自动回复"))
         self.QQGroupListState.setTitle(_translate("Arisu", "需要回复的QQ群"))
         self.QQGroupList.setSortingEnabled(False)

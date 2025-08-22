@@ -954,8 +954,8 @@ QScrollBar::add-line:horizontal {		/*滚动条底部的按钮*/
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>1186</width>
-                <height>556</height>
+                <width>82</width>
+                <height>18</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="StateWidgetLayout"/>
@@ -1403,6 +1403,9 @@ QCheckBox::indicator:checked {
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;添加或修改绑定信息，必须要按该按钮才能确定，如果失去焦点就不保存信息。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">/**正常情况下样式**/
 QPushButton{
@@ -1460,6 +1463,9 @@ QPushButton:pressed {
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;移除需要绑定的QQ群，即删除不需要AI恢复的Q群绑定信息。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">/**正常情况下样式**/
 QPushButton{
@@ -1494,6 +1500,59 @@ QPushButton:pressed {
               </layout>
              </item>
              <item>
+              <widget class="QPushButton" name="QQWinLocationCalculation">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="sizeIncrement">
+                <size>
+                 <width>0</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>黑体</family>
+                 <pointsize>17</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;根据给出的Q群名自动计算，给出所有边缘位置可用的Q群窗口位置（小白专属）。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/**正常情况下样式**/
+QPushButton{
+	border-radius: 10px;		/*圆角*/
+	border-width: 3px;		/*设置边框大小*/
+	border-color: rgb(255, 170, 0);  /*边框颜色*/
+	border-style: solid;		/*实线*/
+	color: rgb(255, 170, 0);
+	background-color: rgba(255, 170, 0,0.1);	/*按钮背景颜色纯白*/
+}
+
+/**鼠标停留在按钮上的样式**/
+QPushButton::hover{	
+	background-color: rgba(255, 170, 0,0.5);
+	color: rgb(255, 255, 255);
+}
+
+/**鼠标按压下去的样式**/
+QPushButton:pressed {
+	background-color: rgb(255, 170, 0);
+	color: rgb(255, 255, 255);
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Q群位置计算</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="TurnInputLayout">
                <property name="orientation">
                 <enum>Qt::Orientation::Vertical</enum>
@@ -1526,6 +1585,9 @@ QPushButton:pressed {
                  <pointsize>17</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;条件满足就开启Q群的消息监听和AI自动回复。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">/**正常情况下样式**/
@@ -3782,7 +3844,7 @@ QTextBrowser QScrollBar::sub-page:vertical {
           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
          </property>
          <property name="readOnly">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>

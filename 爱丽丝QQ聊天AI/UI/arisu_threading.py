@@ -90,7 +90,6 @@ class ArisuThreading(QRunnable):
                 # arisu.monitor_message()  # 对新消息进行监控
                 if text := arisu.monitor_message():                      # 对新消息进行监控
                     self.signal.print_signal.emit(self.print_widget, text)
-
                 """消息处理"""
                 if len(arisu.message_processing_queues) > 0:  # 消息队列不为空，进行队列处理
                     reply = ef.split_respond_msg()  # 解析需要回应的消息
@@ -99,9 +98,14 @@ class ArisuThreading(QRunnable):
                     # 非指令
                     if not reply[3]:
                         """聊天回复"""
-                        reply_msg = deepseek.ask(f"{reply[0]}:{reply[1]}，时间:{reply[2]}", False)  # 发出请求并回应(这里不重复打印到屏幕上)
-                        # @发送者 回复的消息（系统消息不@）
-                        arisu.send_message(f"@{reply[0]} {reply_msg}" if reply[0] != "系统" else f"{reply_msg}")
+                        """关键词匹配规则回复"""
+                        if arisu.output_text == "图片": # 满足图片标志位
+                            arisu.ctrl_v()  # Ctrl+V粘贴并后台点击发送
+                        else:
+                            """AI回复"""
+                            reply_msg = deepseek.ask(f"{reply[0]}:{reply[1]}，时间:{reply[2]}", False)  # 发出请求并回应(这里不重复打印到屏幕上)
+                            # @发送者 回复的消息（系统消息不@
+                            arisu.send_message(f"@{reply[0]} {reply_msg}" if reply[0] != "系统" else f"{reply_msg}")
                     # 接收到了指令（检测指令是否存在）
                     elif ef.is_order(reply[1]):  # 指令库里面检索指令(顺序不能反，因为指令可能带有参数)
                         """指令操作"""

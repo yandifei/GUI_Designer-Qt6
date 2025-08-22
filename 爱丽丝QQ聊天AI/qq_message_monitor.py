@@ -42,7 +42,7 @@ class QQMessageMonitor:
         self.geometry = self.qq_chat_win.BoundingRectangle  # 窗口的位置和大小
         self.x = self.geometry.left # 窗口x坐标
         self.y = self.geometry.top # 窗口y坐标
-        self.weight = self.geometry.width() # 窗口长
+        self.width = self.geometry.width() # 窗口长
         self.height = self.geometry.height() # 窗口宽
         print(f"成功绑定 \033[96m{win_name}\033[0m {self.jude_group_or_friend(self.qq_chat_win)}窗口并置顶窗口\t监听者：{monitor_name}")# 把对象进行绑定，动态属性修改并打印
         print(f"\033[96m{win_name}\033[0m 窗口句柄:{self.hwnd}\t进程ID:{self.pid}\t窗口大小:{self.geometry}")
@@ -80,9 +80,9 @@ class QQMessageMonitor:
         # 2个组里面->组2->组2->组1->组3->组0->组0->全是消息控件，需要解析
         self.message_list_box = self.main_chat_win.GetChildren()[1].GetChildren()[1].GetChildren()[0].GetChildren()[2].GetChildren()[0].GetChildren()[0]
         self.messages_count = 0  # 记录最大消息数(调用消息监控会更新)
-        self.AutomationId_list = list()   # 记录获得消息控件的所有ID(调用消息监控会更新)
-        self.message_list = list()  # 设置一个列表接收消息
-        self.message_list_dict = list()  # 列表字典形式记录消息，用来完整记录消息体（和消息列表冲突了）
+        self.AutomationId_list = []   # 记录获得消息控件的所有ID(调用消息监控会更新)
+        self.message_list = []  # 设置一个列表接收消息
+        self.message_list_dict = []  # 列表字典形式记录消息，用来完整记录消息体（和消息列表冲突了）
         self.get_messages() # 创建对象的时候就对窗口进行一次监听，并把记录保存下来(动态属性修改)
         self.control_id_index = 0  # 旧表的最后一个控件id下标，用来定位新表(默认新表的第一个控件遍历消息体)
         """编辑工具栏(edit_tool_bar)"""
@@ -143,17 +143,29 @@ class QQMessageMonitor:
             # QQ群主和管理员
             self.qq_group_administrator = self.get_qq_group_administrator()
         """-----------------------------------------消息监听相关-----------------------------------------"""
-        self.message_data_directory = None   # 监听数据存放的目录
-        self.message_data_txt = None    # 监听的文本数据存放路径
-        self.create_directory()  # 如果没有转义这里会报警告，不用管(创建目录)
-        self.create_txt()  # 创建文本文件
-        self.message_processing_queues = list() # 消息处理队列(接收到指定消息后就把消息进行处理)
-        self.keyword_respond = False    # 是否启动关键词自动回复
-        self.message_keyword = list()   # 消息关键词
-        self.sender_keyword = list()   # 发送者关键词.txt
-        self.message_sender_keyword = dict()    # 指定发送者的关键词
-        self.filter_sender_keyword = list()     # 过滤发送者关键词.txt
-        self.keyword_read() # 关键词读取(发送者及其关键词内容读入)
+        self.message_data_directory = None      # 监听数据存放的目录
+        self.message_data_txt = None            # 监听的文本数据存放路径
+        self.create_directory()                 # 如果没有转义这里会报警告，不用管(创建目录)
+        self.create_txt()                       # 创建文本文件
+        self.message_processing_queues = []     # 消息处理队列(接收到指定消息后就把消息进行处理)
+        self.keyword_respond = False            # 是否启动关键词自动回复
+        self.message_keyword = []               # 消息关键词
+        self.sender_keyword = []                # 发送者关键词.txt
+        self.message_sender_keyword = {}        # 指定发送者的关键词
+        self.filter_sender_keyword = []         # 过滤发送者关键词.txt
+        self.keyword_read()                     # 关键词读取(发送者及其关键词内容读入)
+        self.picture_map = {}                   # 图片映射表
+        self.picture_map_read()                 # 图片映射表读取
+        """-----------------------------------------网络请求构造-----------------------------------------"""
+        # 请求超时时间
+        self.requests_timeout = 10
+        # 请求头构造
+        self.headers = {
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "zh-CN,zh;q=0.9",
+        }
         """输出重定向的文本（显示文本）"""
         self.output_text = (f"成功绑定 {win_name} {self.jude_group_or_friend(self.qq_chat_win)}窗口并置顶窗口\t监听者：{monitor_name}\n"
                             f"{win_name} 窗口句柄:{self.hwnd}\t进程ID:{self.pid}\n窗口大小:{self.geometry}")
@@ -184,7 +196,7 @@ class QQMessageMonitor:
         desktop = uiautomation.GetRootControl()  # 获取当前桌面对象
         if out: print(f"{desktop.Name}的可见窗口为:")
         visible_windows = desktop.GetChildren()  # 获得当前桌面所有可见的窗口的对象
-        visible_windows_object = list()     # 列表存放可见窗口的对象
+        visible_windows_object = []     # 列表存放可见窗口的对象
         for visible_window in visible_windows:
             visible_windows_object.append(visible_window)   #   遍历存放可见窗口的对象
         if out:
@@ -196,7 +208,7 @@ class QQMessageMonitor:
         :参数 visible_windows_object: 可见窗口的列表
         :返回值:指定窗口的对象
         """
-        qq_chat_win_list = list() # 如果标题和类名相同就拒绝绑定
+        qq_chat_win_list = [] # 如果标题和类名相同就拒绝绑定
         for visible_window in visible_windows_object:
             # 找到符合指定好友名或qq群名的窗口
             if visible_window.Name == self.win_name and visible_window.ClassName == "Chrome_WidgetWin_1":
@@ -204,7 +216,7 @@ class QQMessageMonitor:
         if len(qq_chat_win_list) == 0:
             raise EnvironmentError(f"没有找到这个窗口\n\n错误提示：\n请手动打开【{self.win_name}】 Q群将该Q群窗口显示到桌面上，你不开Q群我玩个屁！我不是神不知道你想的啥！")
         elif len(qq_chat_win_list) >= 2:
-            raise EnvironmentError("窗口重名\n\n错误提示：\n请确保当前打开的Q群没有重名(有备注名就看备注名，没有就是原来的Q的名)。")
+            raise EnvironmentError("窗口重名\n\n错误提示：\n请确保当前打开的Q群没有重名(有备注名就看备注名，没有就是原来的Q群名)。")
         return qq_chat_win_list[0]
 
     """窗口判定相关"""
@@ -257,7 +269,7 @@ class QQMessageMonitor:
         repaint : 重新绘制窗口，默认打开
         """
         if x == y is None:  # 把窗口移动到指定位置
-            x = 3 - self.weight
+            x = 3 - self.width
             y = 3 - self.height
         size = win32gui.GetWindowRect(self.hwnd)  # 获取窗口左上角和右下角的坐标
         width, height = size[2] - size[0], size[3] - size[1]    # 计算窗口的大小
@@ -281,7 +293,7 @@ class QQMessageMonitor:
         repaint : 重新绘制窗口，默认打开
         """
         point = win32gui.GetWindowRect(self.hwnd)  # 获取窗口左上角和右下角的坐标
-        win32gui.MoveWindow(self.hwnd, point[0], point[1], self.weight, self.height, repaint)
+        win32gui.MoveWindow(self.hwnd, point[0], point[1], self.width, self.height, repaint)
 
     def top_win(self):
         """将qq聊天窗口置顶"""
@@ -551,7 +563,6 @@ class QQMessageMonitor:
         # 模拟鼠标弹起
         win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, 0, long_position)  # 弹起
 
-
     def get_edit_value(self):
         """获取编辑控件的值
         返回值： 文本编辑框的内容
@@ -579,19 +590,17 @@ class QQMessageMonitor:
         image = Image.open(image_path).convert("RGB")
         # 将图片保存为BMP格式的内存字节流
         output = io.BytesIO()
-        image.save(output, format="BMP")
-        bmp_data = output.getvalue()
+        image.save(output, "BMP")
+        bmp_data = output.getvalue()[14:]  # 去除BMP文件头（14字节），获取DIB数据
         output.close()
-        # 去除BMP文件头（14字节），获取DIB数据
-        dib_data = bmp_data[14:]
         # 将DIB数据写入剪贴板
         win32clipboard.OpenClipboard()
         win32clipboard.EmptyClipboard()
-        win32clipboard.SetClipboardData(win32clipboard.CF_DIB, dib_data)
+        win32clipboard.SetClipboardData(win32clipboard.CF_DIB, bmp_data)
         win32clipboard.CloseClipboard()
 
-    def send_url_image(self, url):
-        """使用接口发送图片
+    def download_image(self,url):
+        """下载图片
         url : 图片接口
         https://t.alcy.cc/moe   # 二次元萌图
         https://v2.xxapi.cn/api/baisi?return=302   # 三次元白丝
@@ -599,7 +608,21 @@ class QQMessageMonitor:
         """
         try:
             # 请求超过10秒为超时
-            with Image.open(io.BytesIO(requests.get(url, timeout=10).content)) as img:
+            with Image.open(io.BytesIO(requests.get(url, headers=self.headers, timeout=self.requests_timeout).content)) as img:
+                img.save("./logs/下载缓存/网页请求图片.png", "PNG")
+        except Exception as e:
+            self.output_text = f"图片下载失败，出现异常错误:{e}"
+
+    def send_url_image(self, url):
+        """使用接口下载并发送图片
+        url : 图片接口
+        https://t.alcy.cc/moe   # 二次元萌图
+        https://v2.xxapi.cn/api/baisi?return=302   # 三次元白丝
+        https://v2.xxapi.cn/api/heisi?return=302   # 三次元黑丝
+        """
+        try:
+            # 请求超过10秒为超时
+            with Image.open(io.BytesIO(requests.get(url, headers=self.headers, timeout=self.requests_timeout).content)) as img:
                 img.save("./logs/下载缓存/网页请求图片.png", "PNG")
             # 设置剪切板内容为图片
             self.copy_pic("./logs/下载缓存/网页请求图片.png") # 处理图片并复制到剪切板
@@ -607,6 +630,14 @@ class QQMessageMonitor:
         except Exception as e:
             # print(f"\033[91m图片无法发送(9成网络问题)，出现异常错误:{e}")  # 设置剪切板内容出现异常
             self.output_text = f"图片无法发送(9成网络问题)，出现异常错误:{e}"
+
+    def send_image(self, path = "./logs/下载缓存/网页请求图片.png"):
+        """发送图片
+        参数：
+        path : 图片路径（默认./logs/下载缓存/网页请求图片.png）
+        """
+        self.copy_pic(path) # 复制图片
+        self.ctrl_v()       # 模拟粘贴操作并发送
 
     """消息窗口监听相关"""
     @staticmethod
@@ -631,7 +662,7 @@ class QQMessageMonitor:
         返回值： qq_group_administrator_list ： QQ管理员列表(第一个元素为群主)
         """
         # [administrator for administrator in self.group_member_list if self.group_member_list.GetChildren()[2].GetChildren()[0].Name == "管理员"]
-        qq_group_administrator_list = list()    # 群成员列表
+        qq_group_administrator_list = []    # 群成员列表
         # 判断好友列表第一个人是否为群主
         if len(self.group_member_list.GetChildren()[0].GetChildren())  != 3:
             raise ValueError("请将群成员列表滚到最开头(有群主的标志)")
@@ -817,7 +848,7 @@ class QQMessageMonitor:
             # print(f"{datetime.now()}极大可能存在消息监听丢失，开始重新记录")
             self.output_text = f"{datetime.now()}极大可能存在消息监听丢失，开始重新记录"
         """原理解析：保存上一次控件获得的消息到临时变量，更新属性后进行对比，通过控件id去判断加入哪些新的消息"""
-        new_message_list = list()   # 新列表用来临时放置新消息的元素
+        new_message_list = []   # 新列表用来临时放置新消息的元素
         try:  # 估计有些消息体确实没有子孩子，或者突然过时了(实际猜测是最新的消息被顶掉了，导致控件为空)
             for index in range(self.control_id_index,self.messages_count):
                 # print(index)
@@ -889,6 +920,16 @@ class QQMessageMonitor:
         # print(f"过滤发送者关键词:{self.filter_sender_keyword}")
         return True
 
+    def picture_map_read(self):
+        """图片映射表读取"""
+        try:
+            with open("用户设置/关键词回复/图片映射表.json", "r", encoding="utf-8") as json_file:
+                self.picture_map = json.load(json_file)  # 监测指定的人和关键字
+        except json.JSONDecodeError as e:
+            print(f"\033[91m图片映射表.json 文件的格式错误或json没有任何内容\033[0m")
+            return False
+        return True
+
     def message_keyword_jude(self, text):
         """消息关键词判断(拿到正则表达式对象)
         参数 ： text : 需要判断的文本
@@ -927,16 +968,27 @@ class QQMessageMonitor:
         参数： message_dict ： 单条消息字典{"发送者": "yan di fei","发送消息": "hello world","发送时间": "10:10:20"}
         max_processing_queues : 默认10，最大处理队列，超过队列最大数就不进队了
         """
+
+        """正规定模块"""
+        # print(message_dict["发送消息"])
         if len(self.message_processing_queues) > max_processing_queues: # 超出最大处理数
             self.output_text = f"超出消息最大处理数:{max_processing_queues}，不对消息进行处理"
             # print(f"\033[91m超出消息最大处理数:{max_processing_queues}，不对消息进行处理\033[0m")  # 亮红色
             message_dict["发送者"], message_dict["发送消息"] = "系统", f"超出消息最大处理数:{max_processing_queues}，不对消息进行处理"
-            """正规定模块"""
         # 截获自己被@的情况做出消息处理（"@名字 "），注意@后是有空格的
         elif f"@{self.monitor_name} " in message_dict["发送消息"]:  # 最新列表获取消息
-            # 在这个类之外处理死循环的问题，保留自己的所有名
-            self.output_text = f"我被{message_dict["发送者"]}艾特了，消息是:{message_dict["发送消息"]}"
-            # print(f"\033[94m我被{message_dict["发送者"]}艾特了，消息是:{message_dict["发送消息"]}\033[0m")
+            """规则匹配回复图片(移除@部分)"""
+            if url := self.picture_map.get(message_dict["发送消息"].lstrip(f"@{self.monitor_name} ")):
+                self.download_image(url)    # 下载图片（这里这么做是为了分离消息发送）
+                self.copy_pic("./logs/下载缓存/网页请求图片.png")  # 处理图片并复制到剪切板
+                # self.output_text = f"{message_dict["发送者"]}请求发送一张图片，图片内容:{message_dict["发送消息"]}"
+                self.output_text = "图片"
+            else:
+                """正常@我的文本消息"""
+                # 在这个类之外处理死循环的问题，保留自己的所有名
+                self.output_text = f"我被{message_dict["发送者"]}艾特了，消息是:{message_dict["发送消息"]}"
+                # print(f"\033[94m我被{message_dict["发送者"]}艾特了，消息是:{message_dict["发送消息"]}\033[0m")
+            """关键词"""
         # 检查是否开启了关键词自动回复,仅当开启了才会
         # 关键词触发需要3个条件：1.设置了关键词2.消息体存在关键词3.消息体的发送者不是自己
         elif not self.keyword_respond or message_dict["发送者"] == self.monitor_name:
@@ -979,7 +1031,11 @@ if __name__ == '__main__':
     #     chat_win.top_win()     # 置顶窗口 zA
     # print("可以输出没有语法错误")
 
-    chat_win = QQMessageMonitor("1","爱丽丝",3)
-    # chat_win.send_message("1")
-    # chat_win.send_url_image("https://t.alcy.cc/moe")
-    chat_win.paste_send_file()
+    arisu = QQMessageMonitor("鸣潮想睡觉","爱丽丝",3)
+    # 下载图片（这里这么做是为了整体高效）
+    # self.send_url_image(url)
+    # arisu.picture_map_read()
+    # arisu.send_url_image("https://t.alcy.cc/moe")
+    # arisu.send_message("1")
+    # arisu.send_url_image("https://t.alcy.cc/moe")
+    # arisu.paste_send_file()

@@ -28,5 +28,3 @@ if exit_code == -20213025: # 卸载的退出码
     uninstall_program()  # 启动卸载程序
 # 安全退出程序
 sys.exit(exit_code)
-
-

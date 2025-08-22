@@ -8,10 +8,14 @@ import subprocess
 import sys  # 系统库
 
 # 第三方库
+import win32api
+import win32con
+import win32gui
 from PyQt6.QtCore import QObject, pyqtSignal
+import uiautomation
 # 自己的库
 from arisu_logger import info, exception                     # 导入日志方法
-
+# from qq_message_monitor import QQMessageMonitor              # QQ监控
 
 class InputRedirection(QObject):
     """输如重定向"""
@@ -160,6 +164,96 @@ class OutputRedirection(QObject):
 
         return html_output
 
+def qq_win_location_calculation(qq_group_name: str):
+    """QQ窗口位置计算
+    参数：：
+    qq_group_name ： QQ群的名字
+    返回值：
+    一个元组：窗口左上角位置、左边缘列表、上边缘列表、右边缘列表、下边缘列表
+    """
+    """顶层窗口遍历"""
+    # 获取当前桌面对象->获得当前桌面所有可见的窗口的对象->列表存放可见窗口的对象
+    visible_windows_object = [visible_window for visible_window in uiautomation.GetRootControl().GetChildren()]
+    """窗口绑定"""
+    qq_chat_win_list = list()  # 如果标题和类名相同就拒绝绑定
+    for visible_window in visible_windows_object:
+        # 找到符合指定好友名或qq群名的窗口
+        if visible_window.Name == qq_group_name and visible_window.ClassName == "Chrome_WidgetWin_1":
+            qq_chat_win_list.append(visible_window)  # 把查找对象添加进去
+
+    # a = uiautomation.WalkControl(a)
+    # a = uiautomation.PaneControl.FindAll(searchDepth=1, Name=qq_group_name,ClassName='Chrome_WidgetWin_1')
+    # print(a)
+
+    if len(qq_chat_win_list) == 0:
+        raise EnvironmentError(
+            f"没有找到这个窗口，请手动打开【{qq_group_name}】 Q群将该Q群窗口显示到桌面上")
+    elif len(qq_chat_win_list) >= 2:
+        raise EnvironmentError(
+            "请确保当前打开的Q群没有重名(有备注名就看备注名，没有就是原来的QQ群名)。")
+    # 显示窗口(确保能获得窗口的大小，这里是必须的)
+    win32gui.ShowWindow(qq_chat_win_list[0].NativeWindowHandle, win32con.SW_RESTORE)
+    # 置顶窗口
+    win32gui.SetWindowPos(qq_chat_win_list[0].NativeWindowHandle, win32con.HWND_TOPMOST
+                          ,0, 0, 0, 0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+    # 取消置顶
+    win32gui.SetWindowPos(qq_chat_win_list[0].NativeWindowHandle,win32con.HWND_NOTOPMOST,
+        0, 0, 0, 0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+    # 置底窗口
+    win32gui.SetWindowPos(qq_chat_win_list[0].NativeWindowHandle, win32con.HWND_BOTTOM
+                          , 0, 0, 0, 0, win32con.SWP_NOSIZE | win32con.SWP_NOMOVE | win32con.SWP_NOACTIVATE)
+    # 获取Q群窗口的左、上、右、下坐标
+    left, top, right, bottom = win32gui.GetWindowRect(qq_chat_win_list[0].NativeWindowHandle)
+    width, height = right - left, bottom - top  # Q群窗口的位置和大小
+    """获取主显示器的工作区域（可用区域矩阵）"""
+    desktop_rect = win32api.GetMonitorInfo(win32api.MonitorFromPoint((0, 0)))["Work"]
+    desktop_width = desktop_rect[2]     # 右边
+    desktop_height = desktop_rect[3]    # 下边
+    """开始计算"""
+    top_left_corner = -width + 1, -height + 1                                       # 左上角
+    # 左上右下边缘的使用列表
+    left_location_list = []
+    top_location_list = []
+    right_location_list = []
+    bottom_location_list = []
+    # 初始化递增值（左上角初始为1已用，所以2开始）
+    incremental_value = 2
+    # 不断计算所有左边可用的位置
+    while incremental_value <= desktop_height:
+        # 录入可用值，包括第一个条件之外的（宽度不变，高度改变）
+        left_location_list.append((-width + 1, incremental_value))
+        # 高度自增(+1避免边缘重合)
+        incremental_value += height + 1
+    # 初始化递增值（左上角初始为1已用，所以2开始）
+    incremental_value = 2
+    # 不断计算所有上边可用的位置
+    while incremental_value <= desktop_width:
+        # 录入可用值，包括第一个条件之外的（宽度改变，高度不变）
+        top_location_list.append((incremental_value, -height + 1))
+        # 宽度自增(+1避免边缘重合)
+        incremental_value += width + 1
+    # 初始化递增值（右上角初始为1已用，所以2开始）
+    incremental_value = 2
+    # 不断计算所有右边可用的位置（避开显示桌面按钮）
+    while incremental_value <= desktop_height:
+        # 到达桌面按钮时退出
+        if (incremental_value + height + 1) > desktop_height:
+            break
+        # 录入可用值，不包括显示桌面按钮（宽度不变，高度改变）
+        right_location_list.append((desktop_width + width - 1, incremental_value))
+        # 高度自增
+        incremental_value += height + 1
+    # 初始化递增值（右下角初始为1已用，所以2开始）
+    incremental_value = 2
+    # 不断计算所有下边可用的位置
+    while incremental_value <= desktop_width:
+        # 录入可用值，包括第一个条件之外的（宽度改变，高度不变）
+        bottom_location_list.append((incremental_value, desktop_height + height - 1))
+        # 宽度自增(+1避免边缘重合)
+        incremental_value += width + 1
+    # 返回值：窗口左上角位置、左边缘列表、上边缘列表、右边缘列表、下边缘列表
+    return top_left_corner , left_location_list , top_location_list , right_location_list , bottom_location_list
+
 def clear_temp():
     """删除残留在temp文件的MP4动态壁纸文件
     返回值：如果成功删除所有找到的缓存文件就返回True
@@ -191,7 +285,6 @@ def clear_temp():
         except(OSError,FileNotFoundError):
             exception("缓存文件(动态壁纸MP4文件)删除失败，以下是错误信息:")
     return True if flag else False
-
 
 def uninstall_program():
     """卸载程序"""
@@ -252,4 +345,7 @@ del %0
 
 
 if __name__ == '__main__':
+    results = qq_win_location_calculation("鸣潮想睡觉")
+    print(f"左上角位置：{results[0]}\n左边缘可用位置")
+    print(f"上边缘可用位置：{"  ".join(str(result) for result in results[2])}")
     clear_temp()
