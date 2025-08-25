@@ -750,7 +750,7 @@ class DeepseekConversationEngine:
         role_name_txt = role_name + ".txt"  # 补足后缀名
         path = os.path.join("用户设置/提示库/", role_name_txt)
         if not os.path.isfile(path):  # 检查是否有这个文件（文件不存在）
-            print("提示库不存在该人设，不对人设进行任何任何修改")
+            # print("提示库不存在该人设，不对人设进行任何任何修改")
             return False
         self.role = self.role_read(role_name)   # 修改人设属性
         # 在对话中启用人设
@@ -761,7 +761,9 @@ class DeepseekConversationEngine:
                 self.dialog_history[0] = {"role": "system", "content": self.role}  # 把之前的人设替换掉
             else:  # 在消息头插入人设
                 self.dialog_history.insert(0, {"role": "system", "content": self.role})
-        print(f"已切换人设为：{role_name}")
+        # 这里增加清空对话历史
+        self.clear_dialog_history()
+        # print(f"已切换人设为：{role_name}")
         return True
 
     @staticmethod

@@ -83,7 +83,7 @@ class ArisuThreading(QRunnable):
             except (RuntimeError,TypeError):
                 critical("启动AI自动回复过程中强行关闭了窗口")
             """核心循环逻辑"""
-            while self.is_task_progress:    # 使用变量来确保是否执行和退出
+            while self.is_task_progress and ef.running:    # 使用变量来确保是否执行和退出
                 """监听窗口控制"""
                 # 默认一秒监听一次窗口，防止CUP占用过高
                 sleep(self.monitoring_time)
@@ -98,6 +98,9 @@ class ArisuThreading(QRunnable):
                     # 非指令
                     if not reply[3]:
                         """聊天回复"""
+                        # 如果发送者是自己这就就改名（@自己），因为回复时会进行@导致无限循环的发生
+                        if ef.arisu.monitor_name == reply[0]:
+                            reply[0] = "自己"
                         """关键词匹配规则回复"""
                         if arisu.output_text == "图片": # 满足图片标志位
                             arisu.ctrl_v()  # Ctrl+V粘贴并后台点击发送
@@ -111,19 +114,29 @@ class ArisuThreading(QRunnable):
                         """指令操作"""
                         # 分割指令和参数
                         order, args = ef.split_order_args(reply[1])
+                        """鉴权是最大的文体，自己调用自己的鉴权"""
                         # 是否有权限调度指令(包括root和非root的指令)
                         if ef.check_permission(order, reply[0]):  # 传入指令和发送者
                             # 传入指令执行后拿到返回结果并发送(@发送者 执行结果)
-                            arisu.send_message(f"@{reply[0]} {ef.execute_order(order, args)}")
+                            # 如果发送者是自己就改名（@自己），因为回复时会进行@时会导致无限循环的发生
+                            arisu.send_message(f"@{reply[0] if ef.arisu.monitor_name != reply[0] else "自己"
+                            } {ef.execute_order(order, args)}")
                         else:
                             # 无权操作后的警告
-                            arisu.send_message(f"@{reply[0]} {self.warning_of_overrepresentation}")  # 传入指令执行后拿到返回结果并发送
+                            # 如果发送者是自己就改名（@自己），因为回复时会进行@时会导致无限循环的发生
+                            arisu.send_message(f"@{reply[0] if ef.arisu.monitor_name != reply[0] else "自己"
+                            } {self.warning_of_overrepresentation}")  # 传入指令执行后拿到返回结果并发送
                     else:
                         """使用了不存在的指令(不是聊天也无法调用指令库的指令)"""
-                        print("接收到了一条不存在的指令(不是聊天也没有在指令库中找到指令)")
+                        # print("接收到了一条不存在的指令(不是聊天也没有在指令库中找到指令)")
                         arisu.send_message(f"@{reply[0]} 不存在该指令")
-                else:
-                    pass  # print("出现新消息，这里不进行打印，因为监视方法已经打印了")
+                # else:
+                #     pass  # print("出现新消息，这里不进行打印，因为监视方法已经打印了")
+
+            # 退出AI自动回复循环
+            self.signal.print_signal.emit(self.print_widget,
+                f"<font color='red'>此线程已停止，不再对【{arisu.win_name}】群聊窗口进行AI自动回复</font>")
+
         # 整体线程异常处理
         except EnvironmentError:
             # 窗口没有打开的信号，对接的是qq消息监视器的raise EnvironmentError

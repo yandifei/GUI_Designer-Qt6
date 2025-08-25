@@ -11,6 +11,7 @@ from time import sleep  # 时间停顿
 import threading        # 线程
 
 # 第三方库
+from PyQt6.QtWidgets import QApplication                                # 退出
 from qq_message_monitor import QQMessageMonitor                         # 导入QQ消息监控者这个类
 from deepseek_conversation_engine import DeepseekConversationEngine     # 导入deepseek对话引擎这个类
 from jmcomic import create_option_by_file, download_album, jm_exception # 导入禁漫模块
@@ -37,7 +38,7 @@ class ArisuQQChatAICore:
         # 超管
         self.root = root
         # 管理员
-        self.administrators = arisu.get_qq_group_administrator() # 拿到Q群和Q群管理
+        self.administrators = arisu.qq_group_administrator # 直接接收Q群群主和Q群管理员名字
         # #  其他人
         # self.others = None  # 非root非群主非群管理
         # 退出密码
@@ -56,7 +57,10 @@ class ArisuQQChatAICore:
         if self.remove_dangerous_order:
             self.order_dict = self.load_limit_order_dict()  # 限制指令加载
         else:
-            self.order_dict = self.load_order_dict()  # 无限制指令加载
+            self.order_dict = self.load_order_dict()        # 无限制指令加载
+        self.add_pic_download_map_order()  # 添加图片下载映射指令
+        """外部标志"""
+        self.running = True # 执行退出指令后为False
 
     """初始化类传入参数解析"""
     @staticmethod
@@ -100,14 +104,18 @@ class ArisuQQChatAICore:
         参数：
         password ：退出程序的密码
         """
-        print(1)
         # 匹配密码（字符串是否相同）
         if self.exit_password != password:
             # 密码错误
             return False
-        self.arisu.send_message(f"deepseek对话引擎已退出\n{self.arisu.monitor_name}：机器人已关闭")
-        # 退出程序（实际是退出当前进程）
-        sys.exit(1) # 设置1为退出码
+        # self.arisu.send_message(f"deepseek对话引擎已退出\n{self.arisu.monitor_name}：机器人已关闭")
+        # # 退出程序（实际是退出当前进程）
+        # sys.exit(1) # 设置1为退出码
+        # # 退出程序（实际是退出整个软件）
+        # QApplication.exit()
+        # 退出当前的这个AI线程
+        self.running = False    # 设置退出标志位
+        return True
 
     @staticmethod
     def get_help():
@@ -195,6 +203,33 @@ class ArisuQQChatAICore:
             format_string += "\n群管理：" + name
         return format_string
 
+    def add_pic_download_map_order(self):
+        """添加图片下载映射指令"""
+        # 遍历图片映射表(遍历keys)
+        for key in self.arisu.picture_map.keys():
+            # 函数构造
+            def function_build(num, k=str(key)):
+                self.image_batch_download(k, num)
+                # 指令构造
+            self.order_dict[f"#{key}"] = [lambda num : function_build(num),
+                                          f"图片发送完成", "全部/部分图片发送失败或超出限制(100)"]
+            print(f"{[lambda num : function_build(num),
+                                          f"图片发送完成", "全部/部分图片发送失败或超出限制(100)"]}")
+        # self.order_dict[f"#ACG"] = [lambda num: print(num), f"图片发送完成","全部/部分图片发送失败或超出限制(100)"]
+
+
+
+    def image_batch_download(self, key, num):
+        """图片批量下载
+        参数：
+        key ： json文件的键
+        num ： 图片下载的张数
+        """
+        # 开始批量下载并执行
+        for _ in range(num):
+            # 从json拿到url->使用arisu方法进行图片下载复制粘贴发送
+            self.arisu.send_url_image(self.arisu.picture_map[key])
+
     """消息处理（分割，提取）"""
     def split_respond_msg(self):
         """分割响应消息
@@ -208,9 +243,7 @@ class ArisuQQChatAICore:
         """
         """发送者处理"""
         sender = self.arisu.message_processing_queues[0]["发送者"]
-        # 如果发送者是自己这就就改名（@自己），因为回复时会进行@导致循环的发生
-        if self.arisu.monitor_name == sender:
-            sender = "自己"
+        # 如果发送者是自己这就就改名（@自己），因为回复时会进行@导致循环的发生（之后处理掉了）
         """消息处理"""
         message = self.arisu.message_processing_queues[0]["发送消息"]
         message = message.replace(f"@{self.arisu.monitor_name} ", "")
@@ -222,7 +255,8 @@ class ArisuQQChatAICore:
             is_order = True
         else:
             is_order = False
-        return sender, message, time, is_order
+        # sender需要修改，所有不能为元组
+        return [sender, message, time, is_order]
 
     """权限处理（判断）"""
     def check_permission(self, order, sender_name):
@@ -236,13 +270,14 @@ class ArisuQQChatAICore:
         # 检查是否为root指令
         if order in self.root_orders:
             # 检查是否为为root权限
-            print(sender_name, self.root)
+            # print(sender_name, self.root)
             if sender_name == self.root:
                 return True
             else:
                 return False
         # 非root指令
         else:
+            # print(self.is_order_permission_limit, order not in self.unlimited_list, sender_name)
             # 开启指令权限限制(指令限制和不是无限制的指令)
             if self.is_order_permission_limit and order not in self.unlimited_list:
                 # 发送者不是最高权限者也不是群主或群管理员
@@ -366,7 +401,7 @@ class ArisuQQChatAICore:
         return {
     # ==================================================额外实现的指令库========================================================="""
     # root(超管)指令
-    "#退出": [lambda password: self.exit_program(password), "成功退出", "退出密码错误"],
+    "#退出": [lambda password: self.exit_program(password), f"deepseek对话引擎已退出\n{self.arisu.monitor_name}：机器人已关闭", "退出密码错误"],
 
     # 帮助之类的指令
     "#帮助": [True, lambda: self.get_help(), "查询失败"],

@@ -3,6 +3,7 @@
 """
 # 系统自带
 import platform  # CPU逻辑核心计算
+import time      # 时间计算
 # 第三方
 import keyring                                                                              # api密钥加密和解密
 import psutil                                                                               # 电脑硬件信息获取
@@ -42,6 +43,8 @@ class ArisuUI(ArisuQQCHatAIUI):
         super().__init__(title, show_system_tray, ui_file_path)  # 继承父类的属性和方法
         # 设置软件的版本跟随包的版本
         self.SoftwareName.setText(f"爱丽丝QQ聊天AI {__version__}")
+        # start_time = time.monotonic()   # 初始时间(挂钟时间不受系统时间影响)
+        # elapsed_time = time.monotonic() - start_time
         """终端输入输出重定向"""
         # 保留原始的控制台输入输出流
         self.original_log_stream = console_handler.stream   # 保留原始的日志输出流，确保UI退出(这个类被删除时日志重定向回去)

@@ -27,23 +27,23 @@ class QQMessageMonitor:
         monitor_name: QQ号或发送者的名字
         top_wait_time : 默认2秒，设置置顶后等待qq渲染完成的属性，（如果电脑卡的话可以调大属性）
         """
-        self.win_name = str(win_name)    # 左上角窗口名字(如果有备注名就填备注名) 强制转为字符串
-        self.monitor_name = str(monitor_name)   # 强制转为字符串
-        self.parameter_validation() # 调用函数对参数进行校验
+        self.win_name = str(win_name)                                               # 左上角窗口名字(如果有备注名就填备注名) 强制转为字符串
+        self.monitor_name = str(monitor_name)                                       # 强制转为字符串
+        self.parameter_validation()                                                 # 调用函数对参数进行校验
         # 窗口初始化相关
-        self.group_or_friend = None # 记录窗口QQ群还是好友
+        self.group_or_friend = None                                                 # 记录窗口QQ群还是好友
         self.qq_chat_win:uiautomation.WindowControl = self.find_qq_chat_win(self.top_window_traversal())   # 遍历顶层窗口->从顶层窗口中找到指定的qq聊天窗口
-        self.hwnd = self.qq_chat_win.NativeWindowHandle # 被监听窗口的句柄
-        self.show_win() # 如果窗口最小化就展示窗口
-        self.cancel_top_win()   # 取消窗口置顶，防止窗口置顶失效
-        self.top_win()  # 把窗口置顶，防止窗口被遮挡导致渲染停止无法监控窗口
-        sleep(top_wait_time)   # 等待窗口完全置顶（qq置顶后渲染需要时间）
-        self.pid = self.qq_chat_win.ProcessId   # 被监听窗口的进程ID
-        self.geometry = self.qq_chat_win.BoundingRectangle  # 窗口的位置和大小
-        self.x = self.geometry.left # 窗口x坐标
-        self.y = self.geometry.top # 窗口y坐标
-        self.width = self.geometry.width() # 窗口长
-        self.height = self.geometry.height() # 窗口宽
+        self.hwnd = self.qq_chat_win.NativeWindowHandle                             # 被监听窗口的句柄
+        self.show_win()                                                             # 如果窗口最小化就展示窗口
+        self.cancel_top_win()                                                       # 取消窗口置顶，防止窗口置顶失效
+        self.top_win()                                                              # 把窗口置顶，防止窗口被遮挡导致渲染停止无法监控窗口
+        sleep(top_wait_time)                                                        # 等待窗口完全置顶（qq置顶后渲染需要时间）
+        self.pid = self.qq_chat_win.ProcessId                                       # 被监听窗口的进程ID
+        self.geometry = self.qq_chat_win.BoundingRectangle                          # 窗口的位置和大小
+        self.x = self.geometry.left                                                 # 窗口x坐标
+        self.y = self.geometry.top                                                  # 窗口y坐标
+        self.width = self.geometry.width()                                          # 窗口长
+        self.height = self.geometry.height()                                        # 窗口宽
         print(f"成功绑定 \033[96m{win_name}\033[0m {self.jude_group_or_friend(self.qq_chat_win)}窗口并置顶窗口\t监听者：{monitor_name}")# 把对象进行绑定，动态属性修改并打印
         print(f"\033[96m{win_name}\033[0m 窗口句柄:{self.hwnd}\t进程ID:{self.pid}\t窗口大小:{self.geometry}")
         """------------------------------------------聊天窗口控制监控相关---------------------------------------------"""
@@ -168,7 +168,7 @@ class QQMessageMonitor:
         }
         """输出重定向的文本（显示文本）"""
         self.output_text = (f"成功绑定 {win_name} {self.jude_group_or_friend(self.qq_chat_win)}窗口并置顶窗口\t监听者：{monitor_name}\n"
-                            f"{win_name} 窗口句柄:{self.hwnd}\t进程ID:{self.pid}\n窗口大小:{self.geometry}")
+                            f"{win_name} 窗口句柄:{self.hwnd}\t进程ID:{self.pid}\n窗口位置大小:{self.geometry}")
 
     def parameter_validation(self):
         """创建对象时对输入的信息进行校验"""
@@ -668,9 +668,20 @@ class QQMessageMonitor:
             raise ValueError("请将群成员列表滚到最开头(有群主的标志)")
         # 收录群主的名字
         qq_group_administrator_list.append(self.group_member_list.GetChildren()[0].GetChildren()[1].Name)
-        for administrator in self.group_member_list.GetChildren()[1:]:    # 遍历成员列表(跳过群组遍历)
-            if len(administrator.GetChildren()) == 3:    # 检测身份(不是管理员或群主没有3个控件，这个控件记录身份)
-                qq_group_administrator_list.append(administrator.GetChildren()[1].Name)     # 添加管理员身份
+        # 遍历可见的成员列表(跳过群组遍历)
+        # 判断最后一个成员是否没有职业(却确保可见列表限制全部的群管理和群主)
+        if self.group_member_list.GetChildren()[-1].GetChildren() != 3:
+            self.qq_chat_win.Maximize() # 最大化窗口(管理员很多但是窗口太小无法展示所有管理员的问题)
+        # 遍历可见成员列表的所有管理员
+        for administrator in self.group_member_list.GetChildren()[1:]:
+            if len(administrator.GetChildren()) != 3:  # 检测身份(不是管理员或群主没有3个控件，这个控件记录身份)
+                break   # 后面的控件都是群成员，没有必要遍历
+            qq_group_administrator_list.append(administrator.GetChildren()[1].Name)  # 添加管理员身份
+        # 判断是否最大化了(恢复窗口位置和大小)
+        if self.qq_chat_win.IsMaximize():
+            # self.qq_chat_win.Restore()  # 恢复大小和位置
+            self.keep_size()            # 设置回原来窗口的大小
+            self.move(self.x, self.y)   # 设置回原来窗口的位置
         return qq_group_administrator_list
 
     def create_directory(self,path=None,use=False,out=False):
@@ -985,7 +996,7 @@ class QQMessageMonitor:
                 self.output_text = "图片"
             else:
                 """正常@我的文本消息"""
-                # 在这个类之外处理死循环的问题，保留自己的所有名
+                # 在这个类之外处理死循环的问题，保留自己的所有名(改名后面处理)
                 self.output_text = f"我被{message_dict["发送者"]}艾特了，消息是:{message_dict["发送消息"]}"
                 # print(f"\033[94m我被{message_dict["发送者"]}艾特了，消息是:{message_dict["发送消息"]}\033[0m")
             """关键词"""
