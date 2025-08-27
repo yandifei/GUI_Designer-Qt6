@@ -2,8 +2,6 @@
     "ACG" : "https://www.loliapi.com/acg/pc/",
     "二次元" : "https://t.alcy.cc/moe",
     "手机壁纸" : "https://api.anosu.top/img",
-    "白丝" : "https://acg.suyanw.cn/whitesilk/random.php",
-    "黑丝" : "https://v2.xxapi.cn/api/heisi?return=302",
-    "cos涩图" : "http://api.yujn.cn/api/cos.php",
-    "猫娘壁纸" : "https://acg.suyanw.cn/mao/random.php"
+    "白丝" : "https://v2.xxapi.cn/api/baisi?return=302",
+    "黑丝" : "https://v2.xxapi.cn/api/heisi?return=302"
 }
