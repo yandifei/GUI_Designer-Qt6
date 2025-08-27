@@ -134,11 +134,13 @@ class ArisuUI(ArisuQQCHatAIUI):
         self.tip_logic_cpu_count()                                              # 提示用户可以使用的逻辑CPU数量，并自动计算最合适的CPU数量
         self.tip_thread_restart_time()                                          # 提示用户线程重启时间
         self.tip_win_reset_time()                                               # 提示用户窗口重置时间
+        self.tip_qq_message_interval()                                          # 提示用户多少秒查一次QQ新消息
         self.RestoreNavigationBarSortingButton.clicked.connect(self.restore_navigation_bar_sorting)  # 还原导航栏排序按钮
         self.APIKeyConfirm.clicked.connect(self.__api_key_confirm)              # 检测api有效和把deepseek注入到系统变量
         self.LogicCPUCountConfirm.clicked.connect(self.logic_cup_confirm)       # 确认逻辑CPU数
         self.ThreadRestartTime.editingFinished.connect(self.thread_restart_time)# 线程重启时间
         self.WinResetTime.editingFinished.connect(self.win_reset_time)          # 窗口重置时间
+        self.QQMessageInterval.editingFinished.connect(self.qq_message_interval)# 多少秒查一次QQ新消息(QQ消息轮询时间)
         self.OpenRoleDir.clicked.connect(self.open_role_repository_directory)   # 打开人设仓库目录
         self.KeywordReplyDir.clicked.connect(self.open_keyword_reply_directory) # 打开关键词回复目录
         self.JMDownloadStrategy.clicked.connect(self.open_jm_strategy_file)     # 打开JM策略的配置文件
@@ -865,7 +867,7 @@ class ArisuUI(ArisuQQCHatAIUI):
             self.ThreadRestartTimeState.setTitle(f"线程重启时间：{int(self.ThreadRestartTime.text())}秒")
             self.ThreadRestartTimeState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
             self.config.user_settings["线程重启时间"]["时间"] = self.ThreadRestartTime.text()  # 收录时间
-            warning(f"用户成功修改线程重启时间为{self.ThreadRestartTime.text()}秒")
+            info(f"用户成功修改线程重启时间为{self.ThreadRestartTime.text()}秒")
         except ValueError:
             self.ThreadRestartTimeState.setStyleSheet("color: red;border: none;")  # 提示样式表设置字体为红色并且为无边框
             self.ThreadRestartTimeState.setTitle("线程重启时间错误，修正为10秒")
@@ -894,7 +896,7 @@ class ArisuUI(ArisuQQCHatAIUI):
             self.WinResetTimeState.setTitle(f"窗口重置时间：{int(self.WinResetTime.text())}秒")
             self.WinResetTimeState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
             self.config.user_settings["窗口重置时间"]["时间"] = self.WinResetTime.text()  # 收录时间
-            warning(f"用户成功修改线程重启时间为{self.WinResetTime.text()}秒")
+            info(f"用户成功修改线程重启时间为{self.WinResetTime.text()}秒")
         except ValueError:
             self.WinResetTimeState.setStyleSheet("color: red;border: none;")  # 提示样式表设置字体为红色并且为无边框
             self.WinResetTimeState.setTitle("窗口重置时间错误，修正为10秒")
@@ -914,6 +916,34 @@ class ArisuUI(ArisuQQCHatAIUI):
         # 状态输出显示时间
         self.WinResetTimeState.setTitle(f"窗口重置时间：{time}秒")
         info(f"初始窗口重置时间：{time}")
+
+    def qq_message_interval(self):
+        """多少秒查一次QQ新消息(QQ消息轮询时间)
+        判断QQ消息轮询时间是否有效"""
+        try:
+            self.QQMessageIntervalState.setTitle(f"每{int(self.QQMessageInterval.text())}秒查看一次QQ的新消息")
+            self.QQMessageIntervalState.setStyleSheet("color: green;border: none;")  # 提示样式表设置字体为绿色并且为无边框
+            self.config.user_settings["QQ消息轮询时间"]["时间"] = self.QQMessageInterval.text()  # 收录时间
+            info(f"用户成功修QQ消息轮询时间为{self.QQMessageInterval.text()}秒")
+        except ValueError:
+            self.QQMessageIntervalState.setStyleSheet("color: red;border: none;")  # 提示样式表设置字体为红色并且为无边框
+            self.QQMessageIntervalState.setTitle("QQ消息轮询时间错误，修正为1秒")
+            self.QQMessageInterval.setText("1")
+            self.config.user_settings["QQ消息轮询时间"]["时间"] = "1"    # 收录时间
+            warning("用户修改QQ消息轮询时间，自动修正为1秒")
+        finally:
+            # 保存到硬盘
+            self.config.save_user_settings_ini()
+
+    def tip_qq_message_interval(self):
+        """提示用户多少秒查一次QQ新消息"""
+        # 配置文件拿到QQ消息间隔时间（本质上这里拿到的就是字符串）
+        time = self.config.user_settings["QQ消息轮询时间"]["时间"]
+        # 使用用户自定义的时间
+        self.QQMessageInterval.setText(time)
+        # 状态输出显示时间
+        self.QQMessageIntervalState.setTitle(f"每{time}秒查看一次QQ的新消息")
+        info(f"初始QQ消息轮询时间：{time}")
 
     def open_role_repository_directory(self):
         """打开人设库目录"""
@@ -1175,6 +1205,9 @@ class ArisuUI(ArisuQQCHatAIUI):
             arisu_threading.setAutoDelete(True)
             # 添加线程到列表
             self.running_threads.append(arisu_threading)
+            # 使用用户定义的时间
+            arisu_threading.win_reset_time = int(self.config.user_settings["窗口重置时间"]["时间"])
+            arisu_threading.monitoring_time = int(self.config.user_settings["QQ消息轮询时间"]["时间"])
             # 传入县城里池并开始线程
             self.thread_pool.start(arisu_threading)
 
@@ -1184,6 +1217,14 @@ class ArisuUI(ArisuQQCHatAIUI):
         # 打开自动回复的标志
         self.arisu_auto_reply_flag = True
         return True
+
+    # def thread_update_user_config(self):
+    #     """线程更新用户配置"""
+    #     # 遍历线程并修改属性
+    #     for thread in self.running_threads:
+    #         thread.win_reset_time = self.config.user_settings["窗口重置时间"]["时间"]
+    #         thread.monitoring_time = self.config.user_settings["QQ消息轮询时间"]["时间"]
+
 
     @staticmethod
     @pyqtSlot(QTextBrowser, str)
@@ -1227,6 +1268,9 @@ class ArisuUI(ArisuQQCHatAIUI):
                     arisu_threading.signal.error_signal.connect(self.restart_thread)  # 崩溃处理
                     # 设置任务完成（或崩溃）后自动删除该线程对象
                     arisu_threading.setAutoDelete(True)
+                    # 使用用户定义的时间
+                    arisu_threading.win_reset_time = int(self.config.user_settings["窗口重置时间"]["时间"])
+                    arisu_threading.monitoring_time = int(self.config.user_settings["QQ消息轮询时间"]["时间"])
                     # 用新的线程替换已经死亡的线程
                     self.running_threads[index] = arisu_threading
                     # 传入线程池并重新开始线程

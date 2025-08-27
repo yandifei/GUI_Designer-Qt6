@@ -16,7 +16,6 @@ from qframelesswindow import FramelessWindow as FramelessWindowWidget           
 from resources.Arisu import Ui_Arisu                                                # uic转后py文件
 # import resources.resources                                                          # 这个qrc必须存在（即使编译器报灰色）
 
-
 # 开发时用(没有uic转py的文件)
 # class ArisuQQCHatAIUI(FramelessWindowWidget):
 # 打包时用[开发打包都可以用，只要有uic转的文件](可以通过多继承去调用uic转后py文件, Ui_Arisu)

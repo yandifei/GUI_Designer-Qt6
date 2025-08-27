@@ -19,7 +19,7 @@ arisu_ui = ArisuUI("爱丽丝", True, "resources/Arisu.ui")
 arisu_ui.show()                 # 界面展示
 info("UI界面加载完成")
 """UI退出和程序安全退出"""
-# UI界面退出的代码(0为正常退出，其他为 非正常退出)
+# UI界面退出的代码(0为正常    退出，其他为 非正常退出)
 exit_code = arisu_app.exec()
 info("已关闭UI界面")
 # 检查是否是卸载程序

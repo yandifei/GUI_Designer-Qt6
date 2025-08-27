@@ -1666,100 +1666,6 @@ class Ui_Arisu(object):
         self.gridLayout_2.setHorizontalSpacing(51)
         self.gridLayout_2.setVerticalSpacing(5)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.gridLayout_2.addItem(spacerItem2, 2, 0, 1, 1)
-        self.WinResetTimeState = QtWidgets.QGroupBox(parent=self.SettingsScrollAreaWidget)
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.WinResetTimeState.setFont(font)
-        self.WinResetTimeState.setStyleSheet("QGroupBox {\n"
-"    border: none;            /*无边框*/\n"
-"    color: green;\n"
-"}")
-        self.WinResetTimeState.setTitle("")
-        self.WinResetTimeState.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter|QtCore.Qt.AlignmentFlag.AlignTop)
-        self.WinResetTimeState.setFlat(False)
-        self.WinResetTimeState.setCheckable(False)
-        self.WinResetTimeState.setObjectName("WinResetTimeState")
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.WinResetTimeState)
-        self.horizontalLayout_7.setContentsMargins(0, 20, 0, 0)
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.WinResetTime = QtWidgets.QLineEdit(parent=self.WinResetTimeState)
-        self.WinResetTime.setMinimumSize(QtCore.QSize(309, 40))
-        font = QtGui.QFont()
-        font.setFamily("等线")
-        font.setPointSize(17)
-        font.setBold(True)
-        self.WinResetTime.setFont(font)
-        self.WinResetTime.setStyleSheet("QLineEdit {\n"
-"    border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/\n"
-"    border-radius: 10px; /*边框圆角3px*/\n"
-"    background: white; /*背景色为白色*/\n"
-"    selection-background-color: green; /* 文本选中时的背景色*/\n"
-"}\n"
-"/*悬停*/\n"
-"QLineEdit:hover {\n"
-"    border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/\n"
-"}\n"
-"\n"
-"/*正常模式的颜色*/\n"
-"QLineEdit[echoMode=\"0\"] {\n"
-"    color: rgb(0,0, 0);\n"
-"}")
-        self.WinResetTime.setInputMask("")
-        self.WinResetTime.setFrame(False)
-        self.WinResetTime.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.WinResetTime.setReadOnly(False)
-        self.WinResetTime.setClearButtonEnabled(True)
-        self.WinResetTime.setObjectName("WinResetTime")
-        self.horizontalLayout_7.addWidget(self.WinResetTime)
-        self.gridLayout_2.addWidget(self.WinResetTimeState, 1, 0, 1, 1)
-        self.ThreadRestartTimeState = QtWidgets.QGroupBox(parent=self.SettingsScrollAreaWidget)
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.ThreadRestartTimeState.setFont(font)
-        self.ThreadRestartTimeState.setStyleSheet("QGroupBox {\n"
-"    border: none;            /*无边框*/\n"
-"    color: green;\n"
-"}")
-        self.ThreadRestartTimeState.setTitle("")
-        self.ThreadRestartTimeState.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter|QtCore.Qt.AlignmentFlag.AlignTop)
-        self.ThreadRestartTimeState.setFlat(False)
-        self.ThreadRestartTimeState.setCheckable(False)
-        self.ThreadRestartTimeState.setObjectName("ThreadRestartTimeState")
-        self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.ThreadRestartTimeState)
-        self.horizontalLayout_6.setContentsMargins(0, 20, 0, 0)
-        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.ThreadRestartTime = QtWidgets.QLineEdit(parent=self.ThreadRestartTimeState)
-        self.ThreadRestartTime.setMinimumSize(QtCore.QSize(309, 40))
-        font = QtGui.QFont()
-        font.setFamily("等线")
-        font.setPointSize(17)
-        font.setBold(True)
-        self.ThreadRestartTime.setFont(font)
-        self.ThreadRestartTime.setStyleSheet("QLineEdit {\n"
-"    border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/\n"
-"    border-radius: 10px; /*边框圆角3px*/\n"
-"    background: white; /*背景色为白色*/\n"
-"    selection-background-color: green; /* 文本选中时的背景色*/\n"
-"}\n"
-"/*悬停*/\n"
-"QLineEdit:hover {\n"
-"    border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/\n"
-"}\n"
-"\n"
-"/*正常模式的颜色*/\n"
-"QLineEdit[echoMode=\"0\"] {\n"
-"    color: rgb(0,0, 0);\n"
-"}")
-        self.ThreadRestartTime.setInputMask("")
-        self.ThreadRestartTime.setFrame(False)
-        self.ThreadRestartTime.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.ThreadRestartTime.setReadOnly(False)
-        self.ThreadRestartTime.setClearButtonEnabled(True)
-        self.ThreadRestartTime.setObjectName("ThreadRestartTime")
-        self.horizontalLayout_6.addWidget(self.ThreadRestartTime)
-        self.gridLayout_2.addWidget(self.ThreadRestartTimeState, 0, 0, 1, 1)
         self.groupBox = QtWidgets.QGroupBox(parent=self.SettingsScrollAreaWidget)
         self.groupBox.setStyleSheet("QGroupBox {\n"
 "    border: none;            /*无边框*/\n"
@@ -2030,9 +1936,149 @@ class Ui_Arisu(object):
         self.KeywordReplyDir.setFlat(False)
         self.KeywordReplyDir.setObjectName("KeywordReplyDir")
         self.gridLayout.addWidget(self.KeywordReplyDir, 1, 2, 1, 1)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.gridLayout.addItem(spacerItem2, 3, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.groupBox, 0, 1, 4, 1)
+        self.ThreadRestartTimeState = QtWidgets.QGroupBox(parent=self.SettingsScrollAreaWidget)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.ThreadRestartTimeState.setFont(font)
+        self.ThreadRestartTimeState.setStyleSheet("QGroupBox {\n"
+"    border: none;            /*无边框*/\n"
+"    color: green;\n"
+"}")
+        self.ThreadRestartTimeState.setTitle("")
+        self.ThreadRestartTimeState.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.ThreadRestartTimeState.setFlat(False)
+        self.ThreadRestartTimeState.setCheckable(False)
+        self.ThreadRestartTimeState.setObjectName("ThreadRestartTimeState")
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.ThreadRestartTimeState)
+        self.horizontalLayout_6.setContentsMargins(0, 20, 0, 0)
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.ThreadRestartTime = QtWidgets.QLineEdit(parent=self.ThreadRestartTimeState)
+        self.ThreadRestartTime.setMinimumSize(QtCore.QSize(309, 40))
+        font = QtGui.QFont()
+        font.setFamily("等线")
+        font.setPointSize(17)
+        font.setBold(True)
+        self.ThreadRestartTime.setFont(font)
+        self.ThreadRestartTime.setStyleSheet("QLineEdit {\n"
+"    border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/\n"
+"    border-radius: 10px; /*边框圆角3px*/\n"
+"    background: white; /*背景色为白色*/\n"
+"    selection-background-color: green; /* 文本选中时的背景色*/\n"
+"}\n"
+"/*悬停*/\n"
+"QLineEdit:hover {\n"
+"    border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/\n"
+"}\n"
+"\n"
+"/*正常模式的颜色*/\n"
+"QLineEdit[echoMode=\"0\"] {\n"
+"    color: rgb(0,0, 0);\n"
+"}")
+        self.ThreadRestartTime.setInputMask("")
+        self.ThreadRestartTime.setFrame(False)
+        self.ThreadRestartTime.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.ThreadRestartTime.setReadOnly(False)
+        self.ThreadRestartTime.setClearButtonEnabled(True)
+        self.ThreadRestartTime.setObjectName("ThreadRestartTime")
+        self.horizontalLayout_6.addWidget(self.ThreadRestartTime)
+        self.gridLayout_2.addWidget(self.ThreadRestartTimeState, 0, 0, 1, 1)
         spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.gridLayout.addItem(spacerItem3, 3, 2, 1, 1)
-        self.gridLayout_2.addWidget(self.groupBox, 0, 1, 3, 1)
+        self.gridLayout_2.addItem(spacerItem3, 3, 0, 1, 1)
+        self.WinResetTimeState = QtWidgets.QGroupBox(parent=self.SettingsScrollAreaWidget)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.WinResetTimeState.setFont(font)
+        self.WinResetTimeState.setStyleSheet("QGroupBox {\n"
+"    border: none;            /*无边框*/\n"
+"    color: green;\n"
+"}")
+        self.WinResetTimeState.setTitle("")
+        self.WinResetTimeState.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.WinResetTimeState.setFlat(False)
+        self.WinResetTimeState.setCheckable(False)
+        self.WinResetTimeState.setObjectName("WinResetTimeState")
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.WinResetTimeState)
+        self.horizontalLayout_7.setContentsMargins(0, 20, 0, 0)
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.WinResetTime = QtWidgets.QLineEdit(parent=self.WinResetTimeState)
+        self.WinResetTime.setMinimumSize(QtCore.QSize(309, 40))
+        font = QtGui.QFont()
+        font.setFamily("等线")
+        font.setPointSize(17)
+        font.setBold(True)
+        self.WinResetTime.setFont(font)
+        self.WinResetTime.setStyleSheet("QLineEdit {\n"
+"    border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/\n"
+"    border-radius: 10px; /*边框圆角3px*/\n"
+"    background: white; /*背景色为白色*/\n"
+"    selection-background-color: green; /* 文本选中时的背景色*/\n"
+"}\n"
+"/*悬停*/\n"
+"QLineEdit:hover {\n"
+"    border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/\n"
+"}\n"
+"\n"
+"/*正常模式的颜色*/\n"
+"QLineEdit[echoMode=\"0\"] {\n"
+"    color: rgb(0,0, 0);\n"
+"}")
+        self.WinResetTime.setInputMask("")
+        self.WinResetTime.setFrame(False)
+        self.WinResetTime.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.WinResetTime.setReadOnly(False)
+        self.WinResetTime.setClearButtonEnabled(True)
+        self.WinResetTime.setObjectName("WinResetTime")
+        self.horizontalLayout_7.addWidget(self.WinResetTime)
+        self.gridLayout_2.addWidget(self.WinResetTimeState, 1, 0, 1, 1)
+        self.QQMessageIntervalState = QtWidgets.QGroupBox(parent=self.SettingsScrollAreaWidget)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.QQMessageIntervalState.setFont(font)
+        self.QQMessageIntervalState.setStyleSheet("QGroupBox {\n"
+"    border: none;            /*无边框*/\n"
+"    color: green;\n"
+"}")
+        self.QQMessageIntervalState.setTitle("")
+        self.QQMessageIntervalState.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.QQMessageIntervalState.setFlat(False)
+        self.QQMessageIntervalState.setCheckable(False)
+        self.QQMessageIntervalState.setObjectName("QQMessageIntervalState")
+        self.horizontalLayout_10 = QtWidgets.QHBoxLayout(self.QQMessageIntervalState)
+        self.horizontalLayout_10.setContentsMargins(0, 20, 0, 0)
+        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
+        self.QQMessageInterval = QtWidgets.QLineEdit(parent=self.QQMessageIntervalState)
+        self.QQMessageInterval.setMinimumSize(QtCore.QSize(309, 40))
+        font = QtGui.QFont()
+        font.setFamily("等线")
+        font.setPointSize(17)
+        font.setBold(True)
+        self.QQMessageInterval.setFont(font)
+        self.QQMessageInterval.setStyleSheet("QLineEdit {\n"
+"    border: 3px solid rgb(41, 57, 85); /*边框1px宽，颜色为深紫色*/\n"
+"    border-radius: 10px; /*边框圆角3px*/\n"
+"    background: white; /*背景色为白色*/\n"
+"    selection-background-color: green; /* 文本选中时的背景色*/\n"
+"}\n"
+"/*悬停*/\n"
+"QLineEdit:hover {\n"
+"    border: 3px solid rgba(0, 0, 0,0.4); /* 鼠标悬停时边框颜色为蓝色*/\n"
+"}\n"
+"\n"
+"/*正常模式的颜色*/\n"
+"QLineEdit[echoMode=\"0\"] {\n"
+"    color: rgb(0,0, 0);\n"
+"}")
+        self.QQMessageInterval.setInputMask("")
+        self.QQMessageInterval.setFrame(False)
+        self.QQMessageInterval.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.QQMessageInterval.setReadOnly(False)
+        self.QQMessageInterval.setClearButtonEnabled(True)
+        self.QQMessageInterval.setObjectName("QQMessageInterval")
+        self.horizontalLayout_10.addWidget(self.QQMessageInterval)
+        self.gridLayout_2.addWidget(self.QQMessageIntervalState, 2, 0, 1, 1)
         self.verticalLayout_12.addLayout(self.gridLayout_2)
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
@@ -2229,14 +2275,6 @@ class Ui_Arisu(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">如果能够获取逻辑核心数则会判断用户输入的核心数是否合理，超出后则使用最大逻辑核心数。</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">输入可使用的逻辑核心数，默认通过编程计算。物理核心数乘上1.5后去掉小数点，如过这个值超过最大逻辑核心数就使用最大逻辑核心数。</p></body></html>"))
         self.LogicCPUCountConfirm.setText(_translate("Arisu", "确认"))
-        self.WinResetTimeState.setToolTip(_translate("Arisu", "API录入状态显示"))
-        self.WinResetTime.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">窗口(显示、位置、大小)重置时间，默认设置10秒进行一次保持。</span></p></body></html>"))
-        self.WinResetTime.setText(_translate("Arisu", "10"))
-        self.WinResetTime.setPlaceholderText(_translate("Arisu", "请输入窗口重置的时间"))
-        self.ThreadRestartTimeState.setToolTip(_translate("Arisu", "API录入状态显示"))
-        self.ThreadRestartTime.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">窗口绑定失败后等待重新进行绑定的时间。窗口被关闭、被完全遮挡、崩溃就会导致绑定窗口失效。</span></p></body></html>"))
-        self.ThreadRestartTime.setText(_translate("Arisu", "10"))
-        self.ThreadRestartTime.setPlaceholderText(_translate("Arisu", "请输入线程重启的时间"))
         self.OpenRoleDir.setToolTip(_translate("Arisu", "打开提示库，在这个目录下用户可以自行添加或修改AI自动回复的人设。"))
         self.OpenRoleDir.setText(_translate("Arisu", "人设自定义"))
         self.LogQueryDir.setToolTip(_translate("Arisu", "存放Q群的聊天记录和软件的日志信息"))
@@ -2253,6 +2291,18 @@ class Ui_Arisu(object):
         self.InitialInterfaceLocationComboBox.setItemText(4, _translate("Arisu", "用户设置"))
         self.KeywordReplyDir.setToolTip(_translate("Arisu", "打开关键词回复目录，在这个目录下用户可以自行添加或修改AI自动回复的规则。"))
         self.KeywordReplyDir.setText(_translate("Arisu", "关键词回复"))
+        self.ThreadRestartTimeState.setToolTip(_translate("Arisu", "API录入状态显示"))
+        self.ThreadRestartTime.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">窗口绑定失败后等待重新进行绑定的时间。窗口被关闭、被完全遮挡、崩溃就会导致绑定窗口失效。</span></p></body></html>"))
+        self.ThreadRestartTime.setText(_translate("Arisu", "10"))
+        self.ThreadRestartTime.setPlaceholderText(_translate("Arisu", "请输入线程重启的时间"))
+        self.WinResetTimeState.setToolTip(_translate("Arisu", "API录入状态显示"))
+        self.WinResetTime.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">窗口(显示、位置、大小)重置时间，默认设置10秒进行一次保持。</span></p></body></html>"))
+        self.WinResetTime.setText(_translate("Arisu", "10"))
+        self.WinResetTime.setPlaceholderText(_translate("Arisu", "请输入窗口重置的时间"))
+        self.QQMessageIntervalState.setToolTip(_translate("Arisu", "API录入状态显示"))
+        self.QQMessageInterval.setToolTip(_translate("Arisu", "<html><head/><body><p><span style=\" font-size:12pt;\">多少秒查看一次有没有新的QQ消息(每秒轮询QQ消息)。速度不能太快，不然CPU会高速运转(纯纯浪费电)。</span></p></body></html>"))
+        self.QQMessageInterval.setText(_translate("Arisu", "1"))
+        self.QQMessageInterval.setPlaceholderText(_translate("Arisu", "请输入多少秒查一次QQ新消息"))
         self.Uninstall.setToolTip(_translate("Arisu", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

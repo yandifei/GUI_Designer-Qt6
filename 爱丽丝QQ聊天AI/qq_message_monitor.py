@@ -512,7 +512,10 @@ class QQMessageMonitor:
         win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, long_position)
 
     def ctrl_v(self):
-        """模拟ctrl+v的操作"""
+        """模拟ctrl+v的操作
+        普通文本或小的图片直接发送
+        但是图片过大就会以文件发送，需要多次点击
+        """
         # win32gui.SetForegroundWindow(self.hwnd)
         self.edit_box.SetFocus()    # 设置焦点
         """模拟Ctrl+V按键"""
@@ -536,6 +539,11 @@ class QQMessageMonitor:
         win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONDBLCLK, win32con.MK_LBUTTON, long_position)
         # 模拟鼠标弹起
         win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, 0, long_position)  # 弹起
+        """文件需要二次确认"""
+        # 按下回车键
+        win32api.keybd_event(win32con.VK_RETURN, 0, 0, 0)
+        # 松开回车键
+        win32api.keybd_event(win32con.VK_RETURN, 0, win32con.KEYEVENTF_KEYUP, 0)
 
     def paste_send_file(self):
         """模拟粘贴发送文件"""

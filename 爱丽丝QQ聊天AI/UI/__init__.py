@@ -5,10 +5,12 @@
 __author__ = "yandifei"
 __name__ = "爱丽丝QQ聊天AI"
 __version__ = "1.3.0"
-# 核心模块的快捷导入路径
+
+"""核心模块的快捷导入路径"""
 from .ExtendedUI import ArisuUI
 from .arisu_qq_chat_ai_ui import ArisuQQCHatAIUI
 from .functions import OutputRedirection, InputRedirection # 输入输出重定向
 
-
+"""允许导入"""
 __all__ = ["ArisuUI", "ArisuQQCHatAIUI", "functions", "OutputRedirection", "InputRedirection"]
+

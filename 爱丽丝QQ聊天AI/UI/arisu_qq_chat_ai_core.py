@@ -4,14 +4,21 @@
 指令系统+权限系统+接入deepseekAI+QQ监听
 """
 
-import os               # 操作系统库
-import sys              # 系统库
-import shutil           # 清理文件夹下的所有内容（官方推荐）
-from time import sleep  # 时间停顿
-import threading        # 线程
+import os                       # 操作系统库
+# import sys                    # 系统库
+import shutil                   # 清理文件夹下的所有内容（官方推荐）
+from datetime import datetime   # 时间计算
+from time import sleep          # 时间停顿
+import threading                # 线程
 
 # 第三方库
-from PyQt6.QtWidgets import QApplication                                # 退出
+import psutil                                                           # 进程时间查询
+import win32con                                                         # 组件
+import win32gui                                                         # 句柄查找
+import win32process                                                     # 进程
+import win32ui                                                          # 截图使用
+from PIL import Image                                                   # 截图使用
+# from PyQt6.QtWidgets import QApplication                                # 退出
 from qq_message_monitor import QQMessageMonitor                         # 导入QQ消息监控者这个类
 from deepseek_conversation_engine import DeepseekConversationEngine     # 导入deepseek对话引擎这个类
 from jmcomic import create_option_by_file, download_album, jm_exception # 导入禁漫模块
@@ -58,6 +65,8 @@ class ArisuQQChatAICore:
             self.order_dict = self.load_limit_order_dict()  # 限制指令加载
         else:
             self.order_dict = self.load_order_dict()        # 无限制指令加载
+
+        # 添加到self.order_dict或self.order_dict中，以及纳入无限制指令中
         self.add_pic_download_map_order()  # 添加图片下载映射指令
         """外部标志"""
         self.running = True # 执行退出指令后为False
@@ -205,19 +214,25 @@ class ArisuQQChatAICore:
 
     def add_pic_download_map_order(self):
         """添加图片下载映射指令"""
+        # 构造线程
+        def thread_image_batch_download(num, key):
+            """线程图片下载"""
+            # 构造线程
+            thread = threading.Thread(target=self.image_batch_download, name='图片批量下载',args=(key, num), daemon=True)
+            # 启动线程
+            thread.start()
+            # 返回True去执行成功语句
+            return True
+
         # 遍历图片映射表(遍历keys)
         for key in self.arisu.picture_map.keys():
-            # 函数构造
-            def function_build(num, k=str(key)):
-                self.image_batch_download(k, num)
-                # 指令构造
-            self.order_dict[f"#{key}"] = [lambda num : function_build(num),
-                                          f"图片发送完成", "全部/部分图片发送失败或超出限制(100)"]
-            print(f"{[lambda num : function_build(num),
-                                          f"图片发送完成", "全部/部分图片发送失败或超出限制(100)"]}")
-        # self.order_dict[f"#ACG"] = [lambda num: print(num), f"图片发送完成","全部/部分图片发送失败或超出限制(100)"]
-
-
+            # 直接使用 lambda 函数，并使用默认参数捕获当前 key 的值
+            self.order_dict[f"#{key}"] = [lambda num, k=key: thread_image_batch_download(int(num), k), "开始发送图片",
+                "1.图片发送失败\n2.图片超出限制(100)\n3.参数错误"]
+            self.unlimited_list.append(f"#{key}")
+            # 非线程
+            # self.order_dict[f"#{key}"] = [lambda num, k=key: self.image_batch_download(int(num), k), "开始发送图片",
+            #                               "1.图片发送失败\n2.图片超出限制(100)\n3.参数错误"]
 
     def image_batch_download(self, key, num):
         """图片批量下载
@@ -225,10 +240,76 @@ class ArisuQQChatAICore:
         key ： json文件的键
         num ： 图片下载的张数
         """
+        # 检查批量下载是否超标
+        if num > 100:
+            return False
         # 开始批量下载并执行
         for _ in range(num):
             # 从json拿到url->使用arisu方法进行图片下载复制粘贴发送
             self.arisu.send_url_image(self.arisu.picture_map[key])
+        return True
+
+    def send_screen_arisu(self):
+        """发送后台截图当前窗口状态
+        """
+        try:
+            """截图"""
+            # 类名和标题查找句柄
+            hwnd = win32gui.FindWindow("Qt691QWindowIcon", "爱丽丝")
+            # 获取窗口坐标
+            left, top, right, bottom = win32gui.GetWindowRect(hwnd)
+            # 获取窗口设备上下文
+            hwndDC = win32gui.GetWindowDC(hwnd)
+            mfcDC = win32ui.CreateDCFromHandle(hwndDC)
+            saveDC = mfcDC.CreateCompatibleDC()
+            # 创建位图对象
+            saveBitMap = win32ui.CreateBitmap()
+            saveBitMap.CreateCompatibleBitmap(mfcDC, right - left, bottom - top)
+            # 将位图选入设备上下文
+            saveDC.SelectObject(saveBitMap)
+            # 复制设备上下文到内存设备上下文
+            saveDC.BitBlt((0, 0), (right - left, bottom - top), mfcDC, (0, 0), win32con.SRCCOPY)
+            # 获取位图信息
+            bmp_info = saveBitMap.GetInfo()
+            bmp_str = saveBitMap.GetBitmapBits(True)
+            # 生成PIL图像
+            image = Image.frombuffer(
+                'RGB',
+                (bmp_info['bmWidth'], bmp_info['bmHeight']),
+                bmp_str, 'raw', 'BGRX', 0, 1
+            )
+            # 保存图像
+            image.save("./logs/下载缓存/当前界面状态.png")
+            """发送"""
+            self.arisu.send_image("./logs/下载缓存/当前界面状态.png")
+        except Exception as e:
+            # 打印错误
+            print(e)
+
+    @staticmethod
+    def get_arisu_running_time():
+        """获得软件的运行时间
+        返回值：
+        create_time ： 爱丽丝进程的创建时间
+        """
+        # 获得当前窗口的句柄
+        hwnd = win32gui.FindWindow("Qt691QWindowIcon", "爱丽丝")
+        # 获取窗口的进程ID
+        _, pid = win32process.GetWindowThreadProcessId(hwnd)
+        # 获取进程创建时间 (使用psutil简化操作)
+        process = psutil.Process(pid)
+        # 进程创建时间戳（自1970年以来的秒数）
+        create_time_timestamp = process.create_time()
+        # 转换为datetime对象
+        create_time = datetime.fromtimestamp(create_time_timestamp)
+        now = datetime.now()
+        uptime = (now - create_time)
+        # 计算天、小时、分钟和秒
+        days = uptime.days
+        seconds = uptime.seconds
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{days}天 {hours}时:{minutes}分:{seconds}秒"
 
     """消息处理（分割，提取）"""
     def split_respond_msg(self):
@@ -415,6 +496,10 @@ class ArisuQQChatAICore:
 
     # 禁漫指令
     "#jm": [True, lambda : self.jm_down_order(self.args),"下载失败"],
+
+    # 远程控制指令
+    "#中控截图": [lambda : self.send_screen_arisu(), "截图完成","截图失败"],
+    "#运行时间": [True, lambda : self.get_arisu_running_time(), "无法获取运行时间"],
     # ==========================================DeepseekConversationEngine延伸过来的指令=========================================="""
     # 特殊指令
     "#兼容": [lambda : self.deepseek.compatible_openai() ,"已经切换至兼容OpenAI的接口","切换中途发生异常"],
@@ -525,7 +610,6 @@ class ArisuQQChatAICore:
         "#FIM补全开头",
         "#FIM完整输出",
         "#FIM补全后缀",
-        "#FIM对数概率输出",
         # 上下文管理
         "#思维链",
         "#清空对话历史",
