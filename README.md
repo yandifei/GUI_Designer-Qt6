@@ -44,16 +44,27 @@
   - 消息日志记录(撤回前监测到的消息会被记录到日志中)
 
 ## 界面示意
+<div style="display: flex; flex-direction: column; align-items: center; gap: 3px;">
+  <div style="display: flex; justify-content: center; gap: 3px;">
+    <img alt="主页" style="width: 400px; height: auto; " src="./展示项目的图片/主页.png"/>
+    <img alt="状态监测" style="width: 400px; height: auto;" src="./展示项目的图片/状态监测.png"/>
+  </div>
 
-<div style="display: flex; justify-content: center; gap: 10px; margin: 20px auto;">
-  <img alt="主页" style="width: 400px; height: auto;" src="./展示项目的图片/主页.png"/>
-  <img alt="状态监测" style="width: 400px; height: auto;" src="https://media.githubusercontent.com/media/yandifei/ArisuQQChatAI/main/%E5%B1%95%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9B%BE%E7%89%87/%E7%8A%B6%E6%80%81%E7%9B%91%E6%B5%8B.png"/>
-  <img alt="Q群绑定" style="width: 400px; height: auto;" src="./展示项目的图片/Q群绑定.png"/>
-  <img alt="用户设置" style="width: 400px; height: auto;" src="./展示项目的图片/用户设置.png"/>
-  <img alt="状态监测(最大化)" style="width: 400px; height: auto;" src="./展示项目的图片/状态监测(最大化).png"/>
-  <img alt="日志监控(最大化)" style="width: 400px; height: auto;" src="./展示项目的图片/日志监控(最大化).png"/>
+  <div style="display: flex; justify-content: center; gap: 3px;">
+    <img alt="Q群绑定" style="width: 400px; height: auto;" src="./展示项目的图片/Q群绑定.png"/>
+    <img alt="键盘快捷键" style="width: 400px; height: auto;" src="./展示项目的图片/键盘快捷键.png"/>
+  </div>
+  
+  <div style="display: flex; justify-content: center; gap: 3px;">
+    <img alt="问题链接" style="width: 400px; height: auto;" src="./展示项目的图片/问题链接.png"/>
+    <img alt="用户设置" style="width: 400px; height: auto;" src="./展示项目的图片/用户设置.png"/>
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 3px;">
+    <img alt="状态监测(最大化)" style="width: 400px; height: auto;" src="./展示项目的图片/状态监测(最大化).png"/>
+    <img alt="日志监控(最大化)" style="width: 400px; height: auto;" src="./展示项目的图片/日志监控(最大化).png"/>
+  </div>
 </div>
-
 
 ## 安装使用
 - 下载地址：[⚡Github下载⚡](https://github.com/yandifei/ArisuQQChatAI/releases/download/v1.0.0-beta/ArisuQQChatAI.7z)
@@ -74,15 +85,16 @@ git clone https://github.com/yandifei/ArisuQQChatAI.git
 # 2.进入项目目录的开发目录（目录名需与克隆结果一致）
 cd ArisuQQChatAI/爱丽丝QQ聊天AI/
 
-# 3. [可选] 创建虚拟环境
+# 3. [可选，强烈推荐] 创建虚拟环境
 conda create -n Arisu python=3.13.5
-# 激活虚拟环境
+
+# 激活虚拟环境(Anaconda或Miniconda)
 conda activate Arisu
 
-# 4.安装依赖（强烈建议使用虚拟环境）
+# 4.安装依赖(强烈建议使用虚拟环境)
 pip install -r requirements.txt
 
-# 5.启动项目
+# 5.启动项目(cmd使用以下指令，pycharm直接运行)
 python 爱丽丝QQ聊天AI/爱丽丝QQ聊天AI.py
 ```
 
@@ -94,10 +106,10 @@ python 爱丽丝QQ聊天AI/爱丽丝QQ聊天AI.py
 
 ## 免责声明
 - ⚠️本软件通过 DeepSeek API 生成的内容不代表开发者观点，其准确性、适当性由使用者自行判断并承担全部责任。🤖AI可能产生错误、偏见或不适宜内容，开发者不对此引发的任何后果负责。
-- 如果使用该软件导致Q号被封⚡，开发者不负任何责任！(非要作死开发者也拦不住，已提供移除危险指令的选项)🎭用户需要自行承当封号风险！！！
-- 使用MIT协议📜保留原始版权可自由修改，🚫禁止将该项目用于引流(带节奏)、纯色情、当键政、消息轰炸等非法目的。
-- 此软件的根本目的是打造接入DeepSeek的API接口实现“满分”🧠的问题解答和为用户提供《情绪价值💖》！
-
+- ⚖️如果使用该软件导致Q号被封⚡，开发者不负任何责任！(非要作死开发者也拦不住，已提供移除危险指令的选项)🎭用户需要自行承当封号的风险！！！
+- 📜使用LGPL2.0开源协议，🚫禁止将该项目用于引流(带节奏)、🔞纯色情(如:写黄色小说)、❌当键政(政治敏感话题讨论)、🔥消息轰炸等非法目的。
+- 💡此软件的根本目的是打造接入DeepSeek的API接口实现“满分”🧠的问题解答和为用户提供《情绪价值💖》！
+- 🖼️项目中使用的所有图像资源仅供个人研究学习📚和欣赏之用🔍，如有侵权，请通知开发者立即删除。
 
 ## 致谢
 
@@ -111,5 +123,5 @@ python 爱丽丝QQ聊天AI/爱丽丝QQ聊天AI.py
 - [DeepseekConversationEngine](https://github.com/yandifei/DeepseekConversationEngine) 基于deepseek api开发的类库
 
 ## 问题反馈
-- 其实还有别的项目要研发和个人学习，没时间处理。
+- 其实还有别的项目要研发和个人学习(繁忙)，没时间处理issues。
 - 提交 [Issues](https://github.com/yandifei/ArisuQQChatAI/issues) 或 邮箱3058439878@qq.com
