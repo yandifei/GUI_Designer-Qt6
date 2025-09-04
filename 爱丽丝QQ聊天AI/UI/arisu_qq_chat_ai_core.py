@@ -311,6 +311,27 @@ class ArisuQQChatAICore:
         minutes, seconds = divmod(remainder, 60)
         return f"{days}天 {hours}时:{minutes}分:{seconds}秒"
 
+    @staticmethod
+    def get_computer_usage():
+        """获得cpu、内存的使用率（非物理核心），以及爱丽丝对CPU、内存的使用率
+        参数：
+        返回值：
+        1秒钟内CPU所有逻辑核心的使用率
+        内存当前使用率的百分比
+
+        """
+        # 获得当前窗口的句柄
+        hwnd = win32gui.FindWindow("Qt691QWindowIcon", "爱丽丝")
+        # 获取窗口的进程ID
+        _, pid = win32process.GetWindowThreadProcessId(hwnd)
+        # 构建发送文本(1秒内CPU占用百分比，内存占用百分比，该进程对CPU占比，该进程对内存占比)
+        return f"""
+CPU占比：{psutil.cpu_percent(1, True)}%
+内存占比：{(psutil.swap_memory().total / psutil.swap_memory().used):.2f}%
+爱丽丝对CPU当前占比：{psutil.Process(pid).cpu_percent()}%
+爱丽丝对内存当前占比：{psutil.Process(pid).memory_percent(memtype='rss')}
+"""
+
     """消息处理（分割，提取）"""
     def split_respond_msg(self):
         """分割响应消息
@@ -500,6 +521,7 @@ class ArisuQQChatAICore:
     # 远程控制指令
     "#中控截图": [lambda : self.send_screen_arisu(), "截图完成","截图失败"],
     "#运行时间": [True, lambda : self.get_arisu_running_time(), "无法获取运行时间"],
+    "#系统资源监控": [True, lambda : self.get_computer_usage(), "无法获取系统资源信息"],
     # ==========================================DeepseekConversationEngine延伸过来的指令=========================================="""
     # 特殊指令
     "#兼容": [lambda : self.deepseek.compatible_openai() ,"已经切换至兼容OpenAI的接口","切换中途发生异常"],
