@@ -26,8 +26,8 @@
 - **AI自动回复**：
   - 使用deepseek的api自动回复
   - 结合指令系统对回答进行优化
-  - 可自定义人设和能记录上下文
-  - 其余功能可以看：[DeepseekConversationEngine](https://github.com/yandifei/DeepseekConversationEngine)
+  - 可**自定义人设**和上下文对话
+  - 其余功能可以看：(爱丽丝QQ聊天AI.pdf)[./爱丽丝QQ聊天AI/文档/开发手册.md"]或[DeepseekConversationEngine](https://github.com/yandifei/DeepseekConversationEngine)
 - **自定回复策略**：
   - 关键词自动回复
   - 过滤回复指定发送者
@@ -37,11 +37,12 @@
   - 需要承认的是权限系统存在设计缺陷：权限可被复制。(有解决方案，但价值和意义太低了)
   - 通过权限分级可以避免某些“危险指令”导致QQ封号(如：从禁漫天堂下本子发到Q群中)
 - **指令系统**：
-  - AI无法完成的操作(调整AI的回复策略)
-  - 后续有功能再加(文件处理、电脑状态等)
+  - AI无法完成的操作(调整AI的回复策略、发涩图、运行时间和中控截图等等)
+  - 后续有功能再加(文件处理、电脑状态监控等)
 - **异常处理与日志**：
   - 强大的纠错机制(全局异常捕获和线程池自动重启线程)
-  - 消息日志记录(撤回前监测到的消息会被记录到日志中)
+  - 消息文本记录(撤回前监测到的消息会被记录到txt中)
+  - 日志自动管理(文件进行日志轮替及详细捕获异常)
 
 ## 界面示意
 <div style="display: flex; flex-direction: column; align-items: center; gap: 3px;">
