@@ -27,7 +27,7 @@
   - 使用deepseek的api自动回复
   - 结合指令系统对回答进行优化
   - 可**自定义人设**和上下文对话
-  - 其余功能可以看：(爱丽丝QQ聊天AI.pdf)[./爱丽丝QQ聊天AI/文档/开发手册.md"]或[DeepseekConversationEngine](https://github.com/yandifei/DeepseekConversationEngine)
+  - 其余功能可以看：[爱丽丝QQ聊天AI.pdf](爱丽丝QQ聊天AI/文档/爱丽丝QQ聊天AI.md)或[DeepseekConversationEngine](https://github.com/yandifei/DeepseekConversationEngine)
 - **自定回复策略**：
   - 关键词自动回复
   - 过滤回复指定发送者
@@ -126,3 +126,4 @@ python 爱丽丝QQ聊天AI/爱丽丝QQ聊天AI.py
 ## 问题反馈
 - 其实还有别的项目要研发和个人学习(繁忙)，没时间处理issues。
 - 提交 [Issues](https://github.com/yandifei/ArisuQQChatAI/issues) 或 邮箱3058439878@qq.com
+
