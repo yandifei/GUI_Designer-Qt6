@@ -67,7 +67,7 @@
 </div>
 
 ## 安装使用
-- 下载地址：[⚡Github下载⚡](https://github.com/yandifei/ArisuQQChatAI/releases/download/v1.0.0-beta/ArisuQQChatAI.7z)
+- 下载地址：[⚡Github下载⚡](https://github.com/yandifei/ArisuQQChatAI/releases)
 - 直接解压即后打开“爱丽丝QQ聊天AI.exe”
 - 确保你有deepseek api的密钥和这个密钥有钱
 - 设置窗口录入deepseek api密钥并填写好绑定QQ群的参数
