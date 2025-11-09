@@ -113,10 +113,10 @@ class QQMessageMonitor:
         self.message_record_button = self.edit_tool_bar.GetLastChildControl().GetFirstChildControl()
         """编辑框(edit_box)[textbox、关闭按钮、发送按钮]"""
         # 2个组里面->最后组->组->组->组1->最后组->组4->"Rich Text Editor" 应用程序(里面有2个控件)
-        self.edit_box: uiautomation.EditControl = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
+        self.edit_box: uiautomation.Control = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
             .GetChildren()[1].GetLastChildControl().GetChildren()[3].GetLastChildControl()
         # 2个组里面->最后组->组->组->组1->最后组->组4->"Rich Text Editor" 应用程序->最后组(EditControlTypeId 编辑)
-        self.text_control: uiautomation.TextControl = self.edit_box.GetLastChildControl()
+        self.text_control: uiautomation.EditControl = self.edit_box.GetLastChildControl().EditControl()
         # 2个组里面->最后组->组->组->组1->最后组->组5->组(关闭按钮)
         self.edit_box_close_button =  self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
             .GetChildren()[1].GetLastChildControl().GetChildren()[4].GetFirstChildControl()
@@ -137,17 +137,15 @@ class QQMessageMonitor:
             self.bulletin_text_button = self.bulletin_bar.GetLastChildControl().GetFirstChildControl().GetFirstChildControl()
         """群成员框(group_member_box)[文本控件(群聊成员人数)、群成员搜索、群成员列表]"""
         if self.group_or_friend == "群聊":
-            group_or_friend_index = 1   # 群成员位置下表
-            if len(self.main_chat_win.GetChildren()[1].GetChildren()[2].GetChildren()[0].GetChildren()) == 4:   # 没有公告栏存在控件位置影响
-                group_or_friend_index = 0   # 如果没有控件就是从0开始的下标
             # 2个组里面->组3->组1->组1->组2(直接文本控件(群聊成员人数))
-            self.group_member_count = self.main_chat_win.GetChildren()[1].GetChildren()[2].GetChildren()[0].GetChildren()[group_or_friend_index]    # 群聊成员人数
+            self.group_member_count = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
+                .GetLastChildControl().GetFirstChildControl().GetChildren()[-3]   # 群聊成员人数
             # 2个组里面->组3->组1->组1->组3(群搜索按钮)
-            self.group_member_search = self.main_chat_win.GetChildren()[1].GetChildren()[2].GetChildren()[0].GetChildren()[group_or_friend_index + 1]
-            # 2个组里面->组3->组1->组1->组4->组->组2(群成员搜索输入框("编辑"EditControl))
-            self.group_member_search_input_box= self.main_chat_win.GetChildren()[1].GetChildren()[2].GetChildren()[0].GetChildren()[group_or_friend_index + 2].GetChildren()[0].GetChildren()[1]    # 群聊成员人数
-            # 2个组里面->组3->组1->组1->组5->"成员列表"(一堆子组(记录群员和职称，如果是群友就没有称呼))
-            self.group_member_list = self.main_chat_win.GetChildren()[1].GetChildren()[2].GetChildren()[0].GetChildren()[group_or_friend_index + 3].GetChildren()[0]
+            self.group_member_search = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
+                .GetLastChildControl().GetFirstChildControl().GetChildren()[-2]
+            # 2个组里面->最后组->组->组->最后组->组->最后一个组->组(里面的就是能找到的群成员列表了)
+            self.group_member_list = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
+                .GetLastChildControl().GetFirstChildControl().GetLastChildControl().GetFirstChildControl().GetChildren()
             # QQ群主和管理员
             self.qq_group_administrator = self.get_qq_group_administrator()
         """-----------------------------------------消息监听相关-----------------------------------------"""
@@ -680,19 +678,19 @@ class QQMessageMonitor:
         # [administrator for administrator in self.group_member_list if self.group_member_list.GetChildren()[2].GetChildren()[0].Name == "管理员"]
         qq_group_administrator_list = []    # 群成员列表
         # 判断好友列表第一个人是否为群主
-        if len(self.group_member_list.GetChildren()[0].GetChildren())  != 3:
+        if self.group_member_list[0].GetLastChildControl().GetFirstChildControl().Name != "群主":
             raise ValueError("请将群成员列表滚到最开头(有群主的标志)")
         # 收录群主的名字
-        qq_group_administrator_list.append(self.group_member_list.GetChildren()[0].GetChildren()[1].Name)
+        qq_group_administrator_list.append(self.group_member_list[0].GetChildren()[1].Name)
         # 遍历可见的成员列表(跳过群组遍历)
-        # 判断最后一个成员是否没有职业(却确保可见列表限制全部的群管理和群主)
-        if self.group_member_list.GetChildren()[-1].GetChildren() != 3:
+        # 判断最后一个成员是否没有职业(却确保可见列表显示完全了管理和群主)
+        if len(self.group_member_list[-1].GetChildren()) != 3:  # 最后一个人是没有职业的，也就只有2个控件
             self.qq_chat_win.Maximize() # 最大化窗口(管理员很多但是窗口太小无法展示所有管理员的问题)
         # 遍历可见成员列表的所有管理员
-        for administrator in self.group_member_list.GetChildren()[1:]:
-            if len(administrator.GetChildren()) != 3:  # 检测身份(不是管理员或群主没有3个控件，这个控件记录身份)
+        for administrator in self.group_member_list[1:]:
+            if len(administrator.GetChildren()) == 2:  # 检测身份(不是管理员或群主没有3个控件，3控件记录身份，群友只有一个控件)
                 break   # 后面的控件都是群成员，没有必要遍历
-            qq_group_administrator_list.append(administrator.GetChildren()[1].Name)  # 添加管理员身份
+            qq_group_administrator_list.append(administrator.GetChildren()[1].Name)  # 添加管理员名字
         # 判断是否最大化了(恢复窗口位置和大小)
         if self.qq_chat_win.IsMaximize():
             # self.qq_chat_win.Restore()  # 恢复大小和位置
