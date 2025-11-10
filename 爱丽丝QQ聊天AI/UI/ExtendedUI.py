@@ -23,7 +23,7 @@ except (ModuleNotFoundError, ImportError):                                      
     from arisu_qq_chat_ai_ui import ArisuQQCHatAIUI                                         # 基础框架的类
     from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore                                  # 外部方法的类
     from deepseek_conversation_engine import DeepseekConversationEngine                     # AI对话
-    from qq_message_monitor import QQMessageMonitor                                         # QQ监控
+    # from qq_message_monitor import QQMessageMonitor                                         # QQ监控
 from 用户设置.configuration_manager import ConfigurationManager                             # 导入配置文件的类
 from arisu_logger import debug, info, warning, critical, exception                          # 导入日志方法
 from arisu_logger import console_handler                                                    # 导入日志处理器

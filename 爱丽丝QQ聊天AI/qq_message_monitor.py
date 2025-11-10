@@ -19,10 +19,12 @@ import win32con                     # win32api操作
 import win32clipboard               # 剪切板操作
 from PIL import Image               # 图片格式转换处理(pip install Pillow)
 
+
 class QQMessageMonitor:
-    def __init__(self,win_name="",monitor_name="",top_wait_time = 2):
+    def __init__(self, group_or_friend: str, win_name="", monitor_name="", top_wait_time = 2):
         """
         参数:
+        group_or_friend: 群聊窗口还是好友窗口(群聊 或 好友)
         win_name: 左上角窗口名字(如果有备注名就填备注名)
         monitor_name: QQ号或发送者的名字
         top_wait_time : 默认2秒，设置置顶后等待qq渲染完成的属性，（如果电脑卡的话可以调大属性）
@@ -31,7 +33,7 @@ class QQMessageMonitor:
         self.monitor_name = str(monitor_name)                                       # 强制转为字符串
         self.parameter_validation()                                                 # 调用函数对参数进行校验
         # 窗口初始化相关
-        self.group_or_friend = None                                                 # 记录窗口QQ群还是好友
+        self.group_or_friend = group_or_friend                                                 # 记录窗口QQ群还是好友
         self.qq_chat_win:uiautomation.WindowControl = self.find_qq_chat_win(self.top_window_traversal())   # 遍历顶层窗口->从顶层窗口中找到指定的qq聊天窗口
         self.hwnd = self.qq_chat_win.NativeWindowHandle                             # 被监听窗口的句柄
         self.show_win()                                                             # 如果窗口最小化就展示窗口
@@ -116,13 +118,15 @@ class QQMessageMonitor:
         self.edit_box: uiautomation.Control = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
             .GetChildren()[1].GetLastChildControl().GetChildren()[3].GetLastChildControl()
         # 2个组里面->最后组->组->组->组1->最后组->组4->"Rich Text Editor" 应用程序->最后组(EditControlTypeId 编辑)
-        self.text_control: uiautomation.EditControl = self.edit_box.GetLastChildControl().EditControl()
+        self.text_control: uiautomation.EditControl = self.edit_box.EditControl()
+        # 2个组里面->最后组->组->组->组1->最后组->组4->"Rich Text Editor" 应用程序->最后组->第一个组(修改文本后这里显示修改的问厄本那)
+        self.text_content_control: uiautomation.TextControl = self.edit_box.GetLastChildControl().TextControl()
         # 2个组里面->最后组->组->组->组1->最后组->组5->组(关闭按钮)
         self.edit_box_close_button =  self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
             .GetChildren()[1].GetLastChildControl().GetChildren()[4].GetFirstChildControl()
-        # 2个组里面->最后组->组->组->组1->最后组->组5->最后组(发送按钮)
+        # 2个组里面->最后组->组->组->组1->最后组->组5->组2(准确的发送按钮)
         self.send_button = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl() \
-            .GetChildren()[1].GetLastChildControl().GetChildren()[4].GetLastChildControl()
+            .GetChildren()[1].GetLastChildControl().GetChildren()[4].GetChildren()[1].GetFirstChildControl()
         """文件发送时的按钮"""
         # # 文档->组->倒数第二个组(对话框)->最后组->最后组->组(发送(1)的按钮)
         # self.send_file_button = self.main_chat_win.GetFirstChildControl().GetChildren()[-2].GetLastChildControl().GetLastChildControl().GetFirstChildControl()
@@ -488,7 +492,7 @@ class QQMessageMonitor:
         # sleep(1)  # 发送前确保窗口激活
         # win32gui.SetForegroundWindow(self.hwnd)
         # sleep(0.1)  # 给窗口激活留出时间
-        self.edit_box.SetFocus()    # 设置焦点
+        # self.edit_box.SetFocus()    # 设置焦点
         """将文本复制到剪贴板"""
         win32clipboard.OpenClipboard()   # 打开剪切板
         win32clipboard.EmptyClipboard()  # 清空剪贴板
@@ -502,7 +506,12 @@ class QQMessageMonitor:
         win32api.keybd_event(win32con.VK_CONTROL, 0, win32con.KEYEVENTF_KEYUP, 0)  # 释放Ctrl
         # 给窗口粘贴完毕的时间
         # while self.edit_box.GetFirstChildControl().GetFirstChildControl().Name == "":
-        sleep(0.1)
+        # 存在文本就会有多个控件
+        # while len(self.text_content_control.GetChildren()) == 0:
+        #     sleep(0.1)
+        # 发送控件能够使用
+        while not self.send_button.IsEnabled:
+            sleep(0.1)
         """后台点击发送按钮"""
         # 获取发送按钮中心x和y的绝对坐标
         screen_x, screen_y = self.send_button.BoundingRectangle.xcenter(), self.send_button.BoundingRectangle.ycenter()
@@ -581,14 +590,14 @@ class QQMessageMonitor:
         """获取编辑控件的值
         返回值： 文本编辑框的内容
         """
-        return self.edit_box.GetValuePattern().Value
+        return self.text_control.GetValuePattern().Value
 
-    def set_edit_value(self,content):
+    def set_edit_value(self,content: str):
         """修改edit控件的值
         参数 ： content ： 需要修改的文本内容
         """
-        self.edit_box.SetFocus()   # 设置焦点
-        self.edit_box.GetValuePattern().SetValue("content")
+        self.text_control.SetFocus()   # 设置焦点
+        self.text_control.GetValuePattern().SetValue(content)
         pass
 
     # def set_edit_title(self):

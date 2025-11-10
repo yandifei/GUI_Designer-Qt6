@@ -4,7 +4,7 @@
 """
 __author__ = "yandifei"
 __name__ = "爱丽丝QQ聊天AI"
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 """核心模块的快捷导入路径"""
 from .ExtendedUI import ArisuUI

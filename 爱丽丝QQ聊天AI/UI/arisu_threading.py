@@ -63,7 +63,7 @@ class ArisuThreading(QRunnable):
             deepseek = DeepseekConversationEngine(self.init_role)  # 给deepseek这个外部变量赋值（让外部函数也能调用）
 
             # qq消息监听者
-            arisu = QQMessageMonitor(self.qq_group_name, self.bot_name, 4)
+            arisu = QQMessageMonitor("群聊", self.qq_group_name, self.bot_name, 4)
 
             # 外部函数(传入需要的对象)
             ef = ArisuQQChatAICore(deepseek, arisu, self.root, self.exit_password, self.qq_group_location,
