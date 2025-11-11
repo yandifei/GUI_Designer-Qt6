@@ -43,7 +43,7 @@ class ArisuQQCHatAIUI(Ui_Arisu, FramelessWindowWidget):
         """系统托盘(有个系统托盘按钮需要链接)"""
         self.system_tray = QSystemTrayIcon(self)  # 创建系统托盘(self建立父子关系避免资源泄露)
         self.system_tray.setIcon(self.QLogo)# 设置系统托盘的图标
-        self.system_tray.setToolTip(self.SoftwareName.text())     # 设置悬浮提示为软件名
+        self.system_tray.setToolTip( self.SoftwareName.text()    )     # 默认悬浮提示为软件名
         self.system_tray.show() if self.show_system_tray else self.system_tray.hide()       # 根据初始化参数来决定 隐藏系统托盘 还是 显示系统托盘
         # 系统托盘菜单
         self.system_tray_menu = QMenu(self)                                 # 创建系统托盘菜单
@@ -141,7 +141,8 @@ class ArisuQQCHatAIUI(Ui_Arisu, FramelessWindowWidget):
     def hide_button_function(self):
         """实现隐藏按钮的功能"""
         self.hide() # 隐藏窗口
-        if not self.show_system_tray:       # 如果创建界面后不想要系统托盘，那么设置属性后隐藏窗口后就也把系统托盘隐藏
+        # 如果系统托盘存在就隐藏系统托盘
+        if self.show_system_tray:
             self.system_tray.hide() # 隐藏系统托盘
 
     def changeEvent(self, event):

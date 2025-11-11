@@ -133,6 +133,7 @@ class ArisuThreading(QRunnable):
                 # else:
                 #     pass  # print("出现新消息，这里不进行打印，因为监视方法已经打印了")
 
+            """退出循环逻辑"""
             # 退出AI自动回复循环
             self.signal.print_signal.emit(self.print_widget,
                 f"<font color='red'>此线程已停止，不再对【{arisu.win_name}】群聊窗口进行AI自动回复</font>")

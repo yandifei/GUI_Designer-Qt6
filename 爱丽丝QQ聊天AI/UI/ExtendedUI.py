@@ -42,7 +42,8 @@ class ArisuUI(ArisuQQCHatAIUI):
         """
         super().__init__(title, show_system_tray, ui_file_path)  # 继承父类的属性和方法
         # 设置软件的版本跟随包的版本
-        self.SoftwareName.setText(f"爱丽丝QQ聊天AI {__version__}")
+        self.SoftwareName.setText(f"爱丽丝QQ聊天AI {__version__}")   # 主窗口UI
+        self.system_tray.setToolTip(f"爱丽丝QQ聊天AI {__version__}")  # # 系统托盘
         # start_time = time.monotonic()   # 初始时间(挂钟时间不受系统时间影响)
         # elapsed_time = time.monotonic() - start_time
         """终端输入输出重定向"""
