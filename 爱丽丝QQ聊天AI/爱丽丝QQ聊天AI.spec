@@ -1,16 +1,25 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 a = Analysis(
     ['爱丽丝QQ聊天AI.py'],
     pathex=[],
     binaries=[],
-    datas=[('A:/Anaconda3/envs/Arisu/Lib/site-packages/comtypes', 'comtypes'), ('A:/Anaconda3/envs/Arisu/Lib/site-packages/uiautomation/bin', 'uiautomation/bin')],
-    hiddenimports=['comtypes'],
+    datas=[('A:/Anaconda3/envs/Arisu/Lib/site-packages/comtypes', 'comtypes'),
+    ('A:/Anaconda3/envs/Arisu/Lib/site-packages/uiautomation/bin', 'uiautomation/bin')
+    ],
+    hiddenimports=[
+    'comtypes',
+    'transformers.models.ernie4_5',
+    'transformers.models.ernie4_5_moe',  # 添加这个
+    'transformers.models.ernie.tokenization_ernie',
+    # 添加其他可能的transformers子模块
+    'transformers.models.auto',
+    'transformers.models.ernie_moe'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    # 排除未使用的库减小体积(numpy必要)'pandas', 'matplotlib', 'tkinter', 'tensorflow', 'torch'
+    excludes=['pipreqs'],   # pipreqs是生成requirements.txt用的
     noarchive=False,
     optimize=0,
 )
@@ -33,7 +42,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     uac_admin=True,
-    icon=['resources\\Logo\\256.ico'],
+    icon=['resources\\ArisuQQChatAI.ico'],
 )
 coll = COLLECT(
     exe,
