@@ -28,9 +28,9 @@ class DeepseekConversationEngine:
         """
         self.__DEEPSEEK_API_KEY = self.__keyring_get_key()    # 从系统环境变量中读入密钥和检查密钥
         """-----------------------------------------------------核心业务-----------------------------------------------------"""
-        # self.base_url ="https://api.deepseek.com"   # api网址
+        self.base_url ="https://api.deepseek.com"   # api网址
         # 为了完成本项目的研发，这个直接切换为beat接口，用来做严格的函数回调数值
-        self.base_url ="https://api.deepseek.com/beta"   # api网址
+        # self.base_url ="https://api.deepseek.com/beta"   # api网址
         """对话补全请求参数(回答内容控制)"""
         # 模型默认V3(deepseek-chat)，R1是(deepseek-reasoner)
         self.model_choice = "deepseek-chat"
@@ -504,40 +504,60 @@ class DeepseekConversationEngine:
             "role": "assistant",
             "content": assistant_content,
             "tool_calls": tool_calls})
+        # 函数名
+        function_name: str = ""
+        # 函数ID
+        function_id: str = ""
+        try:
+            # 遍历工具列表
+            for tool_call in tool_calls:
+                # print(tool_call)
+                if not self.stream:
+                    function_args = json.loads(tool_call.function.arguments) or {}  # 非流式需要解析
+                    # 函数名
+                    function_name = tool_call.function.name
+                    # 函数id
+                    function_id = tool_call.id
+                    # 获取函数
+                    if function_name in tools_map:  # 调用的工具在映射表中
+                        # 调用函数并拿到返回的结果
+                        result: str = tools_map[function_name](**function_args)
+                        if out: print(f"调用的工具：{function_name}\n结果：{result}")
+                        # 将模型返回的包含工具调用的消息添加到对话历史中。
+                        self.dialog_history.append({
+                            "role": "tool",
+                            "tool_call_id": function_id,
+                            "content": result
+                        })
+                    else:
+                        if out: print(f"遇到了其他需要调用的工具{tool_call.function.name}")
+                else:
+                    function_args = json.loads(tool_call["function"]["arguments"])# 非流式需要解析
+                    # 函数名
+                    function_name = tool_call["function"]["name"]
+                    # 函数id
+                    function_id = tool_call["id"]
+                    # 获取函数
+                    if function_name in tools_map:  # 调用的工具在映射表中
+                        # 调用函数并拿到返回的结果
+                        result: str = tools_map[function_name](**function_args)
+                        if out: print(f"调用的工具：{function_name}")
+                        # 将模型返回的包含工具调用的消息添加到对话历史中。
+                        self.dialog_history.append({
+                            "role": "tool",
+                            "tool_call_id": function_id,
+                            "content": result
+                        })
+                    else:
+                        if out: print(f"遇到了其他需要调用的工具{tool_call["function"]["name"]}")
+        except Exception as e:
+            if out: print(f"工具{function_name}调用失败")
+            self.dialog_history.append({
+                "role": "tool",
+                "tool_call_id": function_id,
+                "content": f"工具{function_name}调用失败\n{e}"
+            })
 
-        # 遍历工具列表
-        for tool_call in tool_calls:
-            # print(tool_call)
-            if not self.stream:
-                function_args = json.loads(tool_call.function.arguments) or {}  # 非流式需要解析
-                # 获取函数
-                if tool_call.function.name in tools_map:  # 调用的工具在映射表中
-                    # 调用函数并拿到返回的结果
-                    result: str = tools_map[tool_call.function.name](**function_args)
-                    if out: print(f"调用的工具：{tool_call.function.name}")
-                    # 将模型返回的包含工具调用的消息添加到对话历史中。
-                    self.dialog_history.append({
-                        "role": "tool",
-                        "tool_call_id": tool_call.id,
-                        "content": result
-                    })
-                else:
-                    if out: print(f"遇到了其他需要调用的工具{tool_call.function.name}")
-            else:
-                function_args = json.loads(tool_call["function"]["arguments"])# 非流式需要解析
-                # 获取函数
-                if tool_call["function"]["name"] in tools_map:  # 调用的工具在映射表中
-                    # 调用函数并拿到返回的结果
-                    result: str = tools_map[tool_call["function"]["name"]](**function_args)
-                    if out: print(f"调用的工具：{tool_call["function"]["name"]}")
-                    # 将模型返回的包含工具调用的消息添加到对话历史中。
-                    self.dialog_history.append({
-                        "role": "tool",
-                        "tool_call_id": tool_call["id"],
-                        "content": result
-                    })
-                else:
-                    if out: print(f"遇到了其他需要调用的工具{tool_call.function.name}")
 
 
 
