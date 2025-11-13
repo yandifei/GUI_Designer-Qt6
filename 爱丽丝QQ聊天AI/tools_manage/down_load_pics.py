@@ -11,13 +11,13 @@ class DownLoadPics(BaseTool):
         # QQ消息监控者
         self.qq_message_monitor = qq_message_monitor
         self.name = "down_load_pics"
-        self.description = "获取预设的女性主题图片，可选：" + "、".join(name for name in self.qq_message_monitor.picture_map.keys())
+        self.description = "快速获取特定主题(女性相关)的图片，可选主题：" + "、".join(name for name in self.qq_message_monitor.picture_map.keys())
         self.parameters = {
             "type": "object",
             "properties": {
                 "theme": {
                     "type": "string",
-                    "description": "快速获取预设的女性主题图片：" + "、".join(name for name in self.qq_message_monitor.picture_map.keys()),
+                    "description": "你必须选择其中一个主题：" + "、".join(name for name in self.qq_message_monitor.picture_map.keys()),
                     "enum": list(self.qq_message_monitor.picture_map.keys())  # 明确列出所有可选值
                 },
                 "quantity": {

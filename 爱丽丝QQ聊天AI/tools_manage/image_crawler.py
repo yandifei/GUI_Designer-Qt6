@@ -63,11 +63,11 @@ class ImageCrawler(BaseTool):
         # 有效的搜索链接
         search_link: str
         # 遍历网址
-        for search_link in all_search_link:
+        for i in range(len(all_search_link)):
             # 选取其中的一个随机链接
-            link = random.choice(all_search_link)
+            search_link = random.choice(all_search_link)
             # 构建请求
-            response = get(fr"{link}")
+            response = get(fr"{search_link}")
             # 判断这是一个有效的网址（不是进去没图片）
             if not re.findall("<h5>提示信息</h5>", response.text):
                 break
@@ -84,7 +84,7 @@ class ImageCrawler(BaseTool):
         # 下载并发送图片(仅仅发送当前页面集合的最大数量且不得超过目标数量)
         for i in range(min(quantity, max_pic_num)):
             # 拼接需要爬取图片的源网址，然后爬取pic_url的图片地址数据
-            response = get(link + f"_{i}")
+            response = get(search_link + f"_{i}")
             # 图片地址
             pic_url = re.search(fr'<img alt=".*?" src="(.*?)".>', response.text).group(1)
             try:
