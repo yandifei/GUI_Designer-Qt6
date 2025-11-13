@@ -17,7 +17,7 @@ import transformers # (爆红没事，能跑就行)
 from openai import OpenAI, OpenAIError  # 导入OpenAI和OpenAI错误类型
 # 额外的库
 import keyring # 密钥获取
-
+from tools_manage import tools, tools_map   # 函数回调，超级重要的库
 
 class DeepseekConversationEngine:
     def __init__(self,role=None):
@@ -28,7 +28,9 @@ class DeepseekConversationEngine:
         """
         self.__DEEPSEEK_API_KEY = self.__keyring_get_key()    # 从系统环境变量中读入密钥和检查密钥
         """-----------------------------------------------------核心业务-----------------------------------------------------"""
-        self.base_url ="https://api.deepseek.com"   # api网址
+        # self.base_url ="https://api.deepseek.com"   # api网址
+        # 为了完成本项目的研发，这个直接切换为beat接口，用来做严格的函数回调数值
+        self.base_url ="https://api.deepseek.com/beta"   # api网址
         """对话补全请求参数(回答内容控制)"""
         # 模型默认V3(deepseek-chat)，R1是(deepseek-reasoner)
         self.model_choice = "deepseek-chat"
@@ -51,9 +53,9 @@ class DeepseekConversationEngine:
         # 作为调节采样温度的替代方案，模型会考虑前 top_p 概率的 token 的结果。所以 0.1 就意味着只有包括在最高 10% 概率中的 token 会被考虑。 我们通常建议修改这个值或者更改 temperature，但不建议同时对两者进行修改。
         self.top_p = 1 # 默认值为1
         # 模型可能会调用的 tool 的列表。目前，仅支持 function 作为工具。使用此参数来提供以 JSON 作为输入参数的 function 列表。最多支持 128 个 function。
-        self.tools = None   # 默认为None
+        self.tools = tools   # 默认为None，但是现在我要用
         # 控制模型调用 tool 的行为。
-        self.tool_choice  = "none"
+        self.tool_choice  = "auto"  # 这里选择自动调用工具
         # 是否返回所输出 token 的对数概率。如果为 true，则在 message 的 content 中返回每个输出 token 的对数概率。
         self.logprobs = False
         # 一个介于 0 到 20 之间的整数 N，指定每个输出位置返回输出概率 top N 的 token，且返回这些 token 的对数概率。指定此参数时，logprobs 必须为 true。
@@ -81,6 +83,7 @@ class DeepseekConversationEngine:
         """Token分词和计算"""
         # add_special_tokens=True是模型输入格式要求,False是纯文本Token计算
         self.tokenizer = transformers.AutoTokenizer.from_pretrained("resources/deepseek_v3_tokenizer/", trust_remote_code=True)
+
 
     def reset(self, out = False):
         """初始化或格式化类的属性1
@@ -489,6 +492,59 @@ class DeepseekConversationEngine:
         参数： question ： 用户的问题
         """
         self.dialog_history.append({"role": "user", "content": question})
+
+    """多态和工具回调的核心功能"""
+    def tools_call_back(self, assistant_content, tool_calls, out = False):
+        """
+        assistant_content : 内容
+        tool_calls： 工具列表
+        """
+        # 将模型的工具调用消息添加到对话历史中（这是关键的一步！）
+        self.dialog_history.append({
+            "role": "assistant",
+            "content": assistant_content,
+            "tool_calls": tool_calls})
+
+        # 遍历工具列表
+        for tool_call in tool_calls:
+            # print(tool_call)
+            if not self.stream:
+                function_args = json.loads(tool_call.function.arguments) or {}  # 非流式需要解析
+                # 获取函数
+                if tool_call.function.name in tools_map:  # 调用的工具在映射表中
+                    # 调用函数并拿到返回的结果
+                    result: str = tools_map[tool_call.function.name](**function_args)
+                    if out: print(f"调用的工具：{tool_call.function.name}")
+                    # 将模型返回的包含工具调用的消息添加到对话历史中。
+                    self.dialog_history.append({
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "content": result
+                    })
+                else:
+                    if out: print(f"遇到了其他需要调用的工具{tool_call.function.name}")
+            else:
+                function_args = json.loads(tool_call["function"]["arguments"])# 非流式需要解析
+                # 获取函数
+                if tool_call["function"]["name"] in tools_map:  # 调用的工具在映射表中
+                    # 调用函数并拿到返回的结果
+                    result: str = tools_map[tool_call["function"]["name"]](**function_args)
+                    if out: print(f"调用的工具：{tool_call["function"]["name"]}")
+                    # 将模型返回的包含工具调用的消息添加到对话历史中。
+                    self.dialog_history.append({
+                        "role": "tool",
+                        "tool_call_id": tool_call["id"],
+                        "content": result
+                    })
+                else:
+                    if out: print(f"遇到了其他需要调用的工具{tool_call.function.name}")
+
+
+
+
+        # 第二次调用 API，将工具执行结果发回模型，模型基于此结果生成最终答案。
+        return self.tool_ask(out)  # 返回这个字符串答案
+
     """多人设、多模式对话管理(核心业务)"""
     def ask(self, ask_content, out = False):
         """用户发起提问
@@ -520,27 +576,194 @@ class DeepseekConversationEngine:
             )
             self.reasoning_content = ""  # 每次调用后都清空之前思维链(R1的推理内容)[确保最近一次对话存在思维链]
             assistant_content = ""  # 临时文本(记录或拼接)
+            tools_content = {} # 工具调用的信息(最终都是[ChoiceDeltaToolCall对象])
+
             if not self.stream: # 非流式输出记录
                 assistant_content = response.choices[0].message.content     # 拿到回答结果
+                tools_content = response.choices[0].message.tool_calls      # 非流式直接拿到工具结果
                 if out: print(assistant_content)        # 打印回答结果
-                if self.model_choice == "deepseek-reasoner":     # R1模型会产生思维链（存在推理内容）
-                    self.reasoning_content = response.choices[0].message.reasoning_content  # 把非流式的思维链接进行保存
-            elif self.stream:   #流式输出
-                if self.model_choice == "deepseek-reasoner":     # R1模型会产生思维链（存在推理内容）
-                    for chunk in response:  # 遍历流式返回的每个数据块
-                        # 确保流式中返回的空数据块(None)不会影响输出就加or ""
-                        if out: print(f"{chunk.choices[0].delta.content or ""}", end="", flush=True)  # 实时逐词输出
-                        assistant_content += chunk.choices[0].delta.content or "" # 累积最终回答
-                        self.reasoning_content += chunk.choices[0].delta.reasoning_content or "" # 累积推理过程
-                else:   # V3模型没有思维链
-                    for chunk in response:  # 遍历流式返回的每个数据块
-                        # 确保流式中返回的空数据块(None)不会影响输出就加or ""
-                        if out: print(f"{chunk.choices[0].delta.content or ""}", end="", flush=True)  # 实时逐词输出
-                        assistant_content += chunk.choices[0].delta.content or "" # 累积最终回答
-                if out: print() # 打印换行
-            self.dialog_history.append({"role": "assistant", "content": assistant_content}) # 添加AI的回答历史（包括流式和非流式的）
-            # print(f"\033[91m{assistant_content}\033[0m")
-            return assistant_content    # 返回AI回答的结果
+                # 存在思维链才收集
+                if hasattr(response.choices[0].message, "reasoning_content"):
+                    self.reasoning_content = response.choices[0].message.reasoning_content
+                # print(response.choices[0].message.tool_calls)
+
+            # 流式输出（fork傻逼思维链，妈的官网也不写调用工具直接没有思维链了，好了直接逼我重构代码了）
+            elif self.stream:
+                # R1模型不调用工具才会产生思维链（存在推理内容）# R1模型不调用工具才会产生思维链（存在推理内容）
+                # V3模型没有思维链，有思维链才收集，没有就直接不搜集了
+                for chunk in response:  # 遍历流式返回的每个数据块
+                    # 确保流式中返回的空数据块(None)不会影响输出
+                    if out: print(f"{chunk.choices[0].delta.content or ''}", end="", flush=True)  # 实时逐词输出
+                    # 存在思维链才收集
+                    if hasattr(chunk.choices[0].delta, "reasoning_content") and chunk.choices[0].delta.reasoning_content:
+                        self.reasoning_content += chunk.choices[0].delta.reasoning_content or ""  # 累积推理过程
+
+                    # 累积最终回答
+                    assistant_content += chunk.choices[0].delta.content or ""
+
+                    # 累计流式的函数回调 - 修正缩进
+                    if chunk.choices[0].delta.tool_calls:
+                        for tool_call_chunk in chunk.choices[0].delta.tool_calls:
+                            index = tool_call_chunk.index  # 工具调用的索引
+
+                            # 初始化/获取累积对象 - 这个检查是正确的
+                            if index not in tools_content:
+                                tools_content[index] = {
+                                    "id": "",
+                                    "type": "function",
+                                    "function": {"name": "", "arguments": ""}
+                                }
+
+                            # 累积工具调用ID - 这些应该对每个数据块都执行
+                            if tool_call_chunk.id:
+                                tools_content[index]["id"] += tool_call_chunk.id
+
+                            # 累积函数名称
+                            if tool_call_chunk.function and tool_call_chunk.function.name:
+                                tools_content[index]["function"]["name"] += tool_call_chunk.function.name
+
+                            # 累积函数参数
+                            if tool_call_chunk.function and tool_call_chunk.function.arguments:
+                                tools_content[index]["function"]["arguments"] += tool_call_chunk.function.arguments
+                tools_content = [tool_content for tool_content in tools_content.values()]
+
+            # print(tools_content)
+            # 工具调用(此次提问的消息、工具列表),tools_content有内容
+            if tools_content:
+                # 返回完成调用工具后AI的结果
+                return self.tools_call_back(assistant_content, tools_content, out)
+            else:   # 正常回答没有工具调用
+                # 添加AI的回答历史（包括流式和非流式的）
+                self.dialog_history.append({"role": "assistant", "content": assistant_content})
+                # print(f"\033[91m{assistant_content}\033[0m")
+                return assistant_content    # 没有工具就返回AI回答的结果
+
+        except OpenAIError as Error:
+            # 获取 HTTP 状态码
+            status_code = Error.status_code
+            # print(f"错误码: {status_code}")
+            # 根据状态码处理不同错误
+            if status_code == 400:
+                print("\033[91m请求体格式错误，请根据错误信息提示修改请求体\033[0m")
+                assistant_content =  "请求体格式错误，请根据错误信息提示修改请求体"
+            elif status_code == 401:
+                print("\033[91mAPIkey错误，认证失败。请检查您的APIkey是否正确如没有APIkey请先创建APIkey\033[0m")
+                assistant_content =  "APIkey错误，认证失败。请检查您的APIkey是否正确如没有APIkey请先创建APIkey"
+            elif status_code == 402:
+                print("\033[91m账号余额不足，请确认账户余额，并前往充值页面进行充值\033[0m")
+                assistant_content =  "账号余额不足，请确认账户余额，并前往充值页面进行充值"
+            elif status_code == 422:
+                print("\033[91m请求体参数错误，请根据错误信息提示修改相关参数\033[0m")
+                assistant_content =  "请求体参数错误，请根据错误信息提示修改相关参数"
+            elif status_code == 429:
+                print("\033[91m请求速率（TPM 或 RPM）达到上限，请合理规划您的请求速率\033[0m")
+                assistant_content =  "请求速率（TPM 或 RPM）达到上限，请合理规划您的请求速率"
+            elif status_code == 500:
+                print("\033[91m服务器内部故障，请等待后重试。若问题一直存在，请联系我们解决\033[0m")
+                assistant_content =  "服务器内部故障，请等待后重试。若问题一直存在，请联系我们解决"
+            elif status_code == 503:
+                print("\033[91m服务器负载过高，请稍后重试您的请求\033[0m")
+                assistant_content =  "服务器负载过高，请稍后重试您的请求"
+            else:
+                print(f"\033[91m未知错误: {Error}\033[0m")
+                assistant_content = f"未知错误: {Error}"
+
+            # 把这次错误添加AI的回答历史（包括流式和非流式的）
+            assistant_content = "此次请求过程中发生严重错误:" + assistant_content
+            self.dialog_history.append({"role": "assistant", "content": assistant_content})
+            return assistant_content  # 调用失败返回失败信息
+
+    def tool_ask(self, out = False):
+        """调用完工具后再次向AI提问然后对用户进行回复(已经将多个工具结果给到对话中了)
+        参数 ：
+        out : 是否打印到屏幕上
+        返回值：assistant_content  ： 返回AI回答的结果
+        如果调用失败会返回False
+        """
+        try:
+            client = OpenAI(api_key=self.__DEEPSEEK_API_KEY, base_url=self.base_url)
+            response = client.chat.completions.create(
+                messages = self.dialog_history,
+                model=self.model_choice,
+                frequency_penalty = self.frequency_penalty,
+                max_tokens = self.max_tokens,
+                presence_penalty = self.presence_penalty,
+                response_format = self.response_format,
+                stop = self.stop,
+                stream = self.stream,  # 是否流式输出(是否逐字输出)
+                stream_options = self.stream_options,
+                temperature = self.temperature,
+                top_p = self.top_p,
+                tools = self.tools,
+                tool_choice = self.tool_choice,
+                logprobs = self.logprobs,
+                top_logprobs = self.top_logprobs
+            )
+            self.reasoning_content = ""  # 每次调用后都清空之前思维链(R1的推理内容)[确保最近一次对话存在思维链]
+            assistant_content = ""  # 临时文本(记录或拼接)
+            tools_content = {}  # 工具调用的信息(最终都是[ChoiceDeltaToolCall对象])
+
+            if not self.stream:  # 非流式输出记录
+                assistant_content = response.choices[0].message.content  # 拿到回答结果
+                tools_content = response.choices[0].message.tool_calls  # 非流式直接拿到工具结果
+                if out: print(assistant_content)  # 打印回答结果
+                # 存在思维链才收集
+                if hasattr(response.choices[0].message, "reasoning_content"):
+                    self.reasoning_content = response.choices[0].message.reasoning_content
+                # print(response.choices[0].message.tool_calls)
+
+            # 流式输出（fork傻逼思维链，妈的官网也不写调用工具直接没有思维链了，好了直接逼我重构代码了）
+            elif self.stream:
+                # R1模型不调用工具才会产生思维链（存在推理内容）# R1模型不调用工具才会产生思维链（存在推理内容）
+                # V3模型没有思维链，有思维链才收集，没有就直接不搜集了
+                for chunk in response:  # 遍历流式返回的每个数据块
+                    # 确保流式中返回的空数据块(None)不会影响输出
+                    if out: print(f"{chunk.choices[0].delta.content or ''}", end="", flush=True)  # 实时逐词输出
+                    # 存在思维链才收集
+                    if hasattr(chunk.choices[0].delta, "reasoning_content") and chunk.choices[
+                        0].delta.reasoning_content:
+                        self.reasoning_content += chunk.choices[0].delta.reasoning_content or ""  # 累积推理过程
+
+                    # 累积最终回答
+                    assistant_content += chunk.choices[0].delta.content or ""
+
+                    # 累计流式的函数回调 - 修正缩进
+                    if chunk.choices[0].delta.tool_calls:
+                        for tool_call_chunk in chunk.choices[0].delta.tool_calls:
+                            index = tool_call_chunk.index  # 工具调用的索引
+
+                            # 初始化/获取累积对象 - 这个检查是正确的
+                            if index not in tools_content:
+                                tools_content[index] = {
+                                    "id": "",
+                                    "type": "function",
+                                    "function": {"name": "", "arguments": ""}
+                                }
+
+                            # 累积工具调用ID - 这些应该对每个数据块都执行
+                            if tool_call_chunk.id:
+                                tools_content[index]["id"] += tool_call_chunk.id
+
+                            # 累积函数名称
+                            if tool_call_chunk.function and tool_call_chunk.function.name:
+                                tools_content[index]["function"]["name"] += tool_call_chunk.function.name
+
+                            # 累积函数参数
+                            if tool_call_chunk.function and tool_call_chunk.function.arguments:
+                                tools_content[index]["function"]["arguments"] += tool_call_chunk.function.arguments
+                tools_content = [tool_content for tool_content in tools_content.values()]
+
+            # print(tools_content)
+            # 工具调用(此次提问的消息、工具列表),tools_content有内容
+            if tools_content:
+                # 返回完成调用工具后AI的结果
+                return self.tools_call_back(assistant_content, tools_content, out)
+            else:  # 正常回答没有工具调用
+                # 添加AI的回答历史（包括流式和非流式的）
+                self.dialog_history.append({"role": "assistant", "content": assistant_content})
+                # print(f"\033[91m{assistant_content}\033[0m")
+                return assistant_content  # 没有工具就返回AI回答的结果
+
         except OpenAIError as Error:
             # 获取 HTTP 状态码
             status_code = Error.status_code
@@ -1238,6 +1461,8 @@ class DeepseekConversationEngine:
 if __name__ == '__main__':
     deepseek = DeepseekConversationEngine()  # 实例化对象(设置人设为专属猫娘)
     deepseek.set_stream(True)  # 设置流式输出
+    deepseek.switch_model(True) # 模型切换
+    # print(deepseek.tools)
     while True:
         content = input("我：")
         if content == "#退出": break  # 退出循环调用对话的指令

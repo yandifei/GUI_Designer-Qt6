@@ -18,6 +18,7 @@ import win32gui                     # win32api操作
 import win32con                     # win32api操作
 import win32clipboard               # 剪切板操作
 from PIL import Image               # 图片格式转换处理(pip install Pillow)
+# 自己的库
 
 
 class QQMessageMonitor:
@@ -1002,10 +1003,6 @@ class QQMessageMonitor:
         参数： message_dict ： 单条消息字典{"发送者": "yan di fei","发送消息": "hello world","发送时间": "10:10:20"}
         max_processing_queues : 默认10，最大处理队列，超过队列最大数就不进队了
         """
-        print("22222222222222222222222222222222222222222222222")
-        print(f"1{message_dict["发送消息"]}1")
-        print(f"{self.monitor_name}")
-        print(f"@{self.monitor_name} " in message_dict["发送消息"])
         """正规定模块"""
         # print(message_dict["发送消息"])
         if len(self.message_processing_queues) > max_processing_queues: # 超出最大处理数
@@ -1014,8 +1011,6 @@ class QQMessageMonitor:
             message_dict["发送者"], message_dict["发送消息"] = "系统", f"超出消息最大处理数:{max_processing_queues}，不对消息进行处理"
         # 截获自己被@的情况做出消息处理（"@名字 "），注意@后是有空格的
         elif f"@{self.monitor_name} " in message_dict["发送消息"]:  # 最新列表获取消息
-            print("33333333333333333333333333333333")
-
             """规则匹配回复图片(移除@部分)"""
             if url := self.picture_map.get(message_dict["发送消息"].lstrip(f"@{self.monitor_name} ")):
                 self.download_image(url)    # 下载图片（这里这么做是为了分离消息发送）
@@ -1051,7 +1046,8 @@ class QQMessageMonitor:
             # print(f"\033[94m截获关键发送者:{message_dict["发送者"]}，发送消息是:{message_dict["发送消息"]}\033[0m")
         # 不满足截获规则
         else:
-            print("44444444444444444444444444444444")
+            # print("不满足截获规则")
+            pass
 
             return True # 直接返回True避免触发下面的加入消息队列
 

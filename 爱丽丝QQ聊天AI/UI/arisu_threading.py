@@ -14,6 +14,8 @@ from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore
 from arisu_logger import critical
 from deepseek_conversation_engine import DeepseekConversationEngine
 from qq_message_monitor import QQMessageMonitor
+from tools_manage.tools_register import tools_register  # 函数回调注册，必须传入对象后才能注册
+
 
 # 信号持有类（必须继承 QObject）
 class Signals(QObject):
@@ -59,11 +61,14 @@ class ArisuThreading(QRunnable):
             # self.id = threading.get_ident()
             """实例化对象"""
             # print(qq_group_name, bot_name, root, exit_password, init_role, qq_group_location, remove_dangerous_order)
-            # deepseek消息回复(示例化对象没有顺序要求)
-            deepseek = DeepseekConversationEngine(self.init_role)  # 给deepseek这个外部变量赋值（让外部函数也能调用）
-
             # qq消息监听者
             arisu = QQMessageMonitor("群聊", self.qq_group_name, self.bot_name, 4)
+
+            # AI函数回调注册，必须先有爱丽丝
+            tools_register(arisu)   # 爱丽丝作为对象传递进去然后注册函数
+
+            # deepseek消息回复(工具必须要先被注册后才创建这个对象)
+            deepseek = DeepseekConversationEngine(self.init_role)  # 给deepseek这个外部变量赋值（让外部函数也能调用）
 
             # 外部函数(传入需要的对象)
             ef = ArisuQQChatAICore(deepseek, arisu, self.root, self.exit_password, self.qq_group_location,
