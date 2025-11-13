@@ -10,7 +10,7 @@ class DownLoadPics(BaseTool):
     def __init__(self, qq_message_monitor: QQMessageMonitor):
         # QQ消息监控者
         self.qq_message_monitor = qq_message_monitor
-        self.name = "down_load_pic"
+        self.name = "down_load_pics"
         self.description = "发送某个主题的单张或多张图片，图片主题：" + "、".join(name for name in self.qq_message_monitor.picture_map.keys())
         self.parameters = {
             "type": "object",
@@ -23,8 +23,8 @@ class DownLoadPics(BaseTool):
                 "quantity": {
                     "type": "integer",
                     "description": "需要发送的图片数量",
-                    "minimum": 1,  # 最小值为1
-                    "maximum": 5  # 最大值为5（根据您的需求调整）
+                    "minimum": 0,  # 最小值为0
+                    "maximum": 20  # 最大值为20
                 }
             },
             "required": ["theme", "quantity"]
@@ -41,7 +41,7 @@ class DownLoadPics(BaseTool):
         # 检查主题是否存在
         if theme not in self.qq_message_monitor.picture_map:
             return f"没有找到主题为 '{theme}' 的图片。"
-        for i in quantity:
+        for i in range(quantity):
             # 只有通过所有检查后才执行下载
             # 下载图片（这里这么做是为了分离消息发送）
             self.qq_message_monitor.send_url_image(self.qq_message_monitor.picture_map[theme])
