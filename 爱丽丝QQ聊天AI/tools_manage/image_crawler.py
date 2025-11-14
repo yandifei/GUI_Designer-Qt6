@@ -18,7 +18,7 @@ class ImageCrawler(BaseTool):
         # QQ消息监控者
         self.qq_message_monitor = qq_message_monitor
         self.name = "image_crawler"
-        self.description = "基于关键词的网络图片搜索和下载工具。通过联网搜索获取相关图片，可选择下载并发送指定数量的图片"
+        self.description = "通过1个关键词下载并发送指定数量的图片(优先使用)"
         self.parameters = {
             "type": "object",
             "properties": {
@@ -54,12 +54,12 @@ class ImageCrawler(BaseTool):
             return requests.get(url,headers=self.qq_message_monitor.headers,
                                     timeout=self.qq_message_monitor.requests_timeout)
         # 在特定网址上使用关键词搜索图片，这个response是全局使用
-        response = get(fr"https://www.yitu.com/index.php?m=sch&c=index&a=init&typeid=&siteid=1&q={theme}")
+        response = get(fr"https://www.yeitu.com/index.php?m=sch&c=index&a=init&typeid=&siteid=1&q={theme}")
         # 正则查找元素看看是否有该图片的资料
         if re.search(r'<ul class="list_box">\s*未找到搜索结果\s*</ul>', response.text):
             return f"关键词`{theme}`未找到搜索结果"
         # 拿到所有搜索结果的链接
-        all_search_link = re.findall(r'<h5><a href="(.*?)\.html" target="_blank">', response.text)
+        all_search_link = re.findall(r'<h5><a href="(.*?)" target="_blank">', response.text)
 
         # 有效的搜索链接
         search_link: str = ""
