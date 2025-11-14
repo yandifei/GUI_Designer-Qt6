@@ -27,6 +27,7 @@
   - 使用deepseek的api自动回复
   - 结合指令系统对回答进行优化
   - 可**自定义人设**和上下文对话
+  - 通过工具(插件)实现**多模态**，如：联网搜索某个关键词发送指定量的图片
   - 其余功能可以看：[爱丽丝QQ聊天AI.pdf](爱丽丝QQ聊天AI/文档/爱丽丝QQ聊天AI.md)或[DeepseekConversationEngine](https://github.com/yandifei/DeepseekConversationEngine)
 - **自定回复策略**：
   - 关键词自动回复
@@ -37,8 +38,12 @@
   - 需要承认的是权限系统存在设计缺陷：权限可被复制。(有解决方案，但价值和意义太低了)
   - 通过权限分级可以避免某些“危险指令”导致QQ封号(如：从禁漫天堂下本子发到Q群中)
 - **指令系统**：
-  - AI无法完成的操作(调整AI的回复策略、发涩图、运行时间和中控截图等等)
+  - AI无法完成的操作(调整AI的回复策略、发"美"图、运行时间和中控截图等等)
   - 后续有功能再加(文件处理、电脑状态监控等)
+- **工具(插件)系统**
+  - 通过插件实现多模态
+  - 如：时间查询，具体到农历和国际节日等等
+  - 插件工具实现了LLM的外部感知和操作执行，一个真正能干活的Agent
 - **异常处理与日志**：
   - 强大的纠错机制(全局异常捕获和线程池自动重启线程)
   - 消息文本记录(撤回前监测到的消息会被记录到txt中)
@@ -78,7 +83,7 @@
 
 ## 项目运行
 - 小白不用看这里。开发者用于异常崩溃输出和日志记录查询
-- 也可以用pycharm中打开 爱丽丝QQ聊天AI 文件夹运行 爱丽丝QQ聊天AI.py
+- 也可以在 `爱丽丝QQ聊天AI` 文件夹中用pycharm 中打开项目运行`爱丽丝QQ聊天AI.py`
 ```git
 # 1.克隆项目
 git clone https://github.com/yandifei/ArisuQQChatAI.git
@@ -87,7 +92,7 @@ git clone https://github.com/yandifei/ArisuQQChatAI.git
 cd ArisuQQChatAI/爱丽丝QQ聊天AI/
 
 # 3. [可选，强烈推荐] 创建虚拟环境
-conda create -n Arisu python=3.13.5
+conda create -n Arisu python=3.13.9
 
 # 激活虚拟环境(Anaconda或Miniconda)
 conda activate Arisu
