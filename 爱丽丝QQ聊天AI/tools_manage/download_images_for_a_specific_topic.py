@@ -1,16 +1,16 @@
-"""down_load_pic.py
-图片下载
+"""download_images_for_a_specific_topic.py
+下载特定主题的图片
 """
 # 自己的库
 from tools_manage.base_tool import BaseTool
 from qq_message_monitor import QQMessageMonitor
 
 
-class DownLoadPics(BaseTool):
+class DownloadImagesForASpecificTopic(BaseTool):
     def __init__(self, qq_message_monitor: QQMessageMonitor):
         # QQ消息监控者
         self.qq_message_monitor = qq_message_monitor
-        self.name = "down_load_pics"
+        self.name = "download_images_for_a_specific_topic"
         self.description = "快速获取特定主题(女性相关)的图片，可选主题：" + "、".join(name for name in self.qq_message_monitor.picture_map.keys())
         self.parameters = {
             "type": "object",
