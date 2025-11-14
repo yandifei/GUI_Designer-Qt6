@@ -116,9 +116,17 @@ class ImageCrawler(BaseTool):
                 print(f"图片无法发送，出现异常错误:{e}")
                 request_fail_num += 1 # 失败次数
 
-            self.qq_message_monitor.send_image("./logs/下载缓存/爬虫图片.png")
-
         # 当前图链接的片集合20张图片都不够
         if quantity > max_pic_num:
             return f"已发送{max_pic_num}张{theme}图片（已达上限），其中{request_fail_num}张图片请求失败。请再次调用以获取剩余{quantity - max_pic_num}张"
         return f"已发送{theme}图片{max_pic_num - request_fail_num}张，其中{request_fail_num}张图片请求失败"
+
+
+# try:
+#     # 请求超过10秒为超时
+#     with Image.open(io.BytesIO(requests.get(self.qq_message_monitor.picture_map[theme],
+#                                             headers=self.qq_message_monitor.headers,
+#                                             timeout=self.qq_message_monitor.requests_timeout).content)) as img:
+#         img.save("./logs/下载缓存/网页请求图片{}.png", "PNG")
+# except Exception as e:
+#     self.output_text = f"图片下载失败，出现异常错误:{e}"
