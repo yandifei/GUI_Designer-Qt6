@@ -541,7 +541,7 @@ class DeepseekConversationEngine:
                     if function_name in tools_map:  # 调用的工具在映射表中
                         # 调用函数并拿到返回的结果
                         result: str = tools_map[function_name](**function_args)
-                        if out: print(f"调用的工具：{function_name}")
+                        if out: print(f"调用的工具：{function_name}\n结果：{result}")
                         # 将模型返回的包含工具调用的消息添加到对话历史中。
                         self.dialog_history.append({
                             "role": "tool",
@@ -605,7 +605,7 @@ class DeepseekConversationEngine:
                 # 存在思维链才收集
                 if hasattr(response.choices[0].message, "reasoning_content"):
                     self.reasoning_content = response.choices[0].message.reasoning_content
-                # print(response.choices[0].message.tool_calls)
+                    if out: print(f"思维链:{response.choices[0].message.tool_calls}")
 
             # 流式输出（fork傻逼思维链，妈的官网也不写调用工具直接没有思维链了，好了直接逼我重构代码了）
             elif self.stream:
@@ -651,7 +651,7 @@ class DeepseekConversationEngine:
             # 工具调用(此次提问的消息、工具列表),tools_content有内容
             if tools_content:
                 # 返回完成调用工具后AI的结果
-                return self.tools_call_back(assistant_content, tools_content, out)
+                return self.tools_call_back(assistant_content, tools_content, True)
             else:   # 正常回答没有工具调用
                 # 添加AI的回答历史（包括流式和非流式的）
                 self.dialog_history.append({"role": "assistant", "content": assistant_content})
@@ -777,7 +777,7 @@ class DeepseekConversationEngine:
             # 工具调用(此次提问的消息、工具列表),tools_content有内容
             if tools_content:
                 # 返回完成调用工具后AI的结果
-                return self.tools_call_back(assistant_content, tools_content, out)
+                return self.tools_call_back(assistant_content, tools_content, True)
             else:  # 正常回答没有工具调用
                 # 添加AI的回答历史（包括流式和非流式的）
                 self.dialog_history.append({"role": "assistant", "content": assistant_content})
