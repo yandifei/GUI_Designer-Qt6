@@ -5,7 +5,8 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[('A:/Anaconda3/envs/Arisu/Lib/site-packages/comtypes', 'comtypes'),
-    ('A:/Anaconda3/envs/Arisu/Lib/site-packages/uiautomation/bin', 'uiautomation/bin')
+    ('A:/Anaconda3/envs/Arisu/Lib/site-packages/uiautomation/bin', 'uiautomation/bin'),
+    ('./tools_manage', './tools_manage'),
     ],
     hiddenimports=[
     'comtypes',
@@ -14,7 +15,10 @@ a = Analysis(
     'transformers.models.ernie.tokenization_ernie',
     # 添加其他可能的transformers子模块
     'transformers.models.auto',
-    'transformers.models.ernie_moe'],
+    'transformers.models.ernie_moe',
+    # 日期
+    'zhdate',
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
