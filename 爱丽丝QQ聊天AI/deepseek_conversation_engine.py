@@ -551,7 +551,7 @@ class DeepseekConversationEngine:
                     else:
                         if out: print(f"遇到了其他需要调用的工具{tool_call["function"]["name"]}")
         except Exception as e:
-            if out: print(f"工具{function_name}调用失败")
+            if out: print(f"工具{function_name}调用失败\n{e}")
             self.dialog_history.append({
                 "role": "tool",
                 "tool_call_id": function_id,
