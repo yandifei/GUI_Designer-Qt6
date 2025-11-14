@@ -59,15 +59,16 @@ class ImageCrawler(BaseTool):
         if re.search(r'<ul class="list_box">\s*未找到搜索结果\s*</ul>', response.text):
             return f"关键词`{theme}`未找到搜索结果"
         # 拿到所有搜索结果的链接
-        all_search_link = re.findall(r'<h5><a href="(.*?)" target="_blank">', response.text)
+        all_search_link = re.findall(r'<h5><a href="(.*?)\.html" target="_blank">', response.text)
+
         # 有效的搜索链接
         search_link: str
         # 遍历网址
         for i in range(len(all_search_link)):
-            # 选取其中的一个随机链接
+            # 选取其中的一个随机链接(不完整)
             search_link = random.choice(all_search_link)
-            # 构建请求
-            response = get(fr"{search_link}")
+            # 构建请求（拼接完整的路径）
+            response = get(fr"{search_link}.html")
             # 判断这是一个有效的网址（不是进去没图片）
             if not re.findall("<h5>提示信息</h5>", response.text):
                 break
@@ -77,14 +78,15 @@ class ImageCrawler(BaseTool):
         try:
             # 最大图片数
             max_pic_num = re.search(r'\.\.<a.*?>(?P<page_num>\d+)</a>', response.text).group("page_num")
+            max_pic_num = int(max_pic_num)
         except AttributeError:
             # 就只有一张图片，所以检索不到图片
             max_pic_num = 1
 
         # 下载并发送图片(仅仅发送当前页面集合的最大数量且不得超过目标数量)
-        for i in range(min(quantity, max_pic_num)):
+        for i in range(min(max_pic_num, quantity)): # 下标问题
             # 拼接需要爬取图片的源网址，然后爬取pic_url的图片地址数据
-            response = get(search_link + f"_{i}")
+            response = get(search_link + f"_{i + 1}.html")  # 拼接完整的路径
             # 图片地址
             pic_url = re.search(fr'<img alt=".*?" src="(.*?)".>', response.text).group(1)
             try:
