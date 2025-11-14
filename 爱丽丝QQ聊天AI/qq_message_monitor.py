@@ -900,9 +900,9 @@ class QQMessageMonitor:
             # 修改之前的消息解析输出的方案(输出重定向)
             return "\n".join([one_message for one_message in self.message_list])
         except IndexError as e:  # 显式捕获IndexError
-            # print(f"\033[93mmonitor_message下标溢出：无法获取子控件，原始错误：{e}\033[0m",end="\t")
+            # print(f"\033[93monitor_message下标溢出：无法获取子控件，原始错误：{e}\033[0m",end="\t")
             # print(f"\033self.message_list子孩子控件数:{len(self.message_list)}\033[0m")  # 打控件的子孩子数
-            self.output_text = f"mmonitor_message下标溢出：无法获取子控件，原始错误：{e}\nself.message_list子孩子控件数:{len(self.message_list)}"
+            self.output_text = f"monitor_message下标溢出：无法获取子控件，原始错误：{e}\nself.message_list子孩子控件数:{len(self.message_list)}"
 
     def keyword_read(self):
         """关键词读取和正则化处理(读取当前目录下的“关键词回复”文件夹下的文件录入关键字)
