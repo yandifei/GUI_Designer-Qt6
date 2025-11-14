@@ -555,7 +555,7 @@ class DeepseekConversationEngine:
             self.dialog_history.append({
                 "role": "tool",
                 "tool_call_id": function_id,
-                "content": f"工具{function_name}调用失败\n{e}"
+                "content": f"工具{function_name}调用失败，不需要调用其他与之无关的工具\n{e}"
             })
 
 
@@ -1480,8 +1480,8 @@ class DeepseekConversationEngine:
 
 if __name__ == '__main__':
     deepseek = DeepseekConversationEngine()  # 实例化对象(设置人设为专属猫娘)
-    deepseek.set_stream(True)  # 设置流式输出
-    deepseek.switch_model(True) # 模型切换
+    # deepseek.set_stream(True)  # 设置流式输出
+    # deepseek.switch_model(True) # 模型切换
     # print(deepseek.tools)
     while True:
         content = input("我：")
