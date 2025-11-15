@@ -54,6 +54,8 @@ class DeepseekConversationEngine:
         self.top_p = 1 # 默认值为1
         # 模型可能会调用的 tool 的列表。目前，仅支持 function 作为工具。使用此参数来提供以 JSON 作为输入参数的 function 列表。最多支持 128 个 function。
         self.tools = tools   # 默认为None，但是现在我要用
+        # 自己额外加的
+        self.tools_map = tools_map.copy()   # 必须深度拷贝
         # 控制模型调用 tool 的行为。
         self.tool_choice  = "auto"  # 这里选择自动调用工具
         # 是否返回所输出 token 的对数概率。如果为 true，则在 message 的 content 中返回每个输出 token 的对数概率。
@@ -519,9 +521,9 @@ class DeepseekConversationEngine:
                     # 函数id
                     function_id = tool_call.id
                     # 获取函数
-                    if function_name in tools_map:  # 调用的工具在映射表中
+                    if function_name in self.tools_map:  # 调用的工具在映射表中
                         # 调用函数并拿到返回的结果
-                        result: str = tools_map[function_name](**function_args)
+                        result: str = self.tools_map[function_name](**function_args)
                         if out: print(f"调用的工具：{function_name}\n结果：{result}")
                         # 将模型返回的包含工具调用的消息添加到对话历史中。
                         self.dialog_history.append({
@@ -538,9 +540,9 @@ class DeepseekConversationEngine:
                     # 函数id
                     function_id = tool_call["id"]
                     # 获取函数
-                    if function_name in tools_map:  # 调用的工具在映射表中
+                    if function_name in self.tools_map:  # 调用的工具在映射表中
                         # 调用函数并拿到返回的结果
-                        result: str = tools_map[function_name](**function_args)
+                        result: str = self.tools_map[function_name](**function_args)
                         if out: print(f"调用的工具：{function_name}\n结果：{result}")
                         # 将模型返回的包含工具调用的消息添加到对话历史中。
                         self.dialog_history.append({
@@ -557,10 +559,6 @@ class DeepseekConversationEngine:
                 "tool_call_id": function_id,
                 "content": f"工具{function_name}调用失败，不需要调用其他与之无关的工具\n{e}"
             })
-
-
-
-
 
         # 第二次调用 API，将工具执行结果发回模型，模型基于此结果生成最终答案。
         return self.tool_ask(out)  # 返回这个字符串答案
