@@ -54,7 +54,8 @@ class QQMessageMonitor:
         self.main_chat_win = self.qq_chat_win.GetFirstChildControl().GetFirstChildControl().GetChildren()[1].GetFirstChildControl()
         # 文档->组->组2->组2(好友有2个组，群有3个组)可以用来区分qq还是群
         """标题栏(title_bar)[窗口控制按钮]"""
-        self.title_bar = self.main_chat_win.GetFirstChildControl().GetFirstChildControl()   # 标题栏的位置
+        # self.main_chat_win->组倒二（这个是核心，因为调色板本质就是多了一层遮罩）->第一个组
+        self.title_bar = self.main_chat_win.GetChildren()[-2].GetFirstChildControl()   # 标题栏的位置
         self.top_button = self.title_bar.GetChildren()[1]  #置顶（复合按钮）按钮
         self.min_button = self.title_bar.GetChildren()[2]  # 最小化按钮
         self.max_button = self.title_bar.GetChildren()[3]  # 最大化按钮
@@ -1068,7 +1069,7 @@ if __name__ == '__main__':
     #     chat_win.top_win()     # 置顶窗口 zA
     # print("可以输出没有语法错误")
 
-    arisu = QQMessageMonitor("鸣潮自动刷声骸","爱丽丝",3)
+    arisu = QQMessageMonitor("群聊", "鸣潮想睡觉","雁低飞",3)
     # 下载图片（这里这么做是为了整体高效）
     # self.send_url_image(url)
     # arisu.picture_map_read()
