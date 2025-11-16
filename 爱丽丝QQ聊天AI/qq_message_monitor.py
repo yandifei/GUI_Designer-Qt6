@@ -67,7 +67,7 @@ class QQMessageMonitor:
             # 菜单栏按钮（左边、群名和人数）
             self.menu_bar_button = self.menu_bar.GetChildren()[1]  # 菜单栏按钮（群名或备注名和人数）
             self.menu_bar_group_name = self.menu_bar_button.GetFirstChildControl()  # 群名(菜单栏按钮的第一个子孩子)
-            self.menu_bar_group_count = self.menu_bar_group_name.GetFirstChildControl()  # 群人数(群名的子孩子)
+            self.menu_bar_group_count = self.menu_bar_group_name.GetLastChildControl()  # 群人数(群名的子孩子)
         elif self.group_or_friend == "好友":
             self.menu_bar_button = self.menu_bar.GetChildren()[0]  # 好友按钮(好友名或备注名)
         # 菜单栏->最后组->"更多"工具栏->6个组都菜单栏选项按钮（6个组里面对应语音通话、视频通话、屏幕共享、群应用、邀请加群、展开菜单的按钮）
