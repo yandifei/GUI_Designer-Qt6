@@ -18,6 +18,8 @@ a = Analysis(
     'transformers.models.ernie_moe',
     # 日期
     'zhdate',
+    # 禁漫天堂的模块
+    'jmcomic'
     ],
     hookspath=[],
     hooksconfig={},
