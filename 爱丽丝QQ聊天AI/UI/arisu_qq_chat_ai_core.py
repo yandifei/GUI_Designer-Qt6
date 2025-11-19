@@ -21,7 +21,6 @@ from PIL import Image                                                   # 截图
 # from PyQt6.QtWidgets import QApplication                                # 退出
 from qq_message_monitor import QQMessageMonitor                         # 导入QQ消息监控者这个类
 from deepseek_conversation_engine import DeepseekConversationEngine     # 导入deepseek对话引擎这个类
-from jmcomic import create_option_by_file, download_album, jm_exception # 导入禁漫模块
 from UI import __version__                                              # 从包里面拿到最新版本
 
 class ArisuQQChatAICore:
@@ -38,8 +37,7 @@ class ArisuQQChatAICore:
         """数据初始化"""
         # 创建配置对象(禁漫模块)
         self.arisu = arisu                                                              # 实例化时需要指定
-        self.deepseek = deepseek                                                        # 实例化时需要指定
-        self.option = create_option_by_file("./用户设置/option.yml")                     # 禁漫配置
+        self.deepseek = deepseek                                                        # 实例化时需要指定                     # 禁漫配置
         self.qq_group_x, self.qq_group_y = self.analyze_location(qq_group_location)     # 解析放置qq群的位置
         """权限体系"""
         # 超管
@@ -143,65 +141,6 @@ class ArisuQQChatAICore:
     def get_orders(self):
         """查询所有指令"""
         return "\t".join([order for order in self.order_dict])
-
-    def jm_down_order(self, jm_album_id):
-        """禁漫本子下载指令实现
-        参数：
-        jm_album_id ； 本子专辑指令（250745）
-        """
-        # # 分割出专辑id
-        # jm_album_id = order.replace("#jm:", "")  # 拿到jm本子并放到剪切板(移除多余的字符后进行请求)
-        # if jm_album_id == "":    #使用了指令但是没有填任何参数
-        #     print("使用了jm下载指令但是没有填本子id")
-        #     return "使用了jm下载指令但是没有填本子id"
-        # 使用前先清理之前的资源（因为之后要放到剪切板导致无法删除pdf）
-        try:
-            # 清理残留的资源(把整个缓存目录删除)和目录还原(目录创建回去)
-            shutil.rmtree("./logs/发送缓存")
-            os.mkdir("./logs/发送缓存")
-            shutil.rmtree("./logs/下载缓存")
-            os.mkdir("./logs/下载缓存")
-        except FileNotFoundError:
-            print("目录不存在，无需删除")
-        except (PermissionError, FileExistsError):
-            # 满载第二次请求是PermissionError(shutil.rmtree)，带三次是FileExistsError(os.mkdir)
-            return "请等待上一份的jm发送完再使用该指令(我不是服务器，垃圾CUP没法满足同时下载多个文件)，如您不能见谅请把您的CPU借我用用！"
-
-        # 使用option对象来下载本子
-        down_error = ""   # 下载错误信息
-        try:
-            download_album(jm_album_id, self.option)
-        except jm_exception.PartialDownloadFailedException as e:
-            # 部分下载失败
-            print(e)
-            down_error = str(e).split(": [",1)[0] # 必须转换不然剪切板就报错
-        except jm_exception.MissingAlbumPhotoException as e:
-            # 请求的本子不存在
-            print(e)
-            down_error = str(e) # 必须转换不然剪切板就报错
-        except jm_exception.JmcomicException as e:
-            print("本子输入为空")
-            down_error = e
-        # 文件名字需改（这里使用的是整合包的本子，所以名字会变动）
-        for file_name in os.listdir("./logs/发送缓存"):
-            # 找到后缀名为pdf的文件
-            if file_name.endswith(".pdf"):
-                # 重命名文件为本子的专辑ID(注意原文件是有后缀的，改的时候才要加)
-                os.rename(f"./logs/发送缓存/{file_name}",f"./logs/发送缓存/{jm_album_id}.pdf")
-                break # 退出循环
-        else:
-            print("没有找到PDF文件")
-            down_error += "指令结果：没有找到PDF文件"
-            return down_error
-        # 构建文件下载缓存的绝对路径
-        absolute_path = os.path.abspath(f"./logs/发送缓存/{jm_album_id}.pdf")  # 使用绝对路径(避免路径错误)
-        # 实现文件的复制
-        self.arisu.copy_file(absolute_path)
-        # 调用文件发送
-        self.arisu.paste_send_file()
-        # 等待1秒的点击发送完毕
-        sleep(1)
-        return down_error if down_error else "本子已发送，未看到可能是文件太大了还在上传"
 
     def get_administrators(self):
         """获得管理员
@@ -510,13 +449,10 @@ CPU占比：{psutil.cpu_percent(1, True)}%
     "#指令查询": [True, lambda : self.get_orders(),"查询失败"],
 
     # 权限管理类
-    "#超管": [True, lambda : self.root,"下载失败"],
+    "#超管": [True, lambda : self.root,"权限不足"],
     "#所有管理员": [True, lambda : self.get_administrators(), "查询失败"],
     "#开启指令权限限制": [lambda : self.open_order_permission_limit(), "已开启指令权限限制", "开启指令权限限制失败"],
     "#关闭指令权限限制": [lambda : self.close_order_permission_limit(), "已关闭指令权限限制", "关闭指令权限限制失败"],
-
-    # 禁漫指令
-    "#jm": [True, lambda : self.jm_down_order(self.args),"下载失败"],
 
     # 远程控制指令
     "#中控截图": [lambda : self.send_screen_arisu(), "截图完成","截图失败"],
@@ -656,6 +592,4 @@ CPU占比：{psutil.cpu_percent(1, True)}%
         return ["#退出"]
 
 if __name__ == '__main__':
-    # jm_down_order("JM250745") # 赛马娘(小栗帽)
-    # jm_down_order("#jm:422866") # 短片测试 #jm:422866
     print("额外功能正常")
