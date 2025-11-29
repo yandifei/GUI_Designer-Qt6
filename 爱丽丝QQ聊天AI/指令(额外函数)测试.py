@@ -5,9 +5,9 @@ from deepseek_conversation_engine import DeepseekConversationEngine
 from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore
 from tools_manage.tools_register import tools_register
 
-arisu = QQMessageMonitor("群聊", "4","爱丽丝",4)
+# arisu = QQMessageMonitor("群聊", "4","爱丽丝",4)
 # arisu = QQMessageMonitor("群聊", "1","爱丽丝",4)
-# arisu = QQMessageMonitor("群聊", "鸣潮想睡觉","雁低飞",4)
+arisu = QQMessageMonitor("群聊", "鸣潮想睡觉","雁低飞",4)
 # arisu = QQMessageMonitor("群聊", "鸣潮自动刷声骸","雁低飞",4)
 
 # AI函数回调注册，必须先有爱丽丝
