@@ -665,8 +665,8 @@ class DeepseekConversationEngine:
                 print("\033[91m请求体格式错误，请根据错误信息提示修改请求体\033[0m")
                 assistant_content =  "请求体格式错误，请根据错误信息提示修改请求体"
             elif status_code == 401:
-                print("\033[91mAPIkey错误，认证失败。请检查您的APIkey是否正确如没有APIkey请先创建APIkey\033[0m")
-                assistant_content =  "APIkey错误，认证失败。请检查您的APIkey是否正确如没有APIkey请先创建APIkey"
+                print("\033[91mAPI密钥错误，认证失败。请检查您的API密钥是否正确如没有API密钥请先创建API密钥\033[0m")
+                assistant_content =  "API密钥错误，认证失败。请检查您的API密钥是否正确如没有API密钥请先创建API密钥"
             elif status_code == 402:
                 print("\033[91m账号余额不足，请确认账户余额，并前往充值页面进行充值\033[0m")
                 assistant_content =  "账号余额不足，请确认账户余额，并前往充值页面进行充值"
@@ -791,8 +791,8 @@ class DeepseekConversationEngine:
                 print("\033[91m请求体格式错误，请根据错误信息提示修改请求体\033[0m")
                 assistant_content =  "请求体格式错误，请根据错误信息提示修改请求体"
             elif status_code == 401:
-                print("\033[91mAPIkey错误，认证失败。请检查您的APIkey是否正确如没有APIkey请先创建APIkey\033[0m")
-                assistant_content =  "APIkey错误，认证失败。请检查您的APIkey是否正确如没有APIkey请先创建APIkey"
+                print("\033[91mAPI密钥错误，认证失败。请检查您的API密钥是否正确如没有API密钥请先创建API密钥\033[0m")
+                assistant_content =  "API密钥错误，认证失败。请检查您的API密钥是否正确如没有API密钥请先创建API密钥"
             elif status_code == 402:
                 print("\033[91m账号余额不足，请确认账户余额，并前往充值页面进行充值\033[0m")
                 assistant_content =  "账号余额不足，请确认账户余额，并前往充值页面进行充值"
@@ -866,7 +866,7 @@ class DeepseekConversationEngine:
             if status_code == 400:
                 print("\033[91m请求体格式错误，请根据错误信息提示修改请求体\033[0m")
             elif status_code == 401:
-                print("\033[91mAPIkey错误，认证失败。请检查您的APIkey是否正确如没有APIkey请先创建APIkey\033[0m")
+                print("\033[91mAPI密钥错误，认证失败。请检查您的API密钥是否正确如没有API密钥请先创建API密钥v\033[0m")
             elif status_code == 402:
                 print("\033[91m账号余额不足，请确认账户余额，并前往充值页面进行充值\033[0m")
             elif status_code == 422:
