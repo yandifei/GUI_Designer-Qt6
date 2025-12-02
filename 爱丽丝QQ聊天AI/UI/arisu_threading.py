@@ -159,6 +159,15 @@ class ArisuThreading(QRunnable):
             # 发射崩溃的信号，传递自身和错误
             self.signal.error_signal.emit(self.print_widget, self, error_msg)
 
+        # 控件没有绑定，下标溢出，得去qq_message_monitor.py里修改
+        except IndexError as e:
+            error_msg = (f"线程崩溃: {str(e)}\n{traceback.format_exc()}\n"
+                         f"错误提示：控件绑定失败，请查询QQ版本是否匹配")
+            try:
+                self.signal.error_signal.emit(self.print_widget, self, error_msg)
+            except (RuntimeError, TypeError):
+                critical("启动AI自动回复过程中强行关闭了窗口")
+
         except Exception as e:
             error_msg = (f"线程崩溃: {str(e)}\n{traceback.format_exc()}\n"
                          f"错误提示：检测到线程池里面的线程崩溃,失去对 {self.qq_group_name} 窗口的控制，")
