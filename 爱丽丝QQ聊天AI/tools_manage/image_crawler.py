@@ -61,7 +61,7 @@ class ImageCrawler(BaseTool):
         # 拿到所有搜索结果的链接
         all_search_link = re.findall(r'<h5><a href="(.*?)" target="_blank">', response.text)
 
-        # 有效的搜索链接
+        # 有效的搜索链接(必须保留，动了就只会下载一张图片了)
         search_link: str = ""
         # 拿到有效的搜索链接，只有所有链接无效或者找到有效链接的时候才退出
         while all_search_link:
@@ -119,7 +119,8 @@ class ImageCrawler(BaseTool):
         # 当前图链接的片集合20张图片都不够
         if quantity > max_pic_num:
             return f"已发送{max_pic_num}张{theme}图片（已达上限），其中{request_fail_num}张图片请求失败。请再次调用以获取剩余{quantity - max_pic_num}张"
-        return f"已发送{theme}图片{max_pic_num - request_fail_num}张，其中{request_fail_num}张图片请求失败"
+        # 需求小于总数
+        return f"已发送{theme}图片{quantity - request_fail_num}张，其中{request_fail_num}张图片请求失败"
 
 
 # try:
