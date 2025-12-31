@@ -18,6 +18,9 @@ import win32gui                     # win32api操作
 import win32con                     # win32api操作
 import win32clipboard               # 剪切板操作
 from PIL import Image               # 图片格式转换处理(pip install Pillow)
+from uiautomation import Control
+
+
 # 自己的库
 
 
@@ -84,6 +87,7 @@ class QQMessageMonitor:
         self.more_button = self.menu_option_buttons.GetChildren()[5]  # 展开菜单的按钮
         """消息列表框(message_list_box)"""
         # 2个组里面->最后组->组->组->组1->组->最后组->组->组->全是消息控件，需要解析
+        # print(self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetChildren()[1].GetFirstChildControl().GetLastChildControl().Name)
         self.message_list_box = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetChildren()[1].GetFirstChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl()
         self.messages_count = 0  # 记录最大消息数(调用消息监控会更新)
         self.AutomationId_list = []   # 记录获得消息控件的所有ID(调用消息监控会更新)
@@ -92,26 +96,27 @@ class QQMessageMonitor:
         self.get_messages() # 创建对象的时候就对窗口进行一次监听，并把记录保存下来(动态属性修改)
         self.control_id_index = 0  # 旧表的最后一个控件id下标，用来定位新表(默认新表的第一个控件遍历消息体)
         """编辑工具栏(edit_tool_bar)"""
-        # 2个组里面->最后组->组->组->组1->最后组->组倒4(会话工具栏，主题会多1个组)->7个组(表情、截图、文件、图片、红包、语音、聊天记录)
+        # 2个组里面->最后组->组->组->组1->最后组->组倒4(会话工具栏，主题会多1个组)->2个组([表情、截图、文件、图片、红包、语音]、[聊天记录])
         self.edit_tool_bar = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetChildren()[1].GetLastChildControl().GetChildren()[-4]    # 会话工具栏
-        self.expression_button = self.edit_tool_bar.GetFirstChildControl().GetFirstChildControl()   # 表情按钮
-        self.screenshot_button = self.edit_tool_bar.GetChildren()[1].GetFirstChildControl()   # 截图按钮
-        self.screenshot_arrow = self.edit_tool_bar.GetChildren()[1].GetLastChildControl() # 截图 Alt + S弹出菜单
-        self.folder_button = self.edit_tool_bar.GetChildren()[2].GetFirstChildControl()   # 文件按钮
-        self.folder_arrow_button2 = self.edit_tool_bar.GetChildren()[2].GetLastChildControl()  # 文件弹出菜单
-        self.image_button = self.edit_tool_bar.GetChildren()[3].GetFirstChildControl()   # 图片按钮
+        # print(self.edit_tool_bar.Name)
+        self.expression_button = self.edit_tool_bar.GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()   # 表情按钮
+        self.screenshot_button = self.edit_tool_bar.GetFirstChildControl().GetChildren()[1].GetFirstChildControl()   # 截图按钮
+        self.screenshot_arrow = self.edit_tool_bar.GetFirstChildControl().GetChildren()[1].GetLastChildControl() # 截图 Alt + S弹出菜单
+        self.folder_button = self.edit_tool_bar.GetFirstChildControl().GetChildren()[2].GetFirstChildControl()   # 文件按钮
+        self.folder_arrow_button2 = self.edit_tool_bar.GetFirstChildControl().GetChildren()[2].GetLastChildControl()  # 文件弹出菜单
+        self.image_button = self.edit_tool_bar.GetFirstChildControl().GetChildren()[3].GetFirstChildControl()   # 图片按钮
         if self.group_or_friend == "群聊":
-            self.lucky_money_button = self.edit_tool_bar.GetChildren()[4].GetFirstChildControl()   # 红包按钮
-            self.microphone_on_button = self.edit_tool_bar.GetChildren()[5].GetFirstChildControl()   # 语音按钮
+            self.lucky_money_button = self.edit_tool_bar.GetFirstChildControl().GetChildren()[4].GetFirstChildControl()   # 红包按钮
+            self.microphone_on_button = self.edit_tool_bar.GetFirstChildControl().GetChildren()[5].GetFirstChildControl()   # 语音按钮
         elif self.group_or_friend == "好友":
             self.shake_button = self.edit_tool_bar.GetChildren()[4].GetFirstChildControl()   # 窗口抖动按钮
             self.lucky_money_button = self.edit_tool_bar.GetChildren()[5].GetFirstChildControl()   # 红包按钮
             self.microphone_on_button = self.edit_tool_bar.GetChildren()[6].GetFirstChildControl()   # 语音按钮
         # 机器人按钮（部分QQ群有）
         if self.edit_tool_bar.GetChildren()[-2].Name == "机器人指令":
-            self.robot_command_button = self.edit_tool_bar.GetChildren()[-2].GetFirstChildControl()
+            self.robot_command_button = self.edit_tool_bar.GetFirstChildControl().GetChildren()[-2].GetFirstChildControl()
         # 聊天记录按钮（一定是最后一个）
-        self.message_record_button = self.edit_tool_bar.GetLastChildControl().GetFirstChildControl()
+        self.message_record_button = self.edit_tool_bar.GetChildren()[-1].GetLastChildControl().GetFirstChildControl()
         """编辑框(edit_box)[textbox、关闭按钮、发送按钮]"""
         # 2个组里面->最后组->组->组->组1->最后组->组倒3(主题会改变)->"Rich Text Editor" 应用程序(里面有2个控件)
         self.edit_box: uiautomation.Control = self.main_chat_win.GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetChildren()[1].GetLastChildControl().GetChildren()[-3].GetLastChildControl()
@@ -339,16 +344,37 @@ class QQMessageMonitor:
         """
         uiautomation.Click(control.BoundingRectangle.xcenter(), control.BoundingRectangle.ycenter())
 
-    def send_click(self,control):
-        """向窗口发送点击消息
-        参数：control：控件对象
+    # def send_click(self,control):
+    #     """向窗口发送点击消息
+    #     参数：control：控件对象
+    #     """
+    #     # 获取控件中心x和y的绝对坐标
+    #     screen_x, screen_y = control.BoundingRectangle.xcenter(),control.BoundingRectangle.ycenter()
+    #     # 把屏幕坐标转换为客户端坐标（应用窗口的坐标）
+    #     client_x, client_y = win32gui.ScreenToClient(self.hwnd, (screen_x, screen_y))
+    #     # 模拟鼠标指针， 传送到指定坐标（坐标必须是相对坐标即客户端坐标）
+    #     long_position = win32api.MAKELONG(client_x, client_y)
+    #     # 模拟鼠标按下(窗口句柄和客户端坐标)
+    #     win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, long_position)
+    #     # 模拟鼠标弹起(窗口句柄和客户端坐标)
+    #     win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, long_position)
+
+    def back_click(self, control: Control):
+        """后台点击
+        参数：control: 控件对象
         """
-        # 获取控件中心x和y的绝对坐标
-        screen_x, screen_y = control.BoundingRectangle.xcenter(),control.BoundingRectangle.ycenter()
+        # 获取发送按钮中心x和y的绝对坐标
+        screen_x, screen_y = control.BoundingRectangle.xcenter(), control.BoundingRectangle.ycenter()
         # 把屏幕坐标转换为客户端坐标（应用窗口的坐标）
         client_x, client_y = win32gui.ScreenToClient(self.hwnd, (screen_x, screen_y))
-        # 模拟鼠标指针， 传送到指定坐标（坐标必须是相对坐标即客户端坐标）
+        # 坐标转换，16位的整数（通常是坐标值）合并成一个32位的长整型值
         long_position = win32api.MAKELONG(client_x, client_y)
+        # # 鼠标模拟移动过去
+        # win32api.SendMessage(self.hwnd, win32con.WM_MOUSEMOVE, 0, long_position)
+        # # 模拟鼠标双击(窗口句柄和客户端坐标)
+        # win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONDBLCLK, win32con.MK_LBUTTON, long_position)
+        # # 模拟鼠标弹起
+        # win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, 0, long_position)  # 弹起
         # 模拟鼠标按下(窗口句柄和客户端坐标)
         win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, long_position)
         # 模拟鼠标弹起(窗口句柄和客户端坐标)
@@ -472,6 +498,7 @@ class QQMessageMonitor:
         self.edit_box.SetFocus()           # 设置焦点
         sleep(1)
         self.edit_box.SendKeys(content)    # 发送内容
+
 
     def send_message(self,data):
         """通过复制粘贴数据到qq发送控件
@@ -798,43 +825,101 @@ class QQMessageMonitor:
         self.message_list_dict.clear()  # 清空列表字典
         self.AutomationId_list.clear()  # 用来放置控件的AutomationId(对属性的列表清空)
         # message_child = self.message_list_box.GetChildren()  # 这里多一个变量是为了2次遍历相同的控件
-        for message_control in self.message_list_box.GetChildren()    :# 优先遍历控件id动态更改属性
+        for message_control in self.message_list_box.GetChildren():# 优先遍历控件id动态更改属性
             self.AutomationId_list.append(message_control.AutomationId)  # 放置控件id
         for message_control in self.message_list_box.GetChildren():   # 以下标的形式遍历(方便后续处理)
             try:    # 估计有些消息体确实没有子孩子，或者突然过时了(实际猜测是最新的消息被顶掉了，导致控件为空)
                 self.message_list_box.Refind()  # 每次调用都刷新一次控件
-                message_control = message_control.GetChildren()[0]  # 进入组控件里面（所有都单个消息控件都得进入）
-                pass  # IndexError: list index out of range  提示我下标溢出
-                if len(message_control.GetChildren()) == 2: # 如果等于2代表时间被嵌入的
-                    message_control = message_control.GetChildren()[1]  # 进入个人消息体里面(避开时间)
-                else:
-                    message_control = message_control.GetChildren()[0]  # 进入个人消息体里面
-                send_name = message_control.GetChildren()[0].Name   # 发送者的名字
+                # # 进入3个组控件里面（所有都单个消息控件都得进入）
+                # message_control = message_control.GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()
                 one_message_join = ""  # 清空组合的信息
-                if len(message_control.GetChildren()) == 1: # 对方或我撤回了成员的某条消息(撤回、加入群聊)
-                    if message_control.GetChildren()[0].GetChildren()[1].Name == "加入了群聊。":
-                        send_name = "系统"
-                        # 加入者的名字 拼接 message_control.GetChildren()[0].GetChildren()[1].Name（"加入了群聊。"）
-                        one_message_join = message_control.GetChildren()[0].GetChildren()[0].Name + "加入了群聊。"    # 人名和群聊
-                    elif len(message_control.GetChildren()[0].GetChildren()) == 2:  # 撤回消息的情况
-                        send_name = message_control.GetChildren()[0].GetChildren()[0].Name   # 重新定义发送者的名字
-                        one_message_join = message_control.GetChildren()[0].GetChildren()[1].Name  # 撤回了一条消息
+                # 非系统消息
+                if (component3:= message_control.GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()).Name == "":
+                    # 不解析精华消息
+                    # # 正常消息
+                    # if len(component3.GetChildren()) > 1:
+                    #     # component四个子控件，0是发送者组件，1是等级组件，2是消息，3是没用的
+                    #     send_name = component3.GetFirstChildControl().Name
+                    #     # 递归解析这个复杂消息组件
+                    #     txt_split(component3.GetChildren()[2])
+                    # # 精华消息(属于系统的了)
+                    # elif len(component3.GetChildren()) == 1:
+                    #     print(1)
+                    #     send_name = "系统"
+                    #     txt_split(component3)
+                    # # 不管了
+                    # else:
+                    #     send_name = component3.GetFirstChildControl().Name
+                    #     # 递归解析这个复杂消息组件
+                    #     txt_split(component3.GetChildren()[2])
+                    # component四个子控件，0是发送者组件，1是等级组件，2是消息，3是没用的
+                    send_name = component3.GetFirstChildControl().Name
+                    # 递归解析这个复杂消息组件
+                    txt_split(component3.GetChildren()[2])
+                # 系统消息
+                elif message_control.GetFirstChildControl().GetFirstChildControl().GetFirstChildControl().Name != "":
+                    # 时间组件，但是里面嵌套了非系统消息，所以这里解析为非系统消息(解法一致就是组件不同)
+                    if len(message_control.GetFirstChildControl().GetChildren()) == 2:
+                        component121 = message_control.GetFirstChildControl().GetLastChildControl().GetFirstChildControl()
+                        # 群聊的转发消息
+                        if len(message_control.GetFirstChildControl().GetLastChildControl().GetChildren()) == 2:
+                            send_name = message_control.GetFirstChildControl().GetLastChildControl().GetFirstChildControl().Name
+                            # 递归解析这个转发消息
+                            txt_split(message_control.GetFirstChildControl().GetLastChildControl().GetLastChildControl().GetFirstChildControl())
+                        else:
+                            send_name = component121.GetFirstChildControl().Name
+                            # 递归解析这个复杂消息组件
+                            txt_split(component121.GetChildren()[2])
+                    # 单个链接控件，此时非系统消息
+                    elif len(message_control.GetFirstChildControl().GetFirstChildControl().GetChildren()) == 3:
+                        # 链接组件
+                        # one_message_join = message_control.GetFirstChildControl().GetFirstChildControl().GetChildren()[1].GetFirstChildControl().Name
+                        txt_split(message_control.GetFirstChildControl().GetFirstChildControl())
+                        send_name = component3.Name
                     else:
-                        send_name = "系统" # 拍一拍的发送者
-                        for pai_control in message_control.GetChildren()[0].GetChildren():  # 遍历拍一拍的控件
-                            one_message_join += pai_control.Name  # 把拍一拍的消息组合起来
-                elif len(message_control.GetChildren()) == 2: # 引用和卡片
-                    if message_control.GetChildren()[1].Name == "卡片":
-                        one_message_join = "卡片消息"
-                    else:   # 引用类型
-                        txt_split(message_control)
-                elif len(message_control.GetChildren()) == 3:   # 文件类型和普通聊天类型都是3个组，消息内容在第二个组
-                    if message_control.GetChildren()[1].GetChildren()[0].Name != "":    # 文件类型
-                        one_message_join = message_control.GetChildren()[1].GetChildren()[0].Name   # 文件名
-                    elif message_control.GetChildren()[1].GetChildren()[0].Name == "":   # 文本控件在里面
-                        txt_split(message_control)
-                else:   # 超级复合文本（多个链接之类的）
+                        send_name = "系统"
+                        # one_message_join = message_control.GetFirstChildControl().GetFirstChildControl().GetFirstChildControl().Name
+                        # 递归解析这个复杂消息组件
+                        txt_split(message_control.GetFirstChildControl().GetFirstChildControl().GetFirstChildControl())
+
+                else:  # 超级复合文本（多个链接之类的）
+                    send_name = "未知"
                     txt_split(message_control)
+                # if len(message_control.GetChildren()) == 2: # 如果等于2代表时间被嵌入的
+                #     message_control = message_control.GetChildren()[1]  # 进入个人消息体里面(避开时间)
+                # else:
+                #     message_control = message_control.GetChildren()[0]  # 进入个人消息体里面
+                #     send_name = message_control.GetChildren()[0].Name   # 发送者的名字
+
+                # one_message_join = ""  # 清空组合的信息
+                # if len(message_control.GetChildren()) == 1: # 对方或我撤回了成员的某条消息(撤回、加入群聊)
+                #     if message_control.GetChildren()[0].GetChildren()[1].Name == "加入了群聊。":
+                #         send_name = "系统"
+                #         # 加入者的名字 拼接 message_control.GetChildren()[0].GetChildren()[1].Name（"加入了群聊。"）
+                #         one_message_join = message_control.GetChildren()[0].GetChildren()[0].Name + "加入了群聊。"    # 人名和群聊
+                #     elif len(message_control.GetChildren()[0].GetChildren()) == 2:  # 撤回消息的情况
+                #         send_name = message_control.GetChildren()[0].GetChildren()[0].Name   # 重新定义发送者的名字
+                #         one_message_join = message_control.GetChildren()[0].GetChildren()[1].Name  # 撤回了一条消息
+                #     else:
+                #         send_name = "系统" # 拍一拍的发送者
+                #         for pai_control in message_control.GetChildren()[0].GetChildren():  # 遍历拍一拍的控件
+                #             one_message_join += pai_control.Name  # 把拍一拍的消息组合起来
+                #
+                # elif len(message_control.GetChildren()) == 2: # 引用和卡片
+                #     if message_control.GetChildren()[1].Name == "卡片":
+                #         one_message_join = "卡片消息"
+                #     else:   # 引用类型
+                #         txt_split(message_control)
+                # elif len(message_control.GetChildren()) == 3:   # 文件类型和普通聊天类型都是3个组，消息内容在第二个组
+                #     if message_control.GetChildren()[1].GetChildren()[0].Name != "":    # 文件类型
+                #         one_message_join = message_control.GetChildren()[1].GetChildren()[0].Name   # 文件名
+                #     elif message_control.GetChildren()[1].GetChildren()[0].Name == "":   # 文本控件在里面
+                #         txt_split(message_control)
+                # else:   # 超级复合文本（多个链接之类的）
+                #     txt_split(message_control)
+                # # 红包拦截
+                # self.hook_red_envelope(message_control, one_message_join)
+                # print(f"{datetime.now().time().strftime("%H:%M:%S")}" + " " + send_name + ":\t"+one_message_join)
                 self.message_list.append(f"{datetime.now().time().strftime("%H:%M:%S")}" + " " + send_name + ":\t"+one_message_join) # 标准化后将一条消息放到列表里面
                 self.message_list_dict.append({"发送者": send_name,"发送消息": one_message_join,"发送时间": datetime.now().time().strftime("%H:%M:%S")})
                 # print(f"{datetime.now().time().strftime("%H:%M:%S")}" + "\t" + send_name + ":\t"+one_message_join)
@@ -844,6 +929,57 @@ class QQMessageMonitor:
                 self.output_text = f"标溢出：无法获取子控件，原始错误：{e}\n子孩子控件数:{len(message_control.GetChildren())}，文本控件解析失败"
                 continue # 跳过这次控件访问
         return self.message_list, self.AutomationId_list, self.messages_count # 返回截获的消息列表、控件id列表、最大消息数
+
+    def hook_red_envelope(self, message_control: Control, one_message_join):
+        """抢红包"""
+        try:
+            # if "红包" in one_message_join:
+            #     print("捕获到红包")
+            # 在时间里面拼手气红包
+            if "拼手气红包" == (red_envelope := message_control.GetFirstChildControl().GetLastChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()).Name:
+                self.back_click(red_envelope)
+            # 在时间里面普通红包
+            if "普通红包" == (red_envelope := message_control.GetFirstChildControl().GetLastChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()).Name:
+                self.back_click(red_envelope)
+            # 在时间里专属红包
+            if "的专属红包" in (red_envelope := message_control.GetFirstChildControl().GetLastChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetChildren()[3]).Name:
+                self.back_click(red_envelope)
+            # 在时间里面口令红包
+            if "口令红包" == (red_envelope := message_control.GetFirstChildControl().GetLastChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()).Name:
+                # 发送口令
+                self.send_message(message_control.GetFirstChildControl().GetLastChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetLastChildControl().Name)
+                self.back_click(red_envelope)
+            # print("捕获到红包")
+            # elif one_message_join == "给爱丽丝的专属红包xtfct":
+            #     print("奇怪")
+            # else:
+            #     print("无红包")
+        except Exception as e:
+            try:
+                # 拼手气红包
+                if "拼手气红包" == (
+                red_envelope := message_control.GetFirstChildControl().GetFirstChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()).Name:
+                    self.back_click(red_envelope)
+                # 普通红包
+                if "普通红包" == (
+                red_envelope := message_control.GetFirstChildControl().GetFirstChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()).Name:
+                    self.back_click(red_envelope)
+                    # print(2)
+                # 在时间里专属红包
+                if "的专属红包" in (red_envelope :=
+                message_control.GetFirstChildControl().GetFirstChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetChildren()[
+                    3]).Name:
+                    self.back_click(red_envelope)
+                # 口令红包
+                if "口令红包" == (
+                red_envelope := message_control.GetFirstChildControl().GetFirstChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetFirstChildControl()).Name:
+                    # 发送口令
+                    self.send_message(
+                        message_control.GetFirstChildControl().GetFirstChildControl().GetLastChildControl().GetFirstChildControl().GetFirstChildControl().GetLastChildControl().Name)
+                    self.back_click(red_envelope)
+            except Exception as e:
+                pass
+
 
     def monitor_message(self):
         pass    # 修改逻辑，跳过旧消息的文本控件解析(这里其实是对比上一次消息列表和这次消息列表消息的不同，实际上能在逻辑上实现)
@@ -1058,7 +1194,12 @@ if __name__ == '__main__':
     #     chat_win.top_win()     # 置顶窗口 zA
     # print("可以输出没有语法错误")
 
-    arisu = QQMessageMonitor("群聊", "鸣潮想睡觉","雁低飞",3)
+    # arisu = QQMessageMonitor("群聊", "4","雁低飞",3)
+    arisu = QQMessageMonitor("群聊", "1","雁低飞",3)
+    # print(arisu.get_messages())
+    arisu.get_messages()
+    # for i in arisu.message_list:
+    #     print(i)
     # 下载图片（这里这么做是为了整体高效）
     # self.send_url_image(url)
     # arisu.picture_map_read()
