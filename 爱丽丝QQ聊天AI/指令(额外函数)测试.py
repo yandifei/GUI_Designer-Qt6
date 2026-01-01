@@ -5,9 +5,11 @@ from deepseek_conversation_engine import DeepseekConversationEngine
 from UI.arisu_qq_chat_ai_core import ArisuQQChatAICore
 from tools_manage.tools_register import tools_register
 
+# arisu = QQMessageMonitor("群聊", "1","爱丽丝",4)
+arisu = QQMessageMonitor("群聊", "2","爱丽丝",4)
 # arisu = QQMessageMonitor("群聊", "4","爱丽丝",4)
 # arisu = QQMessageMonitor("群聊", "1","爱丽丝",4)
-arisu = QQMessageMonitor("群聊", "鸣潮想睡觉","雁低飞",4)
+# arisu = QQMessageMonitor("群聊", "鸣潮想睡觉","雁低飞",4)
 # arisu = QQMessageMonitor("群聊", "鸣潮自动刷声骸","雁低飞",4)
 
 # AI函数回调注册，必须先有爱丽丝
@@ -16,6 +18,7 @@ tools_register(arisu)  # 爱丽丝作为对象传递进去然后注册函数
 # deepseek消息回复(工具必须要先被注册后才创建这个对象)
 deepseek = DeepseekConversationEngine("爱丽丝Pro")
 # 外部函数(传入需要的对象)
+# ef = ArisuQQChatAICore(deepseek, arisu,"爱丽丝","1","-650,-650","False")
 ef = ArisuQQChatAICore(deepseek, arisu,"爱丽丝","1","0,0","False")
 
 # qq消息监听者
