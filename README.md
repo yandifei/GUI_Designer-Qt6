@@ -1,3 +1,5 @@
+
+
 <div align="center">
   <h1 align="center">
     <img src="./展示项目的图片/爱丽丝.png" width="200"/>
@@ -101,7 +103,7 @@ conda activate Arisu
 pip install -r requirements.txt
 
 # 5.启动项目(cmd使用以下指令，pycharm直接运行)
-python 爱丽丝QQ聊天AI/爱丽丝QQ聊天AI.py
+python 爱丽丝QQ聊天AI.py
 ```
 
 ## 注意事项
@@ -132,4 +134,3 @@ python 爱丽丝QQ聊天AI/爱丽丝QQ聊天AI.py
 ## 问题反馈
 - 其实还有别的项目要研发和个人学习(繁忙)，没时间处理issues。
 - 提交 [Issues](https://github.com/yandifei/ArisuQQChatAI/issues) 或 邮箱3058439878@qq.com
-
